@@ -1,10 +1,16 @@
 import { type NextPage } from "next";
+import { Layout } from "../components/Layout/";
 
 const Home: NextPage = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-      Fitter
-    </main>
+    <Layout>
+      <div>
+        <h1 className="font-semibold">
+          Check out latest posts from our community
+        </h1>
+        
+      </div>
+    </Layout>
   );
 };
 
