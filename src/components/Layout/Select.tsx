@@ -1,4 +1,9 @@
-import { type UseFormRegister, type Path } from "react-hook-form";
+import {
+  type UseFormRegister,
+  type Path,
+  type RegisterOptions,
+  type FieldError,
+} from "react-hook-form";
 import { type IAddPostFormInput } from "../Posts/AddPost";
 
 export interface SelectProps
@@ -6,26 +11,29 @@ export interface SelectProps
   name: Path<IAddPostFormInput>;
   register: UseFormRegister<IAddPostFormInput>;
   className?: string;
-  required: boolean;
   options: string[];
+  validation: RegisterOptions<IAddPostFormInput>;
+  errors: FieldError | undefined;
 }
 
 const Select = ({
   name,
   register,
-  required,
-  className,
+  validation,
+  className = "",
   options,
+  errors,
   ...props
 }: SelectProps) => {
+  const errorClassses = errors ? "outline-red-500" : null;
+
   return (
     <>
       <label htmlFor={name} />
       <select
-        {...register(name, { required })}
+        {...register(name, validation)}
         id={name}
-        className={`${className}`}
-        required={required}
+        className={`${className} ${errorClassses} w-full rounded-md px-2 py-1 outline outline-1 outline-gray-300`}
         {...props}
       >
         {options?.map((option) => (

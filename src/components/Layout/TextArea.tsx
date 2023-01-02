@@ -7,38 +7,35 @@ import {
 import setCapitalized from "../../utils/setCapitalized";
 import { type IAddPostFormInput } from "../Posts/AddPost";
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface TextAreaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   name: Path<IAddPostFormInput>;
   register: UseFormRegister<IAddPostFormInput>;
   className?: string;
-  type: string;
   placeholder: string;
   errors: FieldError | undefined;
   validation: RegisterOptions<IAddPostFormInput>;
 }
 
-const Input = ({
+const TextArea = ({
   name,
   register,
   className = "",
-  type,
   placeholder,
   errors,
   validation,
   ...props
-}: InputProps) => {
+}: TextAreaProps) => {
   const errorClassses = errors ? "outline-red-500" : null;
 
   return (
     <>
       <label htmlFor={name} />
-      <input
+      <textarea
         {...register(name, validation)}
         id={name}
         placeholder={placeholder}
-        className={`${className} ${errorClassses} w-full rounded-md px-3 py-1 outline outline-1 outline-gray-300`}
-        type={type}
+        className={`${className} ${errorClassses} max-h-[200px] min-h-[100px] w-full rounded-md px-3 py-1 outline outline-1 outline-gray-300 md:min-h-[150px]`}
         {...props}
       />
 
@@ -51,4 +48,4 @@ const Input = ({
   );
 };
 
-export default Input;
+export default TextArea;

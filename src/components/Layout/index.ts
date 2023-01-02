@@ -5,3 +5,4 @@ export { default as Layout } from "./Layout";
 export { default as PageHeading } from "./PageHeading";
 export { default as Input } from "./Input";
 export { default as Select } from "./Select";
+export { default as TextArea } from "./TextArea";

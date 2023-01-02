@@ -15,7 +15,7 @@ function Layout({ children }: LayoutProps) {
       </Head>
       <div className="min-h-screen bg-[#eeeeee]">
         <Header />
-        <main className="container mx-auto min-h-screen px-4 py-6 ">
+        <main className="container mx-auto min-h-screen px-4 py-6 max-w-[1024px]">
           {children}
         </main>
         <Footer />
