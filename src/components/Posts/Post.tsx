@@ -7,7 +7,7 @@ type PostProps = {
 
 const Post = ({ post }: PostProps) => {
   return (
-    <div className="flex flex-col gap-3 rounded-md bg-[#d3cfcf] p-4 shadow-lg">
+    <div className="flex flex-col gap-3 rounded-md bg-[#ebebebd0] p-4 shadow-lg">
       <div className="flex items-center gap-4">
         <div className="relative h-10 w-10">
           <Image
