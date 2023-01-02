@@ -1,8 +1,10 @@
-import { signIn } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Navigation from "./Navigation";
 
 function Header() {
+  const { data: session } = useSession();
+
   return (
     <header className="w-full px-4 shadow-md">
       <div className="container mx-auto flex items-center justify-between ">
@@ -25,10 +27,10 @@ function Header() {
         <div className="flex gap-10">
           <Navigation />
           <button
-            onClick={() => signIn()}
+            onClick={() => (session ? signOut() : signIn())}
             className="rounded-md bg-indigo-500 p-3 py-1 text-white shadow-md outline outline-1 outline-indigo-500 transition-colors duration-200 hover:bg-transparent hover:text-indigo-500"
           >
-            Log in
+            {session ? "Log out" : "Log in"}
           </button>
         </div>
       </div>
