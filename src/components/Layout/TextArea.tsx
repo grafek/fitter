@@ -4,17 +4,17 @@ import {
   type RegisterOptions,
   type FieldError,
 } from "react-hook-form";
+import { type AddPostFormSchema } from "../../schemas/post.schema";
 import setCapitalized from "../../utils/setCapitalized";
-import { type IAddPostFormInput } from "../Posts/AddPost";
 
 export interface TextAreaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  name: Path<IAddPostFormInput>;
-  register: UseFormRegister<IAddPostFormInput>;
+  name: Path<AddPostFormSchema>;
+  register: UseFormRegister<AddPostFormSchema>;
   className?: string;
   placeholder: string;
   errors: FieldError | undefined;
-  validation: RegisterOptions<IAddPostFormInput>;
+  validation: RegisterOptions<AddPostFormSchema>;
 }
 
 const TextArea = ({
@@ -26,22 +26,22 @@ const TextArea = ({
   validation,
   ...props
 }: TextAreaProps) => {
-  const errorClassses = errors ? "outline-red-500" : null;
+  const errorClassses = errors ? "outline-red-500" : "outline-gray-300";
 
   return (
     <>
-      <label htmlFor={name} />
+      <label htmlFor={name}>{setCapitalized(name)}</label>
       <textarea
         {...register(name, validation)}
         id={name}
         placeholder={placeholder}
-        className={`${className} ${errorClassses} max-h-[200px] min-h-[100px] w-full rounded-md px-3 py-1 outline outline-1 outline-gray-300 md:min-h-[150px]`}
+        className={`${className} ${errorClassses} max-h-[200px] min-h-[100px] w-full rounded-md px-3 py-1 outline outline-1 md:min-h-[150px]`}
         {...props}
       />
 
-      {errors?.type === "required" ? (
+      {errors ? (
         <span role={"alert"} className="text-sm text-red-500">
-          {setCapitalized(name)} is required!
+          {errors.message}
         </span>
       ) : null}
     </>

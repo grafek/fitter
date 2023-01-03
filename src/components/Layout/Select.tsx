@@ -4,15 +4,16 @@ import {
   type RegisterOptions,
   type FieldError,
 } from "react-hook-form";
-import { type IAddPostFormInput } from "../Posts/AddPost";
+import setCapitalized from "../../utils/setCapitalized";
+import { type AddPostFormSchema } from "../../schemas/post.schema";
 
 export interface SelectProps
   extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  name: Path<IAddPostFormInput>;
-  register: UseFormRegister<IAddPostFormInput>;
+  name: Path<AddPostFormSchema>;
+  register: UseFormRegister<AddPostFormSchema>;
   className?: string;
   options: string[];
-  validation: RegisterOptions<IAddPostFormInput>;
+  validation: RegisterOptions<AddPostFormSchema>;
   errors: FieldError | undefined;
 }
 
@@ -25,15 +26,16 @@ const Select = ({
   errors,
   ...props
 }: SelectProps) => {
-  const errorClassses = errors ? "outline-red-500" : null;
+  const errorClassses = errors ? "outline-red-500" : "outline-gray-300";
+
 
   return (
     <>
-      <label htmlFor={name} />
+      <label htmlFor={name}>{setCapitalized(name)}</label>
       <select
         {...register(name, validation)}
         id={name}
-        className={`${className} ${errorClassses} w-full rounded-md px-2 py-1 outline outline-1 outline-gray-300`}
+        className={`${className} ${errorClassses} w-full rounded-md px-2 py-1 outline outline-1`}
         {...props}
       >
         {options?.map((option) => (
