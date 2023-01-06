@@ -6,6 +6,7 @@ import {
   postSchemaInput,
 } from "../../schemas/post.schema";
 import { useRouter } from "next/router";
+import { useAddPost } from "../../hooks";
 
 type AddPostProps = {
   sports: string[];
@@ -20,8 +21,10 @@ const AddPost = ({ sports }: AddPostProps) => {
 
   const router = useRouter();
 
-  const submitHandler: SubmitHandler<AddPostFormSchema> = (data) => {
-    console.log(data);
+  const { mutate } = useAddPost();
+
+  const submitHandler: SubmitHandler<AddPostFormSchema> = (post) => {
+    mutate(post);
     router.push("/");
   };
 
@@ -32,6 +35,7 @@ const AddPost = ({ sports }: AddPostProps) => {
     >
       <div className="w-full space-y-1">
         <Input
+          required
           register={register}
           validation={{ required: true }}
           name="title"
@@ -42,6 +46,7 @@ const AddPost = ({ sports }: AddPostProps) => {
       </div>
       <div className="w-full space-y-1">
         <TextArea
+          required
           register={register}
           validation={{ required: true }}
           name="description"
@@ -51,6 +56,7 @@ const AddPost = ({ sports }: AddPostProps) => {
       </div>
       <div className="w-full space-y-1">
         <Select
+          required
           errors={errors.sport}
           name="sport"
           validation={{ required: true }}
@@ -60,6 +66,7 @@ const AddPost = ({ sports }: AddPostProps) => {
       </div>
       <div className="w-full space-y-1">
         <Input
+          required
           errors={errors.workoutDate}
           register={register}
           validation={{ required: true }}

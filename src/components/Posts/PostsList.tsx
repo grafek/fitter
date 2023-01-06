@@ -1,5 +1,5 @@
-import usePosts from "../../hooks/usePosts";
-import Post from "./Post";
+import { usePosts } from "../../hooks";
+import PostItem from "./Post";
 
 const PostsList = () => {
   const { data: posts } = usePosts();
@@ -7,7 +7,7 @@ const PostsList = () => {
   return (
     <>
       {posts?.map((post) => (
-        <Post post={post} key={post.id} />
+        <PostItem post={post} key={post.id} />
       ))}
     </>
   );
