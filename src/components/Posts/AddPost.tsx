@@ -1,26 +1,31 @@
 import { Input, Select, TextArea } from "../Layout";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  type AddPostFormSchema,
+  postSchemaInput,
+} from "../../schemas/post.schema";
+import { useRouter } from "next/router";
+import { useAddPost } from "../../hooks";
 
 type AddPostProps = {
   sports: string[];
 };
-
-export interface IAddPostFormInput {
-  title: string;
-  description: string;
-  sport: string;
-  date: string;
-}
 
 const AddPost = ({ sports }: AddPostProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IAddPostFormInput>();
+  } = useForm<AddPostFormSchema>({ resolver: zodResolver(postSchemaInput) });
 
-  const submitHandler: SubmitHandler<IAddPostFormInput> = (data) => {
-    console.log(data);
+  const router = useRouter();
+
+  const { mutate } = useAddPost();
+
+  const submitHandler: SubmitHandler<AddPostFormSchema> = (post) => {
+    mutate(post);
+    router.push("/");
   };
 
   return (
@@ -28,8 +33,9 @@ const AddPost = ({ sports }: AddPostProps) => {
       className="flex flex-col items-center gap-2"
       onSubmit={handleSubmit(submitHandler)}
     >
-      <div className="w-full">
+      <div className="w-full space-y-1">
         <Input
+          required
           register={register}
           validation={{ required: true }}
           name="title"
@@ -38,8 +44,9 @@ const AddPost = ({ sports }: AddPostProps) => {
           type="text"
         />
       </div>
-      <div className="w-full">
+      <div className="w-full space-y-1">
         <TextArea
+          required
           register={register}
           validation={{ required: true }}
           name="description"
@@ -47,8 +54,9 @@ const AddPost = ({ sports }: AddPostProps) => {
           errors={errors.description}
         />
       </div>
-      <div className="w-full">
+      <div className="w-full space-y-1">
         <Select
+          required
           errors={errors.sport}
           name="sport"
           validation={{ required: true }}
@@ -56,12 +64,13 @@ const AddPost = ({ sports }: AddPostProps) => {
           options={sports}
         />
       </div>
-      <div className="w-full">
+      <div className="w-full space-y-1">
         <Input
-          errors={errors.date}
+          required
+          errors={errors.workoutDate}
           register={register}
           validation={{ required: true }}
-          name="date"
+          name="workoutDate"
           placeholder="Workout date"
           type="text"
           onFocus={(e) => (e.target.type = "date")}

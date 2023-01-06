@@ -1,14 +1,14 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
-import { Layout, PageHeading } from "../components/Layout/";
-import AddPost from "../components/Posts/AddPost";
-import getSports from "../utils/getSports";
+import { Layout, PageHeading } from "../../components/Layout";
+import AddPost from "../../components/Posts/AddPost";
+import getSports from "../../utils/getSports";
 
-type CreatePostProps = {
+type CreatePostPageProps = {
   sports: string[];
 };
 
-const CreatePost: NextPage<CreatePostProps> = ({ sports }) => {
+const CreatePostPage: NextPage<CreatePostPageProps> = ({ sports }) => {
   return (
     <Layout>
       <PageHeading>Share your workout with others 😎</PageHeading>
@@ -19,9 +19,9 @@ const CreatePost: NextPage<CreatePostProps> = ({ sports }) => {
   );
 };
 
-export default CreatePost;
+export default CreatePostPage;
 
-export const getServerSideProps: GetServerSideProps<CreatePostProps> = async (
+export const getServerSideProps: GetServerSideProps<CreatePostPageProps> = async (
   ctx
 ) => {
   const session = await getSession(ctx);

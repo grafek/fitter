@@ -1,31 +1,39 @@
-import { Post } from "@prisma/client";
+import { type Post } from "@prisma/client";
 import Image from "next/image";
+import Link from "next/link";
 
-type PostProps = {
+type PostItemProps = {
   post: Post;
 };
 
-const Post = ({ post }: PostProps) => {
+const PostItem = ({ post }: PostItemProps) => {
   return (
     <div className="flex flex-col gap-3 rounded-md bg-[#ebebebd0] p-4 shadow-lg">
       <div className="flex items-center gap-4">
-        <div className="relative h-10 w-10">
+        <Link
+          href={`/profile/${post.creatorId}`}
+          className="relative h-10 w-10"
+        >
           <Image
             alt="user-pic"
             fill
             className="rounded-full object-contain"
-            src={"/user.png"}
+            src={post.creatorImage || "/user.png"}
             sizes="40x40"
           />
-        </div>
+        </Link>
         <div className="text-sm">
-          <p className="font-semibold">
-            {post.creatorName} •{" "}
-            <span className="font-light">Vancouver, CA</span>
-          </p>
-          <p className="font-light">{post.workout} - 30/12/2022</p>
+          <Link
+            href={`/profile/${post.creatorId}`}
+            className="block font-semibold"
+          >
+            {post.creatorName}
+          </Link>
+          {post.sport} •{" "}
+          <span className="font-light"> {post.workoutDate.toDateString()}</span>
         </div>
       </div>
+      <Link href={`/post/${post.id}`}>See post</Link>
       <h2 className="text-lg font-semibold">{post.title}</h2>
       <p>{post.description}</p>
       <div className="relative h-96 w-full ">
@@ -34,6 +42,7 @@ const Post = ({ post }: PostProps) => {
           fill
           alt="workout-img"
           priority
+          sizes="40x40"
           className="mx-auto min-h-[100px] max-w-md rounded-md "
         />
       </div>
@@ -42,4 +51,4 @@ const Post = ({ post }: PostProps) => {
   );
 };
 
-export default Post;
+export default PostItem;

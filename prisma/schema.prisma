@@ -36,15 +36,15 @@ model Session {
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
+  name          String
   email         String?   @unique
   emailVerified DateTime?
-  image         String?
+  image         String
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
 
-  @@unique([id, name])
+  @@unique([id, name, image])
 }
 
 model VerificationToken {
@@ -56,14 +56,16 @@ model VerificationToken {
 }
 
 model Post {
-  id          String   @id @default(cuid())
-  creator     User     @relation(fields: [creatorId, creatorName], references: [id, name])
-  creatorName String
-  creatorId   String
-  title       String
-  description String
-  workout     String
-  image       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  creator      User?    @relation(fields: [creatorId, creatorName, creatorImage], references: [id, name, image])
+  creatorName  String?
+  creatorId    String?
+  creatorImage String?
+  title        String
+  description  String
+  sport        String
+  workoutDate  DateTime
+  image        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
