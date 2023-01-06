@@ -16,6 +16,7 @@ export interface InputProps
   placeholder: string;
   errors: FieldError | undefined;
   validation: RegisterOptions<AddPostFormSchema>;
+  required?: boolean;
 }
 
 const Input = ({
@@ -26,13 +27,20 @@ const Input = ({
   placeholder,
   errors,
   validation,
+  required,
   ...props
 }: InputProps) => {
   const errorClassses = errors ? "outline-red-500" : "outline-gray-300";
+  const requiredAsterisk = required ? (
+    <span className="font-semibold text-red-500">*</span>
+  ) : null;
 
   return (
     <>
-      <label htmlFor={name}>{setCapitalized(name)}</label>
+      <label htmlFor={name}>
+        {setCapitalized(name)}
+        {requiredAsterisk}
+      </label>
       <input
         {...register(name, validation)}
         id={name}

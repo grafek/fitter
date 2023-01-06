@@ -15,6 +15,7 @@ export interface SelectProps
   options: string[];
   validation: RegisterOptions<AddPostFormSchema>;
   errors: FieldError | undefined;
+  required?: boolean;
 }
 
 const Select = ({
@@ -24,14 +25,20 @@ const Select = ({
   className = "",
   options,
   errors,
+  required,
   ...props
 }: SelectProps) => {
   const errorClassses = errors ? "outline-red-500" : "outline-gray-300";
-
+  const requiredAsterisk = required ? (
+    <span className="font-semibold text-red-500">*</span>
+  ) : null;
 
   return (
     <>
-      <label htmlFor={name}>{setCapitalized(name)}</label>
+      <label htmlFor={name}>
+        {setCapitalized(name)}
+        {requiredAsterisk}
+      </label>
       <select
         {...register(name, validation)}
         id={name}

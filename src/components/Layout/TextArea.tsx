@@ -15,6 +15,7 @@ export interface TextAreaProps
   placeholder: string;
   errors: FieldError | undefined;
   validation: RegisterOptions<AddPostFormSchema>;
+  required?: boolean;
 }
 
 const TextArea = ({
@@ -24,13 +25,20 @@ const TextArea = ({
   placeholder,
   errors,
   validation,
+  required,
   ...props
 }: TextAreaProps) => {
   const errorClassses = errors ? "outline-red-500" : "outline-gray-300";
+  const requiredAsterisk = required ? (
+    <span className="font-semibold text-red-500">*</span>
+  ) : null;
 
   return (
     <>
-      <label htmlFor={name}>{setCapitalized(name)}</label>
+      <label htmlFor={name}>
+        {setCapitalized(name)}
+        {requiredAsterisk}
+      </label>
       <textarea
         {...register(name, validation)}
         id={name}
