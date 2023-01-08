@@ -1,5 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import Button from "./Button";
 import Navigation from "./Navigation";
 
 function Header() {
@@ -26,12 +27,12 @@ function Header() {
         </Link>
         <div className="flex gap-10">
           <Navigation />
-          <button
+          <Button
             onClick={() => (session ? signOut() : signIn())}
-            className="rounded-md bg-indigo-500 p-3 py-1 text-white shadow-md outline outline-1 outline-indigo-500 transition-colors duration-200 hover:bg-transparent hover:text-indigo-500"
+            color={"primary"}
           >
             {session ? "Log out" : "Log in"}
-          </button>
+          </Button>
         </div>
       </div>
     </header>

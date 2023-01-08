@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export type AddPostFormSchema = {
+  id: string;
   title: string;
   description: string;
   sport: string;
@@ -8,6 +9,7 @@ export type AddPostFormSchema = {
 };
 
 export const postSchemaInput = z.object({
+  id: z.string(),
   title: z
     .string()
     .trim()

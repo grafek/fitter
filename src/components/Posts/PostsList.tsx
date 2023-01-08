@@ -1,9 +1,7 @@
-import { usePosts } from "../../hooks";
+import { type Post } from "@prisma/client";
 import PostItem from "./Post";
 
-const PostsList = () => {
-  const { data: posts } = usePosts();
-
+const PostsList = ({ posts }: { posts: Post[] }) => {
   return (
     <>
       {posts?.map((post) => (

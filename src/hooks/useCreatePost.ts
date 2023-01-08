@@ -1,13 +1,13 @@
 import { trpc } from "../utils/trpc";
 
-function useAddPost() {
+function useCreatePost() {
   const ctx = trpc.useContext();
-  
-  return trpc.post.add.useMutation({
+
+  return trpc.post.create.useMutation({
     onSettled() {
       ctx.post.getAll.invalidate();
     },
   });
 }
 
-export default useAddPost;
+export default useCreatePost;
