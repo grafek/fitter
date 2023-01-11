@@ -1,30 +1,47 @@
-import { Input, Select, TextArea } from "../Layout";
+import { Button, Input, Select, TextArea } from "../Layout";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type AddPostFormSchema,
   postSchemaInput,
 } from "../../schemas/post.schema";
+import { type Post } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useAddPost } from "../../hooks";
+import { useCreatePost, useUpdatePost } from "../../hooks";
 
-type AddPostProps = {
+type PostFormProps = {
   sports: string[];
+  isEditing: boolean;
+  post?: Post;
 };
 
-const AddPost = ({ sports }: AddPostProps) => {
+const PostForm = ({ sports, isEditing, post }: PostFormProps) => {
+  const formDefaultValues = {
+    title: post ? post.title : "",
+    description: post ? post.description : "",
+    sport: post ? post.sport : "",
+    workoutDate: post ? post.workoutDate.toDateString() : "",
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<AddPostFormSchema>({ resolver: zodResolver(postSchemaInput) });
-
+  } = useForm<AddPostFormSchema>({
+    resolver: zodResolver(postSchemaInput),
+    defaultValues: formDefaultValues,
+  });
   const router = useRouter();
 
-  const { mutate } = useAddPost();
+  const { mutate: addPost } = useCreatePost();
+  const { mutate: updatePost } = useUpdatePost();
 
-  const submitHandler: SubmitHandler<AddPostFormSchema> = (post) => {
-    mutate(post);
+  const submitHandler: SubmitHandler<AddPostFormSchema> = async (newPost) => {
+    post && isEditing
+      ? updatePost({ postId: newPost ? post.id : "", postSchemaInput: newPost })
+      : addPost(newPost);
+    // if post is passed as a prop, update form and mutateFn will be fired,
+    //  otherwise 'addpost'
     router.push("/");
   };
 
@@ -64,7 +81,7 @@ const AddPost = ({ sports }: AddPostProps) => {
           options={sports}
         />
       </div>
-      <div className="w-full space-y-1">
+      <div className="w-full space-y-3">
         <Input
           required
           errors={errors.workoutDate}
@@ -84,14 +101,15 @@ const AddPost = ({ sports }: AddPostProps) => {
             <input type={"file"} />
           </div> */
       }
-      <button
-        className="rounded-md bg-blue-600 p-3 py-1 text-white shadow-md outline outline-1 outline-blue-600 transition-colors duration-200 hover:bg-transparent hover:text-black"
+      <Button
+        color={`${isEditing ? "success" : "primary"}`}
         type="submit"
+        className="mt-4"
       >
-        Add post!
-      </button>
+        {isEditing ? "Update Post" : "Create Post"}
+      </Button>
     </form>
   );
 };
 
-export default AddPost;
+export default PostForm;

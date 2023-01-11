@@ -12,7 +12,6 @@ export interface TextAreaProps
   name: Path<AddPostFormSchema>;
   register: UseFormRegister<AddPostFormSchema>;
   className?: string;
-  placeholder: string;
   errors: FieldError | undefined;
   validation: RegisterOptions<AddPostFormSchema>;
   required?: boolean;
@@ -22,7 +21,6 @@ const TextArea = ({
   name,
   register,
   className = "",
-  placeholder,
   errors,
   validation,
   required,
@@ -42,8 +40,7 @@ const TextArea = ({
       <textarea
         {...register(name, validation)}
         id={name}
-        placeholder={placeholder}
-        className={`${className} ${errorClassses} max-h-[200px] min-h-[100px] w-full rounded-md px-3 py-1 outline outline-1 md:min-h-[150px]`}
+        className={`${className} ${errorClassses} max-h-[200px] min-h-[100px] w-full rounded-md bg-[#f6f8fa] px-3 py-2 outline outline-1 dark:bg-[#161b22] dark:outline-[#30363d] md:min-h-[150px]`}
         {...props}
       />
 
