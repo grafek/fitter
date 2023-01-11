@@ -12,8 +12,6 @@ export interface InputProps
   name: Path<AddPostFormSchema>;
   register: UseFormRegister<AddPostFormSchema>;
   className?: string;
-  type: string;
-  placeholder: string;
   errors: FieldError | undefined;
   validation: RegisterOptions<AddPostFormSchema>;
   required?: boolean;
@@ -23,8 +21,6 @@ const Input = ({
   name,
   register,
   className = "",
-  type,
-  placeholder,
   errors,
   validation,
   required,
@@ -44,9 +40,7 @@ const Input = ({
       <input
         {...register(name, validation)}
         id={name}
-        placeholder={placeholder}
-        className={`${className} ${errorClassses} w-full rounded-md px-3 py-1 outline outline-1`}
-        type={type}
+        className={`${className} ${errorClassses} w-full rounded-md py-2 px-3 outline outline-1 bg-[#f6f8fa] dark:outline-[#30363d] dark:bg-[#161b22]`}
         {...props}
       />
       {errors ? (

@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export type AddPostFormSchema = {
-  id: string;
   title: string;
   description: string;
   sport: string;
@@ -9,7 +8,6 @@ export type AddPostFormSchema = {
 };
 
 export const postSchemaInput = z.object({
-  id: z.string(),
   title: z
     .string()
     .trim()
@@ -20,7 +18,7 @@ export const postSchemaInput = z.object({
     .trim()
     .min(1, { message: "Description cannot be empty!" })
     .max(500, { message: "Title cannot be longer than 500 characters" }),
-  sport: z.string(),
+  sport: z.string().trim().min(1, { message: "Please choose a sport" }),
   workoutDate: z
     .string()
     .trim()

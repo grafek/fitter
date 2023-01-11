@@ -1,17 +1,10 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color: "danger" | "success" | "primary" | "warning";
   children: React.ReactNode;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
 }
 
-const Button = ({
-  color,
-  className = "",
-  children,
-  onClick,
-  ...props
-}: ButtonProps) => {
+const Button = ({ color, className = "", children, ...props }: ButtonProps) => {
   let colorClasses: string;
   switch (color) {
     case "primary":
@@ -35,8 +28,7 @@ const Button = ({
   return (
     <button
       {...props}
-      onClick={onClick}
-      className={`rounded-md p-3 py-1 text-white shadow-md outline outline-1 transition-colors duration-200 ${colorClasses} ${className}`}
+      className={`rounded-md px-4 py-2 font-semibold text-white shadow-md outline outline-1 transition-colors duration-200 disabled:opacity-50 ${colorClasses} ${className}`}
     >
       {children}
     </button>

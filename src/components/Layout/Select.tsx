@@ -42,7 +42,7 @@ const Select = ({
       <select
         {...register(name, validation)}
         id={name}
-        className={`${className} ${errorClassses} w-full rounded-md px-2 py-1 outline outline-1`}
+        className={`${className} ${errorClassses}  w-full rounded-md bg-[#f6f8fa] p-2 outline outline-1 dark:bg-[#161b22] dark:outline-[#30363d]`}
         {...props}
       >
         {options?.map((option) => (
@@ -51,6 +51,11 @@ const Select = ({
           </option>
         ))}
       </select>
+      {errors ? (
+        <span role={"alert"} className="text-sm text-red-500">
+          {errors.message}
+        </span>
+      ) : null}
     </>
   );
 };

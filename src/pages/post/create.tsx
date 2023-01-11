@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import { Layout, PageHeading } from "../../components/Layout";
-import AddPost from "../../components/Posts/AddPost";
+import PostForm from "../../components/Posts/PostForm";
 import getSports from "../../utils/getSports";
 
 type CreatePostPageProps = {
@@ -10,10 +10,10 @@ type CreatePostPageProps = {
 
 const CreatePostPage: NextPage<CreatePostPageProps> = ({ sports }) => {
   return (
-    <Layout>
+    <Layout title="Add a post">
       <PageHeading>Share your workout with others 😎</PageHeading>
-      <section id='create-post'>
-        <AddPost sports={sports} />
+      <section id="create-post">
+        <PostForm sports={sports} isEditing={false} />
       </section>
     </Layout>
   );
@@ -21,9 +21,9 @@ const CreatePostPage: NextPage<CreatePostPageProps> = ({ sports }) => {
 
 export default CreatePostPage;
 
-export const getServerSideProps: GetServerSideProps<CreatePostPageProps> = async (
-  ctx
-) => {
+export const getServerSideProps: GetServerSideProps<
+  CreatePostPageProps
+> = async (ctx) => {
   const session = await getSession(ctx);
   const sports = await getSports();
 

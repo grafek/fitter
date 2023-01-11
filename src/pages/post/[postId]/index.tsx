@@ -1,0 +1,25 @@
+import { type NextPage } from "next";
+import { useRouter } from "next/router";
+import { usePostById } from "../../../hooks";
+import { Layout } from "../../../components/Layout";
+import PostItem from "../../../components/Posts/Post";
+
+const PostPage: NextPage = () => {
+  const router = useRouter();
+  const { postId } = router.query;
+  const { data: post, isLoading } = usePostById({ postId });
+
+  return (
+    <Layout title={post?.title}>
+      <section id="post-preview">
+        {isLoading ? (
+          <p className="text-center font-semibold">Loading...</p>
+        ) : null}
+        {!post && !isLoading ? <p>No post found!</p> : null}
+        {post ? <PostItem post={post} /> : null}
+      </section>
+    </Layout>
+  );
+};
+
+export default PostPage;
