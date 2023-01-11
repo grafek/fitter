@@ -11,7 +11,7 @@ export const postRouter = router({
       },
     });
   }),
-  getById: protectedProcedure
+  getById: publicProcedure
     .input(z.object({ postId: z.string() }))
     .query(async ({ ctx, input }) => {
       const { postId } = input;

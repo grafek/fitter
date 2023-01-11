@@ -14,7 +14,7 @@ function Header() {
             xmlns="http://www.w3.org/2000/svg"
             width="40"
             height="48"
-            fill="#132dbe"
+            fill="#3366ff"
             version="1.1"
             viewBox="0 0 422.263 422.263"
           >
@@ -27,7 +27,7 @@ function Header() {
         <div className="flex gap-10">
           <Navigation />
           <Button
-            onClick={() => (session ? signOut() : signIn())}
+            onClick={() => (session ? signOut({callbackUrl:'/'}) : signIn())}
             color={"primary"}
             className="md:py-0"
           >

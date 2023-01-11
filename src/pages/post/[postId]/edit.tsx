@@ -40,7 +40,7 @@ export const getServerSideProps: GetServerSideProps<EditPostPageProps> = async (
   if (!session) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/sign-in",
         permanent: false,
       },
     };
