@@ -19,7 +19,7 @@ const PostForm = ({ sports, isEditing, post }: PostFormProps) => {
   const formDefaultValues = {
     title: post ? post.title : "",
     description: post ? post.description : "",
-    sport: post ? post.sport : "",
+    sport: post ? post.sport : sports[Math.ceil(Math.random() * sports.length)],
     workoutDate: post ? post.workoutDate.toDateString() : "",
   };
 

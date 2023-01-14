@@ -5,7 +5,9 @@ type PageHeadingProps = {
 
 const PageHeading = ({ children, className = "" }: PageHeadingProps) => {
   return (
-    <h1 className={`pb-4 text-lg md:text-2xl font-semibold ${className}`}>{children}</h1>
+    <h1 className={`pb-4 md:pb-8 text-xl font-semibold md:text-2xl ${className}`}>
+      {children}
+    </h1>
   );
 };
 

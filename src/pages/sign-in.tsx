@@ -13,24 +13,24 @@ const SignInPage = () => {
           className="mx-auto flex w-full items-center justify-center space-x-2"
           onClick={() =>
             signIn("google", {
-              callbackUrl: '/',
+              callbackUrl: "/",
             })
           }
         >
           <Image src="/google.svg" alt="Google" width={32} height={32} />
-          <span>Sign in with Google</span>
+          <span>Continue with Google</span>
         </Button>
         <Button
           color="discord"
           onClick={() =>
             signIn("discord", {
-              callbackUrl: '/',
+              callbackUrl: "/",
             })
           }
           className="mx-auto flex w-full items-center justify-center space-x-2"
         >
           <Image src="/discord.svg" alt="Discord" width={32} height={32} />
-          <span>Sign in with Discord</span>
+          <span>Continue with Discord</span>
         </Button>
       </div>
     </Layout>

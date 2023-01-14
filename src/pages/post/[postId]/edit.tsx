@@ -14,16 +14,13 @@ const EditPostPage: NextPage<EditPostPageProps> = ({ sports }) => {
   const router = useRouter();
   const { postId } = router.query;
 
-  const { data: post } = usePostById({ postId });
+  const { data: post, isLoading } = usePostById({ postId });
 
   return (
     <Layout title="Edit post">
       <section id="edit-post">
-        {!post ? (
-          <p>No post found!</p>
-        ) : (
-          <PostForm sports={sports} isEditing post={post} />
-        )}
+        {!post && !isLoading ? <p>No post found!</p> : null}
+        {post ? <PostForm sports={sports} isEditing post={post} /> : null}
       </section>
     </Layout>
   );
