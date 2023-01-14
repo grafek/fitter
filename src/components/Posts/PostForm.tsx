@@ -56,7 +56,7 @@ const PostForm = ({ sports, isEditing, post }: PostFormProps) => {
           register={register}
           validation={{ required: true }}
           name="title"
-          placeholder="Title"
+          placeholder="A catchy title!"
           errors={errors.title}
           type="text"
         />

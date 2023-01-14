@@ -1,19 +1,19 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Layout, PageHeading } from "../../../components/Layout";
-import { useFindUser } from "../../../hooks";
+import { useUserById } from "../../../hooks";
+import withAuth from "../../../utils/withAuth";
 
 const ProfilePage: NextPage = () => {
   const router = useRouter();
   const { profileId } = router.query;
   const { data: session } = useSession();
-  const { data: foundUser } = useFindUser({ userId: profileId });
-  if (!session) return null;
+  const { data: foundUser } = useUserById({ userId: profileId });
+  if (!session || !foundUser) return null;
   const { user } = session;
-  if (!foundUser) return null;
 
   const profileHeading =
     user?.id === profileId ? "My Profile" : `${foundUser.name}'s profile`;
@@ -46,20 +46,8 @@ const ProfilePage: NextPage = () => {
 
 export default ProfilePage;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession(ctx);
-  // add login page
-  // add redirect to login page
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
-
+export const getServerSideProps: GetServerSideProps = withAuth(async () => {
   return {
     props: {},
   };
-};
+})

@@ -1,3 +1,4 @@
+import { type GetServerSideProps } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Layout, PageHeading } from "../../../components/Layout";
@@ -7,8 +8,9 @@ import {
   useInfiniteScroll,
   useUsersInfinitePosts,
 } from "../../../hooks";
+import withAuth from "../../../utils/withAuth";
 
-const MyPosts = () => {
+const UsersPostsPage = () => {
   const router = useRouter();
   const { profileId } = router.query;
   const { data: session } = useSession();
@@ -39,4 +41,10 @@ const MyPosts = () => {
   );
 };
 
-export default MyPosts;
+export default UsersPostsPage;
+
+export const getServerSideProps: GetServerSideProps = withAuth(async () => {
+  return {
+    props: {},
+  };
+});

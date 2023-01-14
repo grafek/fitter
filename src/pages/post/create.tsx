@@ -1,8 +1,8 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { getSession } from "next-auth/react";
 import { Layout, PageHeading } from "../../components/Layout";
 import PostForm from "../../components/Posts/PostForm";
 import getSports from "../../utils/getSports";
+import withAuth from "../../utils/withAuth";
 
 type CreatePostPageProps = {
   sports: string[];
@@ -21,22 +21,11 @@ const CreatePostPage: NextPage<CreatePostPageProps> = ({ sports }) => {
 
 export default CreatePostPage;
 
-export const getServerSideProps: GetServerSideProps<
-  CreatePostPageProps
-> = async (ctx) => {
-  const session = await getSession(ctx);
-  const sports = await getSports();
+export const getServerSideProps: GetServerSideProps<CreatePostPageProps> =
+  withAuth(async () => {
+    const sports = await getSports();
 
-  if (!session) {
     return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
+      props: { sports },
     };
-  }
-
-  return {
-    props: { sports },
-  };
-};
+  });

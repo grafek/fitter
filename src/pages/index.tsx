@@ -15,7 +15,7 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <PageHeading>Check out latest posts from our community</PageHeading>
-      <section className="flex flex-col gap-6">
+      <section className="flex flex-col gap-12">
         <PostsList posts={posts} />
       </section>
     </Layout>
