@@ -1,11 +1,16 @@
 import { type NextPage } from "next";
 import { Layout, PageHeading } from "../components/Layout/";
+import { useInfinitePosts, useInfiniteScroll } from "../hooks";
 import PostsList from "../components/Posts/PostsList";
-import { usePosts } from "../hooks";
 
 const Home: NextPage = () => {
-  const { data: posts } = usePosts();
-  if (!posts) return null;
+  const { data, hasNextPage, fetchNextPage } = useInfinitePosts({
+    postsPerPage: 5,
+  });
+
+  useInfiniteScroll({ fetchNextPage, hasNextPage });
+  if (!data) return null;
+  const posts = data.pages.flatMap((page) => page.posts) ?? [];
 
   return (
     <Layout>

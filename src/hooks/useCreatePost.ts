@@ -5,7 +5,7 @@ function useCreatePost() {
 
   return trpc.post.create.useMutation({
     onSettled() {
-      ctx.post.getAll.invalidate();
+      ctx.post.infinitePosts.invalidate();
     },
   });
 }

@@ -4,13 +4,6 @@ import { postSchemaInput } from "../../../schemas/post.schema";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const postRouter = router({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.post.findMany({
-      orderBy: {
-        updatedAt: "desc",
-      },
-    });
-  }),
   getById: publicProcedure
     .input(z.object({ postId: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -22,18 +15,66 @@ export const postRouter = router({
       });
       return foundPost;
     }),
-  getUsersPosts: protectedProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const { userId } = input;
-      return await ctx.prisma.post.findMany({
+  infinitePosts: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(20).nullish(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const limit = input.limit ?? 5;
+      const { cursor } = input;
+      const posts = await ctx.prisma.post.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
-          createdAt: "desc",
+          updatedAt: "desc",
+        },
+      });
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextItem = posts.pop() as typeof posts[number];
+        nextCursor = nextItem.id;
+      }
+      return {
+        posts,
+        nextCursor,
+      };
+    }),
+  infiniteUsersPosts: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        limit: z.number().min(1).max(20).nullish(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input.limit ?? 3;
+      const { userId, cursor } = input;
+
+      const posts = await ctx.prisma.post.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          updatedAt: "desc",
         },
         where: {
           creatorId: userId,
         },
       });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+
+      if (posts.length > limit) {
+        const nextItem = posts.pop() as typeof posts[number];
+        nextCursor = nextItem.id;
+      }
+      return {
+        posts,
+        nextCursor,
+      };
     }),
   create: protectedProcedure
     .input(postSchemaInput)
