@@ -1,32 +1,49 @@
+import { type GetServerSideProps } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Layout, PageHeading } from "../../../components/Layout";
 import PostsList from "../../../components/Posts/PostsList";
-import { useFindUser, useUsersPosts } from "../../../hooks";
+import {
+  useUserById,
+  useInfiniteScroll,
+  useUsersInfinitePosts,
+} from "../../../hooks";
+import withAuth from "../../../utils/withAuth";
 
-const MyPosts = () => {
+const UsersPostsPage = () => {
   const router = useRouter();
   const { profileId } = router.query;
   const { data: session } = useSession();
-  const { data: user } = useFindUser({
+  const { data: foundUser } = useUserById({ userId: profileId });
+
+  const { data, hasNextPage, fetchNextPage } = useUsersInfinitePosts({
+    postsPerPage: 5,
     userId: profileId,
   });
-  const { data: posts } = useUsersPosts({ userId: user ? user.id : "" });
 
-  if (!session || !user || !posts) return null;
+  useInfiniteScroll({ fetchNextPage, hasNextPage });
+  if (!data) return null;
+  const usersPosts = data.pages.flatMap((page) => page.posts) ?? [];
+
+  if (!session || !foundUser) return null;
 
   const profilePosts =
-    user?.id === profileId ? "My posts" : `${user.name}'s posts`;
+    session.user?.id === profileId ? "My posts" : `${foundUser.name}'s posts`;
 
   return (
     <Layout title={profilePosts}>
       <PageHeading>{profilePosts}</PageHeading>
       <section className="flex flex-col gap-6">
-        <PostsList posts={posts} />
-        {posts.length < 1 ? <p>No posts found..</p> : null}
+        <PostsList posts={usersPosts} />
       </section>
     </Layout>
   );
 };
 
-export default MyPosts;
+export default UsersPostsPage;
+
+export const getServerSideProps: GetServerSideProps = withAuth(async () => {
+  return {
+    props: {},
+  };
+});

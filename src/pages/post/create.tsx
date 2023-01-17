@@ -1,19 +1,21 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { getSession } from "next-auth/react";
 import { Layout, PageHeading } from "../../components/Layout";
 import PostForm from "../../components/Posts/PostForm";
-import getSports from "../../utils/getSports";
+import { useCreatePost } from "../../hooks";
+import withAuth from "../../utils/withAuth";
 
-type CreatePostPageProps = {
-  sports: string[];
-};
+const CreatePostPage: NextPage = () => {
+  const { mutateAsync: addPost } = useCreatePost();
 
-const CreatePostPage: NextPage<CreatePostPageProps> = ({ sports }) => {
   return (
     <Layout title="Add a post">
       <PageHeading>Share your workout with others 😎</PageHeading>
       <section id="create-post">
-        <PostForm sports={sports} isEditing={false} />
+        <PostForm
+          onSubmit={addPost}
+          buttonColor="primary"
+          buttonText="Create post"
+        />
       </section>
     </Layout>
   );
@@ -21,22 +23,8 @@ const CreatePostPage: NextPage<CreatePostPageProps> = ({ sports }) => {
 
 export default CreatePostPage;
 
-export const getServerSideProps: GetServerSideProps<
-  CreatePostPageProps
-> = async (ctx) => {
-  const session = await getSession(ctx);
-  const sports = await getSports();
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
-
+export const getServerSideProps: GetServerSideProps = withAuth(async () => {
   return {
-    props: { sports },
+    props: {},
   };
-};
+});

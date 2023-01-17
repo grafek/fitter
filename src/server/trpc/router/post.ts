@@ -4,13 +4,6 @@ import { postSchemaInput } from "../../../schemas/post.schema";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const postRouter = router({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.post.findMany({
-      orderBy: {
-        updatedAt: "desc",
-      },
-    });
-  }),
   getById: publicProcedure
     .input(z.object({ postId: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -22,25 +15,73 @@ export const postRouter = router({
       });
       return foundPost;
     }),
-  getUsersPosts: protectedProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const { userId } = input;
-      return await ctx.prisma.post.findMany({
+  infinitePosts: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(20).nullish(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const limit = input.limit ?? 5;
+      const { cursor } = input;
+      const posts = await ctx.prisma.post.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
-          createdAt: "desc",
+          updatedAt: "desc",
+        },
+      });
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextItem = posts.pop() as typeof posts[number];
+        nextCursor = nextItem.id;
+      }
+      return {
+        posts,
+        nextCursor,
+      };
+    }),
+  infiniteUsersPosts: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        limit: z.number().min(1).max(20).nullish(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input.limit ?? 3;
+      const { userId, cursor } = input;
+
+      const posts = await ctx.prisma.post.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          updatedAt: "desc",
         },
         where: {
           creatorId: userId,
         },
       });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+
+      if (posts.length > limit) {
+        const nextItem = posts.pop() as typeof posts[number];
+        nextCursor = nextItem.id;
+      }
+      return {
+        posts,
+        nextCursor,
+      };
     }),
   create: protectedProcedure
     .input(postSchemaInput)
     .mutation(async ({ ctx, input }) => {
       const { session } = ctx;
       const { user } = session;
-      const { description, sport, title, workoutDate } = input;
+      const { description, sport, title, workoutDate, image } = input;
 
       const workoutDateTime = new Date(workoutDate);
 
@@ -50,6 +91,7 @@ export const postRouter = router({
           description,
           sport,
           workoutDate: workoutDateTime,
+          image,
           creatorId: user.id,
           creatorName: user.name,
           creatorImage: user.image,
@@ -86,21 +128,22 @@ export const postRouter = router({
   update: protectedProcedure
     .input(z.object({ postId: z.string(), postSchemaInput }))
     .mutation(async ({ ctx, input }) => {
-      const user = await prisma?.user.findUnique({
+      const user = await ctx.prisma.user.findUnique({
         where: { id: ctx.session.user.id },
         select: { posts: true },
       });
+      const { title, description, sport, workoutDate, image } =
+        input.postSchemaInput;
 
       const { postId } = input;
 
-      if (!user?.posts.find((post) => post.id === postId)) {
+      if (!user?.posts.find((post) => post.id !== postId)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "You cannot edit not your own posts!",
         });
       }
 
-      const { title, description, sport, workoutDate } = input.postSchemaInput;
       const workoutDateTime = new Date(workoutDate);
 
       const updatePost = await ctx.prisma.post.update({
@@ -109,6 +152,7 @@ export const postRouter = router({
           title,
           description,
           sport,
+          image,
           workoutDate: workoutDateTime,
           updatedAt: new Date(),
         },

@@ -12,9 +12,6 @@ const PostPage: NextPage = () => {
   return (
     <Layout title={post?.title}>
       <section id="post-preview">
-        {isLoading ? (
-          <p className="text-center font-semibold">Loading...</p>
-        ) : null}
         {!post && !isLoading ? <p>No post found!</p> : null}
         {post ? <PostItem post={post} /> : null}
       </section>

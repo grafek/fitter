@@ -5,7 +5,7 @@ const useDeletePost = () => {
 
   return trpc.post.delete.useMutation({
     onSettled() {
-      ctx.post.invalidate();
+      ctx.post.infinitePosts.invalidate();
     },
   });
 };

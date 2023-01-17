@@ -27,6 +27,12 @@ const config = {
         port: "",
         pathname: "/a/**",
       },
+      {
+        protocol: "https",
+        hostname: "bucarskhgrpvvamsknid.supabase.in",
+        port: "",
+        pathname: `/storage/v1/object/public/fitter/**`,
+      },
     ],
   },
 };

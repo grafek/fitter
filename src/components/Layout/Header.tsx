@@ -7,7 +7,7 @@ function Header() {
   const { data: session } = useSession();
 
   return (
-    <header className="w-full bg-[#f6f8fa] px-4 py-1 shadow-md dark:bg-[#161b22]">
+    <header className="w-full bg-[#f6f8fa] px-4 py-2 shadow-sm shadow-blue-400 dark:bg-[#161b22] dark:shadow-blue-800">
       <div className="container mx-auto flex items-center justify-between ">
         <Link href={"/"} className="flex items-center justify-center space-x-2">
           <svg
@@ -27,8 +27,7 @@ function Header() {
         <div className="flex gap-10">
           <Navigation />
           <Button
-            onClick={() => (session ? signOut({callbackUrl:'/'}) : signIn())}
-            color={"primary"}
+            onClick={() => (session ? signOut({ callbackUrl: "/" }) : signIn())}
             className="md:py-0"
           >
             {session ? "Log out" : "Log in"}

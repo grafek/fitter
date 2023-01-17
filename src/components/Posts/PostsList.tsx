@@ -4,7 +4,7 @@ import PostItem from "./Post";
 const PostsList = ({ posts }: { posts: Post[] }) => {
   return (
     <>
-      {posts?.map((post) => (
+      {posts.map((post) => (
         <PostItem post={post} key={post.id} />
       ))}
     </>

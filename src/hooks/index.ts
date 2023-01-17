@@ -1,8 +1,9 @@
-export { default as usePosts } from "./usePosts";
 export { default as useCreatePost } from "./useCreatePost";
-export { default as useUsers } from "./useUsers";
-export { default as useUsersPosts } from "./useUsersPosts";
+export { default as useUsersInfinitePosts } from "./useUsersInfinitePosts";
 export { default as useDeletePost } from "./useDeletePost";
 export { default as useUpdatePost } from "./useUpdatePost";
-export { default as useFindUser } from "./useFindUser";
+export { default as useUserById } from "./useUserById";
 export { default as usePostById } from "./usePostById";
+export { default as useInfinitePosts } from "./useInfinitePosts";
+export { default as useInfiniteScroll } from "./useInfiniteScroll";
+export { default as useLoading } from "./useLoading";
