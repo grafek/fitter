@@ -25,7 +25,7 @@ const NavLink = ({
 
   const navLinkClasses = "h-13 flex w-[80px] flex-col items-center md:w-fit";
   const navItemClasses =
-    "text-xs transition-colors duration-300 md:px-2 md:text-base md:dark:hover:text-white md:dark:hover:bg-[#21262d]  py-1 rounded-lg md:hover:bg-[#e5e7eb]";
+    "text-xs transition-colors duration-300 md:px-2 md:text-base md:dark:hover:text-white md:dark:hover:bg-[#21262d] py-1 rounded-lg md:hover:bg-[#e5e7eb]";
 
   return (
     <Link href={linkDestination} className={`${linkClasses} ${navLinkClasses}`}>

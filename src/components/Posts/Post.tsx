@@ -36,20 +36,20 @@ const PostItem = ({ post }: PostItemProps) => {
     );
 
   const imageContent = post.image ? (
-    <div className="relative h-96 w-full mb-8">
+    <div className="relative mb-8 h-96 w-full">
       <Image
         src={post.image}
         fill
         alt="workout-img"
         priority
         sizes="40x40"
-        className="mx-auto min-h-[100px] object-contain md:object-fill max-w-fit rounded-md "
+        className="mx-auto min-h-[100px] max-w-fit rounded-md object-contain md:object-fill"
       />
     </div>
   ) : null;
 
   const postActions = isOwner ? (
-    <div className="ml-auto flex flex-col items-center gap-2 md:gap-6 sm:flex-row">
+    <div className="ml-auto flex flex-col items-center gap-3 sm:flex-row md:gap-6">
       <Link
         className="relative flex h-8 w-8 items-center justify-center rounded-full bg-[#3366ff] md:h-10 md:w-10"
         href={`/post/${post.id}/edit`}

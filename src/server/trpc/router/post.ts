@@ -81,7 +81,7 @@ export const postRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { session } = ctx;
       const { user } = session;
-      const { description, sport, title, workoutDate } = input;
+      const { description, sport, title, workoutDate, image } = input;
 
       const workoutDateTime = new Date(workoutDate);
 
@@ -91,6 +91,7 @@ export const postRouter = router({
           description,
           sport,
           workoutDate: workoutDateTime,
+          image,
           creatorId: user.id,
           creatorName: user.name,
           creatorImage: user.image,
@@ -127,21 +128,22 @@ export const postRouter = router({
   update: protectedProcedure
     .input(z.object({ postId: z.string(), postSchemaInput }))
     .mutation(async ({ ctx, input }) => {
-      const user = await prisma?.user.findUnique({
+      const user = await ctx.prisma.user.findUnique({
         where: { id: ctx.session.user.id },
         select: { posts: true },
       });
+      const { title, description, sport, workoutDate, image } =
+        input.postSchemaInput;
 
       const { postId } = input;
 
-      if (!user?.posts.find((post) => post.id === postId)) {
+      if (!user?.posts.find((post) => post.id !== postId)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "You cannot edit not your own posts!",
         });
       }
 
-      const { title, description, sport, workoutDate } = input.postSchemaInput;
       const workoutDateTime = new Date(workoutDate);
 
       const updatePost = await ctx.prisma.post.update({
@@ -150,6 +152,7 @@ export const postRouter = router({
           title,
           description,
           sport,
+          image,
           workoutDate: workoutDateTime,
           updatedAt: new Date(),
         },

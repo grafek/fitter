@@ -1,11 +1,15 @@
 import { z } from "zod";
 
-export type AddPostFormSchema = {
+export interface AddPostFormSchema {
   title: string;
   description: string;
   sport: string;
   workoutDate: string;
-};
+  image?: string | null;
+}
+export interface EditPostFormSchema extends AddPostFormSchema {
+  id?: string;
+}
 
 export const postSchemaInput = z.object({
   title: z
@@ -23,4 +27,5 @@ export const postSchemaInput = z.object({
     .string()
     .trim()
     .min(1, { message: "Workout Date cannot be empty!" }),
+  image: z.string().nullish().optional(),
 });

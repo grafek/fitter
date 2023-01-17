@@ -1,19 +1,21 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { Layout, PageHeading } from "../../components/Layout";
 import PostForm from "../../components/Posts/PostForm";
-import getSports from "../../utils/getSports";
+import { useCreatePost } from "../../hooks";
 import withAuth from "../../utils/withAuth";
 
-type CreatePostPageProps = {
-  sports: string[];
-};
+const CreatePostPage: NextPage = () => {
+  const { mutateAsync: addPost } = useCreatePost();
 
-const CreatePostPage: NextPage<CreatePostPageProps> = ({ sports }) => {
   return (
     <Layout title="Add a post">
       <PageHeading>Share your workout with others 😎</PageHeading>
       <section id="create-post">
-        <PostForm sports={sports} isEditing={false} />
+        <PostForm
+          onSubmit={addPost}
+          buttonColor="primary"
+          buttonText="Create post"
+        />
       </section>
     </Layout>
   );
@@ -21,11 +23,8 @@ const CreatePostPage: NextPage<CreatePostPageProps> = ({ sports }) => {
 
 export default CreatePostPage;
 
-export const getServerSideProps: GetServerSideProps<CreatePostPageProps> =
-  withAuth(async () => {
-    const sports = await getSports();
-
-    return {
-      props: { sports },
-    };
-  });
+export const getServerSideProps: GetServerSideProps = withAuth(async () => {
+  return {
+    props: {},
+  };
+});

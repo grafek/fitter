@@ -9,3 +9,4 @@ export { default as TextArea } from "./TextArea";
 export { default as Button } from "./Button";
 export { default as NavLink } from "./NavLink";
 export { default as Loading } from "./Loading";
+export { default as ImageUpload } from "./ImageUpload";
