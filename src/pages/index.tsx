@@ -1,12 +1,13 @@
 import { type NextPage } from "next";
-import { Layout, PageHeading } from "../components/Layout/";
+import { Layout, Loading, PageHeading } from "../components/Layout/";
 import { useInfinitePosts, useInfiniteScroll } from "../hooks";
 import PostsList from "../components/Posts/PostsList";
 
 const Home: NextPage = () => {
-  const { data, hasNextPage, fetchNextPage } = useInfinitePosts({
-    postsPerPage: 5,
-  });
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useInfinitePosts({
+      postsPerPage: 5,
+    });
 
   useInfiniteScroll({ fetchNextPage, hasNextPage });
   if (!data) return null;
@@ -17,6 +18,7 @@ const Home: NextPage = () => {
       <PageHeading>Check out latest posts from our community</PageHeading>
       <section className="flex flex-col gap-12">
         <PostsList posts={posts} />
+        {isFetchingNextPage ? <Loading spinnerColor="fill-blue-500" /> : null}
       </section>
     </Layout>
   );

@@ -7,11 +7,11 @@ const Loading = ({ bgColor = "transparent", spinnerColor }: LoadingProps) => {
   return (
     <div
       role="status"
-      className="m-auto flex h-[70vh] items-center justify-center"
+      className="m-auto flex h-[60vh] items-center justify-center"
     >
       <svg
         aria-hidden="true"
-        className={`fill-${spinnerColor} inline h-10 w-10 animate-spinBezier sm:h-14 sm:w-14 text-${bgColor} md:h-20 md:w-20`}
+        className={`${spinnerColor} inline h-10 w-10 animate-spinBezier sm:h-14 sm:w-14 text-${bgColor} md:h-20 md:w-20`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

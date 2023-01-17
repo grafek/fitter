@@ -13,7 +13,7 @@ export interface InputProps
   register: UseFormRegister<AddPostFormSchema>;
   className?: string;
   errors: FieldError | undefined;
-  validation: RegisterOptions<AddPostFormSchema>;
+  validation?: RegisterOptions<AddPostFormSchema>;
   required?: boolean;
 }
 

@@ -18,8 +18,8 @@ function Layout({ children, title = "" }: LayoutProps) {
       </Head>
       <div className="min-h-screen dark:bg-[#21262d] dark:text-[#c9d1d9]">
         <Header />
-        <main className="container mx-auto min-h-screen max-w-[1024px] px-4 py-6">
-          {isLoading ? <Loading spinnerColor="blue-600" /> : children}
+        <main className="container mx-auto min-h-screen max-w-5xl px-4 py-6">
+          {isLoading ? <Loading spinnerColor="fill-blue-400" /> : children}
         </main>
         <Footer />
       </div>
