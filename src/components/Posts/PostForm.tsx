@@ -7,9 +7,11 @@ import {
 } from "../../schemas/post.schema";
 import { type Post } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import React, { useCallback, useState } from "react";
 import type { ButtonColor } from "../Layout/Button";
 import { SPORTS } from "../../utils/globals";
+import { toast } from "react-hot-toast";
+import { uploadImg } from "../../utils";
 
 type PostFormProps = {
   post?: Post;
@@ -20,14 +22,14 @@ type PostFormProps = {
   redirectPath?: string;
 };
 
-const PostForm = ({
+const PostForm: React.FC<PostFormProps> = ({
   post,
   onSubmit,
   isEditing,
   buttonText,
   buttonColor,
   redirectPath = "/",
-}: PostFormProps) => {
+}) => {
   const formDefaultValues = {
     title: post ? post.title : "",
     description: post ? post.description : "",
@@ -45,39 +47,39 @@ const PostForm = ({
     defaultValues: formDefaultValues,
   });
   const router = useRouter();
-  const [imageUrl, setImageUrl] = useState<string | null>();
 
-  const upload = async (image: string | null | undefined | ArrayBuffer) => {
-    if (!image) return;
-    try {
-      const res = await fetch("/api/image-upload", {
-        body: JSON.stringify({
-          image,
-        }),
-        method: "POST",
-      });
-      const data = await res.json();
-      setImageUrl(data.url);
-    } catch (e: any) {
-      throw new Error(e);
-    }
-  };
+  const [imgData, setImgData] = useState<
+    string | ArrayBuffer | null | undefined
+  >();
 
-  const submitHandler: SubmitHandler<AddPostFormSchema> = async (postData) => {
-    if (typeof onSubmit === "function") {
-      if (post && isEditing) {
-        await onSubmit({
-          postId: post.id,
-          postSchemaInput: { ...postData, image: imageUrl },
-          // post Update
-        });
-      } else {
-        await onSubmit({ ...postData, image: imageUrl });
-        //add post
+  const submitHandler: SubmitHandler<AddPostFormSchema> = useCallback(
+    async (postData) => {
+      let toastId;
+      try {
+        const imageUrl = await uploadImg(imgData);
+
+        toastId = toast.loading("Submitting...");
+
+        if (typeof onSubmit === "function") {
+          if (post && isEditing) {
+            await onSubmit({
+              postId: post.id,
+              postSchemaInput: { ...postData, image: imageUrl },
+              // post Update
+            });
+          } else {
+            await onSubmit({ ...postData, image: imageUrl });
+            //add post
+          }
+          toast.success("Successfully submitted", { id: toastId });
+        }
+        router.push(redirectPath);
+      } catch (e) {
+        toast.error("Unable to submit", { id: toastId });
       }
-    }
-    router.push(redirectPath);
-  };
+    },
+    [imgData, isEditing, onSubmit, post, redirectPath, router]
+  );
 
   return (
     <form
@@ -134,7 +136,7 @@ const PostForm = ({
           register={register}
           name="image"
           errors={errors.image}
-          onChangePicture={upload}
+          onChangePicture={(img) => setImgData(img)}
         />
       </div>
       <Button

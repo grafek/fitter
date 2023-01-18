@@ -40,22 +40,19 @@ const ImageUpload: React.FC<Props> = ({
     const file = e.target.files[0];
     const reader = new FileReader();
 
-    reader.addEventListener(
-      "load",
-      async function () {
-        try {
-          setImage(reader.result);
-          if (typeof onChangePicture === "function") {
-            onChangePicture(reader.result);
-          }
-        } catch (err) {
-          console.log(err);
-        } finally {
-          setUpdatingPicture(false);
+    reader.addEventListener("load", () => {
+      try {
+        setImage(reader.result);
+        setUpdatingPicture(true);
+        if (typeof onChangePicture === "function") {
+          onChangePicture(reader.result);
         }
-      },
-      false
-    );
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setUpdatingPicture(false);
+      }
+    });
 
     if (file) {
       if (file.size <= sizeLimit) {

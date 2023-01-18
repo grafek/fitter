@@ -1,9 +1,6 @@
 import { trpc } from "../utils/trpc";
 
-const usePostById = ({ postId }: { postId: string | undefined | string[] }) => {
-  if (typeof postId !== "string") {
-    throw new Error("Wrong input!");
-  }
+const usePostById = ({ postId }: { postId: string}) => {
   return trpc.post.getById.useQuery(
     { postId },
     { refetchOnWindowFocus: false }
