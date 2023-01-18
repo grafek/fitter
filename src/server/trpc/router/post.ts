@@ -137,7 +137,7 @@ export const postRouter = router({
 
       const { postId } = input;
 
-      if (!user?.posts.find((post) => post.id !== postId)) {
+      if (!user?.posts.find((post) => post.id === postId)) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "You cannot edit not your own posts!",
