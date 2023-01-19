@@ -3,7 +3,7 @@ import Link from "next/link";
 import Button from "./Button";
 import Navigation from "./Navigation";
 
-function Header() {
+const Header: React.FC = () => {
   const { data: session } = useSession();
 
   return (
@@ -36,6 +36,6 @@ function Header() {
       </div>
     </header>
   );
-}
+};
 
 export default Header;

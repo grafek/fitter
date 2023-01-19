@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { AiOutlinePlus, AiOutlineUnorderedList } from "react-icons/ai";
 import NavLink from "./NavLink";
 
-function Navigation() {
+const Navigation: React.FC = () => {
   const { data: sessionData } = useSession();
   const NAVIGATION = [
     {
@@ -20,7 +20,6 @@ function Navigation() {
       linkDestination: sessionData?.user
         ? `/profile/${sessionData?.user.id}`
         : "/sign-in",
-      MobileIcon: AiOutlinePlus,
       isProfilePicture: true,
       innerSpanClasses: "md:hidden",
     },
@@ -43,5 +42,5 @@ function Navigation() {
       })}
     </nav>
   );
-}
+};
 export default Navigation;

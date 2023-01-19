@@ -1,4 +1,4 @@
-function Footer() {
+const Footer: React.FC = () => {
   const currYear = new Date().getFullYear();
 
   return (
@@ -16,6 +16,6 @@ function Footer() {
       </a>
     </footer>
   );
-}
+};
 
 export default Footer;

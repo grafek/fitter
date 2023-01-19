@@ -1,7 +1,9 @@
 import { type Post } from "@prisma/client";
 import PostItem from "./Post";
 
-const PostsList = ({ posts }: { posts: Post[] }) => {
+type PostListProps = { posts: Post[] };
+
+const PostsList: React.FC<PostListProps> = ({ posts }) => {
   return (
     <>
       {posts.length < 1 || !posts ? (

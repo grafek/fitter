@@ -3,9 +3,14 @@ type PageHeadingProps = {
   className?: string;
 };
 
-const PageHeading = ({ children, className = "" }: PageHeadingProps) => {
+const PageHeading: React.FC<PageHeadingProps> = ({
+  children,
+  className = "",
+}) => {
   return (
-    <h1 className={`pb-4 md:pb-8 text-xl font-semibold md:text-2xl ${className}`}>
+    <h1
+      className={`pb-4 text-xl font-semibold md:pb-8 md:text-2xl ${className}`}
+    >
       {children}
     </h1>
   );

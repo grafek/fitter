@@ -12,12 +12,12 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
 }
 
-const Button = ({
+const Button: React.FC<ButtonProps> = ({
   buttonColor,
   className = "",
   children,
   ...props
-}: ButtonProps) => {
+}) => {
   let colorClasses: string;
   switch (buttonColor) {
     case "primary":

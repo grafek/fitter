@@ -1,9 +1,12 @@
 type LoadingProps = {
-  spinnerColor: string; // tailwind color;
+  spinnerColor: string; // tailwind fill-color class;
   bgColor?: string;
 };
 
-const Loading = ({ bgColor = "transparent", spinnerColor }: LoadingProps) => {
+const Loading: React.FC<LoadingProps> = ({
+  bgColor = "transparent",
+  spinnerColor,
+}) => {
   return (
     <div
       role="status"

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-function useLoading() {
+const useLoading = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -23,6 +23,6 @@ function useLoading() {
   });
 
   return { isLoading: loading };
-}
+};
 
 export default useLoading;

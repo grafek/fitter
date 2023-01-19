@@ -12,6 +12,7 @@ import type { ButtonColor } from "../Layout/Button";
 import { SPORTS } from "../../utils/globals";
 import { toast } from "react-hot-toast";
 import { uploadImg } from "../../utils";
+import { TRPCClientError } from "@trpc/client";
 
 type PostFormProps = {
   post?: Post;
@@ -54,29 +55,29 @@ const PostForm: React.FC<PostFormProps> = ({
 
   const submitHandler: SubmitHandler<AddPostFormSchema> = useCallback(
     async (postData) => {
-      let toastId;
-      try {
-        const imageUrl = await uploadImg(imgData);
+      let toastId: string;
 
-        toastId = toast.loading("Submitting...");
-
-        if (typeof onSubmit === "function") {
-          if (post && isEditing) {
-            await onSubmit({
-              postId: post.id,
-              postSchemaInput: { ...postData, image: imageUrl },
-              // post Update
-            });
-          } else {
-            await onSubmit({ ...postData, image: imageUrl });
-            //add post
-          }
-          toast.success("Successfully submitted", { id: toastId });
+      const imageUrl = await uploadImg(imgData).catch((e) => {
+        if (e instanceof TRPCClientError) {
+          toast.error(e.message, { id: toastId });
         }
-        router.push(redirectPath);
-      } catch (e) {
-        toast.error("Unable to submit", { id: toastId });
+      });
+
+      if (typeof onSubmit === "function") {
+        toastId = toast.loading("Submitting...");
+        if (post && isEditing) {
+          await onSubmit({
+            postId: post.id,
+            postSchemaInput: { ...postData, image: imageUrl },
+            // post Update
+          });
+        } else {
+          await onSubmit({ ...postData, image: imageUrl });
+          //add post
+        }
+        toast.success("Successfully submitted", { id: toastId });
       }
+      router.push(redirectPath);
     },
     [imgData, isEditing, onSubmit, post, redirectPath, router]
   );

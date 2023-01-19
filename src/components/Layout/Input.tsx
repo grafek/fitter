@@ -17,7 +17,7 @@ export interface InputProps
   required?: boolean;
 }
 
-const Input = ({
+const Input: React.FC<InputProps> = ({
   name,
   register,
   className = "",
@@ -25,7 +25,7 @@ const Input = ({
   validation,
   required,
   ...props
-}: InputProps) => {
+}) => {
   const errorClassses = errors ? "outline-red-500" : "outline-gray-300";
   const requiredAsterisk = required ? (
     <span className="font-semibold text-red-500">*</span>
@@ -40,7 +40,7 @@ const Input = ({
       <input
         {...register(name, validation)}
         id={name}
-        className={`${className} ${errorClassses} w-full rounded-md py-2 px-3 outline outline-1 bg-[#f6f8fa] dark:outline-[#30363d] dark:bg-[#161b22]`}
+        className={`${className} ${errorClassses} w-full rounded-md bg-[#f6f8fa] py-2 px-3 outline outline-1 dark:bg-[#161b22] dark:outline-[#30363d]`}
         {...props}
       />
       {errors ? (

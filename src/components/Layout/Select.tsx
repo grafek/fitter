@@ -18,7 +18,7 @@ export interface SelectProps
   required?: boolean;
 }
 
-const Select = ({
+const Select: React.FC<SelectProps> = ({
   name,
   register,
   validation,
@@ -27,7 +27,7 @@ const Select = ({
   errors,
   required,
   ...props
-}: SelectProps) => {
+}) => {
   const errorClassses = errors ? "outline-red-500" : "outline-gray-300";
   const requiredAsterisk = required ? (
     <span className="font-semibold text-red-500">*</span>
