@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { Toaster } from "react-hot-toast";
 import { useLoading } from "../../hooks";
 import { Header, Footer, Loading } from "./";
 
@@ -17,7 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "" }) => {
         <meta name="title" content="Fitter - Share your fitness journey!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Toaster />
+      
       <div className="min-h-screen dark:bg-[#21262d] dark:text-[#c9d1d9]">
         <Header />
         <main className="container mx-auto min-h-screen max-w-5xl px-4 py-6">
