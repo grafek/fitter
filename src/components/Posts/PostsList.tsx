@@ -1,7 +1,7 @@
-import { type Post } from "@prisma/client";
+import { type RouterOutputs } from "../../utils/trpc";
 import PostItem from "./Post";
 
-type PostListProps = { posts: Post[] };
+type PostListProps = { posts: RouterOutputs["post"]["infinitePosts"]["posts"] };
 
 const PostsList: React.FC<PostListProps> = ({ posts }) => {
   return (

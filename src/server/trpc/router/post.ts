@@ -8,9 +8,32 @@ export const postRouter = router({
     .input(z.object({ postId: z.string() }))
     .query(async ({ ctx, input }) => {
       const { postId } = input;
+      const userId = ctx.session?.user?.id;
       const foundPost = await ctx.prisma.post.findUnique({
         where: {
           id: postId,
+        },
+        include: {
+          creator: {
+            select: {
+              name: true,
+              image: true,
+              id: true,
+            },
+          },
+          likes: {
+            where: {
+              userId,
+            },
+            select: {
+              userId: true,
+            },
+          },
+          _count: {
+            select: {
+              likes: true,
+            },
+          },
         },
       });
       return foundPost;
@@ -20,39 +43,13 @@ export const postRouter = router({
       z.object({
         limit: z.number().min(1).max(20).nullish(),
         cursor: z.string().nullish(),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      const limit = input.limit ?? 5;
-      const { cursor } = input;
-      const posts = await ctx.prisma.post.findMany({
-        take: limit + 1,
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          updatedAt: "desc",
-        },
-      });
-      let nextCursor: typeof cursor | undefined = undefined;
-      if (posts.length > limit) {
-        const nextItem = posts.pop() as typeof posts[number];
-        nextCursor = nextItem.id;
-      }
-      return {
-        posts,
-        nextCursor,
-      };
-    }),
-  infiniteUsersPosts: protectedProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-        limit: z.number().min(1).max(20).nullish(),
-        cursor: z.string().nullish(),
+        creatorId: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const limit = input.limit ?? 3;
-      const { userId, cursor } = input;
+      const limit = input.limit ?? 5;
+      const { cursor, creatorId } = input;
+      const userId = ctx.session?.user?.id;
 
       const posts = await ctx.prisma.post.findMany({
         take: limit + 1,
@@ -61,12 +58,33 @@ export const postRouter = router({
           updatedAt: "desc",
         },
         where: {
-          creatorId: userId,
+          creatorId: creatorId ? creatorId : undefined,
+        },
+        include: {
+          creator: {
+            select: {
+              name: true,
+              image: true,
+              id: true,
+            },
+          },
+          likes: {
+            where: {
+              userId,
+            },
+            select: {
+              userId: true,
+            },
+          },
+          _count: {
+            select: {
+              likes: true,
+            },
+          },
         },
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
-
       if (posts.length > limit) {
         const nextItem = posts.pop() as typeof posts[number];
         nextCursor = nextItem.id;
@@ -79,8 +97,7 @@ export const postRouter = router({
   create: protectedProcedure
     .input(postSchemaInput)
     .mutation(async ({ ctx, input }) => {
-      const { session } = ctx;
-      const { user } = session;
+      const userId = ctx.session.user.id;
       const { description, sport, title, workoutDate, image } = input;
 
       const workoutDateTime = new Date(workoutDate);
@@ -92,10 +109,12 @@ export const postRouter = router({
           sport,
           workoutDate: workoutDateTime,
           image,
-          creatorId: user.id,
-          creatorName: user.name,
-          creatorImage: user.image,
           updatedAt: undefined,
+          creator: {
+            connect: {
+              id: userId,
+            },
+          },
         },
       });
 
@@ -159,5 +178,49 @@ export const postRouter = router({
       });
 
       return updatePost;
+    }),
+  like: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { postId } = input;
+
+      return await ctx.prisma.like.create({
+        data: {
+          post: {
+            connect: {
+              id: postId,
+            },
+          },
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      });
+    }),
+  unlike: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { postId } = input;
+
+      return await ctx.prisma.like.delete({
+        where: {
+          postId_userId: {
+            postId,
+            userId,
+          },
+        },
+      });
     }),
 });

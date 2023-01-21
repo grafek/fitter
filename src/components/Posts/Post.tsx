@@ -1,16 +1,21 @@
-import { type Post } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useDeletePost } from "../../hooks";
+import {
+  useDeletePost,
+  useLikeOptimistic,
+  useUnlikeOptimistic,
+} from "../../hooks";
 import { BsPenFill } from "react-icons/bs";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose, AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { Dropdown } from "../Layout";
 import { toast } from "react-hot-toast";
+import { BiComment, BiShare } from "react-icons/bi";
+import { type RouterOutputs } from "../../utils/trpc";
 
 type PostItemProps = {
-  post: Post;
+  post: RouterOutputs["post"]["infinitePosts"]["posts"][number];
 };
 
 const PostItem: React.FC<PostItemProps> = ({ post }) => {
@@ -18,6 +23,26 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
   const { data: session } = useSession();
 
   const { mutateAsync: deletePost } = useDeletePost();
+
+  const { mutateAsync: like } = useLikeOptimistic(
+    session?.user?.id ? session.user.id : ""
+  );
+  const { mutateAsync: unlike } = useUnlikeOptimistic();
+
+  const isOwner = post.creatorId === session?.user?.id;
+  const hasLiked = post.likes.find((like) => like.userId === session?.user?.id);
+
+  const toggleLikePost = async () => {
+    if (!session) {
+      router.push("/sign-in");
+      return;
+    }
+    if (hasLiked) {
+      await unlike({ postId: post.id });
+      return;
+    }
+    await like({ postId: post.id });
+  };
 
   const removePost = async () => {
     const toastId = toast.loading("Removing post..");
@@ -34,7 +59,6 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
     </Link>
   );
   // only display 'see post' if it's not been redirected to post details
-  const isOwner = post.creatorId === session?.user?.id;
 
   const updatedAtContent =
     post.updatedAt.getTime() === post.createdAt.getTime() ? null : (
@@ -86,10 +110,10 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
           className={`relative min-h-[40px] min-w-[40px]`}
         >
           <Image
-            alt="user-pic"
+            alt={`${post.creator.name}'s profile picture`}
             fill
             className="rounded-full object-contain"
-            src={post.creatorImage || "/user.png"}
+            src={post.creator.image || "/user.png"}
             sizes="40x40"
           />
         </Link>
@@ -98,7 +122,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
             href={`/profile/${post.creatorId}`}
             className={`block font-semibold`}
           >
-            {post.creatorName}
+            {post.creator.name}
           </Link>
           <span>
             {post.sport} •{" "}
@@ -114,7 +138,33 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
       <h2 className="text-lg font-semibold">{post.title}</h2>
       <p className="overflow-auto pb-8">{post.description}</p>
       {imageContent}
-    
+      <div className="justify flex [&>*]:flex [&>*]:flex-1">
+        <div>
+          <button
+            className="mx-auto flex items-center justify-center gap-2"
+            onClick={toggleLikePost}
+          >
+            {hasLiked ? (
+              <AiFillHeart size={"1.5rem"} className=" text-red-600" />
+            ) : (
+              <AiOutlineHeart size={"1.5rem"} />
+            )}
+            <span className="text-sm text-gray-400">{post._count.likes}</span>
+          </button>
+        </div>
+        <div>
+          <button className="mx-auto flex items-center justify-center gap-2">
+            <BiComment size={"1.5rem"} />
+            <span className="text-sm text-gray-400">{3}</span>
+          </button>
+        </div>
+        <div>
+          <button className="mx-auto flex items-center justify-center gap-2">
+            <BiShare size={"1.5rem"} />
+            {/* <span className="text-sm text-gray-400">{0}</span> */}
+          </button>
+        </div>
+      </div>
 
       {/* TODO: ADD COMMENTS SECTION */}
     </div>

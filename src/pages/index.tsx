@@ -6,9 +6,7 @@ import { toast } from "react-hot-toast";
 
 const Home: NextPage = () => {
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useInfinitePosts({
-      postsPerPage: 5,
-    });
+    useInfinitePosts();
 
   useInfiniteScroll({ fetchNextPage, hasNextPage });
   if (!data) return null;
