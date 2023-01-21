@@ -1,9 +1,6 @@
 import { trpc } from "../utils/trpc";
 
-const useUserById = ({ userId }: { userId: string | undefined | string[] }) => {
-  if (typeof userId !== "string") {
-    throw new Error("Wrong input!");
-  }
+const useUserById = ({ userId }: { userId: string }) => {
   return trpc.user.getUserById.useQuery(
     { userId },
     { refetchOnWindowFocus: false }

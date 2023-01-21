@@ -5,7 +5,7 @@ import React from "react";
 import { type IconType } from "react-icons/lib";
 
 type NavLinkProps = {
-  MobileIcon: IconType;
+  MobileIcon?: IconType;
   children: React.ReactNode;
   linkDestination: string;
   innerSpanClasses?: string;
@@ -13,14 +13,14 @@ type NavLinkProps = {
   isProfilePicture?: boolean;
 };
 
-const NavLink = ({
+const NavLink: React.FC<NavLinkProps> = ({
   MobileIcon,
   children,
   linkDestination,
   innerSpanClasses,
   isProfilePicture,
   linkClasses,
-}: NavLinkProps) => {
+}) => {
   const { data: sessionData } = useSession();
 
   const navLinkClasses = "h-13 flex w-[80px] flex-col items-center md:w-fit";
@@ -43,9 +43,9 @@ const NavLink = ({
             sizes="40x40"
           />
         </div>
-      ) : (
+      ) : MobileIcon ? (
         <MobileIcon className="text-2xl md:hidden " />
-      )}
+      ) : null}
       <span className={`${navItemClasses} ${innerSpanClasses}`}>
         {children}
       </span>

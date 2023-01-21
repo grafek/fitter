@@ -12,10 +12,10 @@ export const config = {
     },
   },
 };
-export default async function handler(
+const imageUploadHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
-) {
+) => {
   if (req.method === "POST") {
     const image = req.body;
 
@@ -64,4 +64,5 @@ export default async function handler(
       .status(405)
       .json({ message: `HTTP method ${req.method} is not supported.` });
   }
-}
+};
+export default imageUploadHandler;

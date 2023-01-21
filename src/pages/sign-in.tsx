@@ -1,15 +1,16 @@
+import { type NextPage } from "next";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
 import { Button, Layout, PageHeading } from "../components/Layout";
 
-const SignInPage = () => {
+const SignInPage: NextPage = () => {
   return (
     <Layout title="Sign in">
       <PageHeading>Sign in</PageHeading>
       <div className="mx-auto flex h-[65vh] max-w-xl flex-col justify-center gap-4">
         <Button
-          color="google"
+          buttonColor="google"
           className="mx-auto flex w-full items-center justify-center space-x-2"
           onClick={() =>
             signIn("google", {
@@ -21,7 +22,7 @@ const SignInPage = () => {
           <span>Continue with Google</span>
         </Button>
         <Button
-          color="discord"
+          buttonColor="discord"
           onClick={() =>
             signIn("discord", {
               callbackUrl: "/",

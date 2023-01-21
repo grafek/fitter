@@ -1,21 +1,11 @@
+import { POSTS_LIMIT } from "../utils/globals";
 import { trpc } from "../utils/trpc";
 
-type useUsersInfinitePostsProp = {
-  userId: string | undefined | string[];
-  postsPerPage: number;
-};
-const useUsersInfinitePosts = ({
-  userId,
-  postsPerPage,
-}: useUsersInfinitePostsProp) => {
-  if (typeof userId !== "string") {
-    throw new Error("Wrong input!");
-  }
-
-  return trpc.post.infiniteUsersPosts.useInfiniteQuery(
+const useUsersInfinitePosts = ({ creatorId }: { creatorId: string }) => {
+  return trpc.post.infinitePosts.useInfiniteQuery(
     {
-      userId,
-      limit: postsPerPage,
+      creatorId,
+      limit: POSTS_LIMIT,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,

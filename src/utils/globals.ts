@@ -1,3 +1,4 @@
+export const POSTS_LIMIT = 5;
 export const SPORTS = [
   "Acrobatics",
   "Aerobic Gymnastics",

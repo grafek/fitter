@@ -9,7 +9,9 @@ const EditPostPage: NextPage = () => {
   const router = useRouter();
   const { postId } = router.query;
 
-  const { data: post, isLoading } = usePostById({ postId });
+  const { data: post, isLoading } = usePostById({ postId } as {
+    postId: string;
+  });
   const { mutateAsync: updatePost } = useUpdatePost();
 
   return (

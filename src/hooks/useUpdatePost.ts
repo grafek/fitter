@@ -1,6 +1,6 @@
 import { trpc } from "../utils/trpc";
 
-function useUpdatePost() {
+const useUpdatePost = () => {
   const ctx = trpc.useContext();
 
   return trpc.post.update.useMutation({
@@ -8,6 +8,6 @@ function useUpdatePost() {
       ctx.post.infinitePosts.invalidate();
     },
   });
-}
+};
 
 export default useUpdatePost;

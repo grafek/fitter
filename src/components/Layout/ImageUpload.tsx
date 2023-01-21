@@ -9,7 +9,7 @@ import Image from "next/image";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import setCapitalized from "../../utils/setCapitalized";
 
-interface Props {
+interface ImageUploadProps {
   name: Path<AddPostFormSchema>;
   errors: FieldError | undefined;
   register: UseFormRegister<AddPostFormSchema>;
@@ -18,7 +18,7 @@ interface Props {
   initialImage: string | null | undefined | ArrayBuffer;
 }
 
-const ImageUpload: React.FC<Props> = ({
+const ImageUpload: React.FC<ImageUploadProps> = ({
   initialImage = null,
   register,
   errors,

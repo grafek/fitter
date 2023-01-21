@@ -5,7 +5,6 @@ const uploadImg = async (imgData: string | null | undefined | ArrayBuffer) => {
   if (!imgData) return;
   try {
     toastId = toast.loading("Uploading image...");
-    console.log(toastId);
     const res = await fetch("/api/image-upload", {
       body: JSON.stringify({
         imgData,
@@ -13,10 +12,10 @@ const uploadImg = async (imgData: string | null | undefined | ArrayBuffer) => {
       method: "POST",
     });
     const data = await res.json();
-    toast.success("Successfully uploaded", { id: toastId });
+    toast.success("Image uploaded!", { id: toastId, icon: "📷" });
     return data.url;
   } catch (e) {
-    toast.error("Unable to upload", { id: toastId });
+    toast.error("Unable to upload :(", { id: toastId });
   } finally {
   }
 };

@@ -12,23 +12,22 @@ import withAuth from "../../../utils/withAuth";
 
 const UsersPostsPage = () => {
   const router = useRouter();
-  const { profileId } = router.query;
+  const profileId = router.query.profileId as string;
+
   const { data: session } = useSession();
   const { data: foundUser } = useUserById({ userId: profileId });
 
   const { data, hasNextPage, fetchNextPage } = useUsersInfinitePosts({
-    postsPerPage: 5,
-    userId: profileId,
+    creatorId: profileId,
   });
 
   useInfiniteScroll({ fetchNextPage, hasNextPage });
+
   if (!data) return null;
   const usersPosts = data.pages.flatMap((page) => page.posts) ?? [];
 
-  if (!session || !foundUser) return null;
-
   const profilePosts =
-    session.user?.id === profileId ? "My posts" : `${foundUser.name}'s posts`;
+    session?.user?.id === profileId ? "My posts" : `${foundUser?.name}'s posts`;
 
   return (
     <Layout title={profilePosts}>

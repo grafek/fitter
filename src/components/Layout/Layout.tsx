@@ -7,7 +7,7 @@ type LayoutProps = {
   title?: string;
 };
 
-function Layout({ children, title = "" }: LayoutProps) {
+const Layout: React.FC<LayoutProps> = ({ children, title = "" }) => {
   const { isLoading } = useLoading();
   return (
     <>
@@ -16,15 +16,16 @@ function Layout({ children, title = "" }: LayoutProps) {
         <meta name="title" content="Fitter - Share your fitness journey!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <div className="min-h-screen dark:bg-[#21262d] dark:text-[#c9d1d9]">
         <Header />
         <main className="container mx-auto min-h-screen max-w-5xl px-4 py-6">
-          {isLoading ? <Loading spinnerColor="fill-blue-400" /> : children}
+          {isLoading ? <Loading /> : children}
         </main>
         <Footer />
       </div>
     </>
   );
-}
+};
 
 export default Layout;

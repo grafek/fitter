@@ -17,7 +17,7 @@ export interface TextAreaProps
   required?: boolean;
 }
 
-const TextArea = ({
+const TextArea: React.FC<TextAreaProps> = ({
   name,
   register,
   className = "",
@@ -25,7 +25,7 @@ const TextArea = ({
   validation,
   required,
   ...props
-}: TextAreaProps) => {
+}) => {
   const errorClassses = errors ? "outline-red-500" : "outline-gray-300";
   const requiredAsterisk = required ? (
     <span className="font-semibold text-red-500">*</span>

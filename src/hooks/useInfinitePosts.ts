@@ -1,9 +1,10 @@
+import { POSTS_LIMIT } from "../utils/globals";
 import { trpc } from "../utils/trpc";
 
-const useInfinitePosts = ({ postsPerPage }: { postsPerPage: number }) => {
+const useInfinitePosts = () => {
   return trpc.post.infinitePosts.useInfiniteQuery(
     {
-      limit: postsPerPage,
+      limit: POSTS_LIMIT,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,

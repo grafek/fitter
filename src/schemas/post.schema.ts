@@ -7,9 +7,6 @@ export interface AddPostFormSchema {
   workoutDate: string;
   image?: string | null;
 }
-export interface EditPostFormSchema extends AddPostFormSchema {
-  id?: string;
-}
 
 export const postSchemaInput = z.object({
   title: z
