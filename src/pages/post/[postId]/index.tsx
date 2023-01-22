@@ -6,16 +6,23 @@ import PostItem from "../../../components/Posts/Post";
 
 const PostPage: NextPage = () => {
   const router = useRouter();
-  const { postId } = router.query;
-  const { data: post, isLoading } = usePostById({ postId } as {
-    postId: string;
+  const postId = router.query.postId as string;
+  const inputData = {
+    where: {
+      id: postId,
+    },
+  };
+  const { data, isLoading } = usePostById({
+    input: inputData,
   });
 
+  const foundPost = data?.pages[0]?.posts[0];
+
   return (
-    <Layout title={post?.title}>
+    <Layout title={foundPost?.title}>
       <section id="post-preview">
-        {!post && !isLoading ? <p>No post found!</p> : null}
-        {post ? <PostItem post={post} /> : null}
+        {!foundPost && !isLoading ? <p>No post found!</p> : null}
+        {foundPost ? <PostItem post={foundPost} input={inputData} /> : null}
       </section>
     </Layout>
   );

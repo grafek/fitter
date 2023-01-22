@@ -1,10 +1,13 @@
-import { trpc } from "../utils/trpc";
+import { type RouterInputs, trpc } from "../utils/trpc";
 
-const usePostById = ({ postId }: { postId: string}) => {
-  return trpc.post.getById.useQuery(
-    { postId },
-    { refetchOnWindowFocus: false }
-  );
+const usePostById = ({
+  input,
+}: {
+  input: RouterInputs["post"]["infinitePosts"];
+}) => {
+  return trpc.post.infinitePosts.useInfiniteQuery({
+    ...input,
+  });
 };
 
 export default usePostById;

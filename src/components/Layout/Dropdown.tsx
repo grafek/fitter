@@ -48,7 +48,7 @@ const Dropdown: React.FC<DropdownProps> = ({ children }) => {
       <div
         className={`${
           !clickedOutside ? "scale-100 opacity-100" : "scale-75 opacity-0"
-        } absolute -right-2 top-12 z-10 flex w-14 flex-col items-center gap-3 rounded-md py-3 shadow-md transition-all duration-200 dark:bg-slate-800/80 [&>*]:bg-[#3366ff] [&>*]:shadow`}
+        } absolute -right-2 top-12 z-10 flex w-14 flex-col items-center divide-y divide-slate-700 rounded-md py-1 shadow-md transition-all duration-200 dark:bg-[#1e263075] [&>*]:w-3/4 [&>*]:py-3`}
       >
         {isOpen ? children : null}
       </div>

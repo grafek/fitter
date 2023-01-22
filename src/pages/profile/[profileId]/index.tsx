@@ -9,7 +9,7 @@ import withAuth from "../../../utils/withAuth";
 
 const ProfilePage: NextPage = () => {
   const router = useRouter();
-  const { profileId } = router.query;
+  const profileId = router.query.profileId as string;
   const { data: session } = useSession();
   const { data: foundUser } = useUserById({ userId: profileId });
   if (!session || !foundUser) return null;
@@ -50,4 +50,4 @@ export const getServerSideProps: GetServerSideProps = withAuth(async () => {
   return {
     props: {},
   };
-})
+});

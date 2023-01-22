@@ -1,13 +1,19 @@
-import { POSTS_LIMIT } from "../utils/globals";
-import { trpc } from "../utils/trpc";
+import { type RouterInputs, trpc } from "../utils/trpc";
 
-const useLikeOptimistic = (userId: string) => {
+const useLikeOptimistic = ({
+  input,
+  userId,
+}: {
+  input: RouterInputs["post"]["infinitePosts"];
+  userId: string;
+}) => {
   const ctx = trpc.useContext();
   return trpc.post.like.useMutation({
     async onMutate({ postId }) {
       await ctx.post.infinitePosts.cancel();
 
-      ctx.post.infinitePosts.setInfiniteData({ limit: POSTS_LIMIT }, (data) => {
+      ctx.post.infinitePosts.setInfiniteData({ ...input }, (data) => {
+        console.log(data);
         if (!data) {
           return {
             pages: [],

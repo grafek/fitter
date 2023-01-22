@@ -7,48 +7,58 @@ import {
   useLikeOptimistic,
   useUnlikeOptimistic,
 } from "../../hooks";
-import { BsPenFill } from "react-icons/bs";
-import { AiOutlineClose, AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { Dropdown } from "../Layout";
+import { BsFillTrashFill } from "react-icons/bs";
+import { HiOutlinePencilAlt } from "react-icons/hi";
+import { AiFillHeart } from "react-icons/ai";
+import { Dropdown, IconBtn, IconLink } from "../Layout";
 import { toast } from "react-hot-toast";
 import { BiComment, BiShare } from "react-icons/bi";
-import { type RouterOutputs } from "../../utils/trpc";
+import { type RouterInputs, type RouterOutputs } from "../../utils/trpc";
+import { useCallback } from "react";
 
 type PostItemProps = {
   post: RouterOutputs["post"]["infinitePosts"]["posts"][number];
+  input: RouterInputs["post"]["infinitePosts"];
 };
 
-const PostItem: React.FC<PostItemProps> = ({ post }) => {
+const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
   const router = useRouter();
   const { data: session } = useSession();
 
   const { mutateAsync: deletePost } = useDeletePost();
 
-  const { mutateAsync: like } = useLikeOptimistic(
-    session?.user?.id ? session.user.id : ""
-  );
-  const { mutateAsync: unlike } = useUnlikeOptimistic();
+  const { mutate: like } = useLikeOptimistic({
+    userId: session?.user?.id ? session.user.id : "",
+    input,
+  });
+  const { mutate: unlike } = useUnlikeOptimistic({ input });
 
   const isOwner = post.creatorId === session?.user?.id;
+
   const hasLiked = post.likes.find((like) => like.userId === session?.user?.id);
 
-  const toggleLikePost = async () => {
+  const toggleLikePost = useCallback(() => {
     if (!session) {
       router.push("/sign-in");
       return;
     }
     if (hasLiked) {
-      await unlike({ postId: post.id });
+      unlike({ postId: post.id });
       return;
     }
-    await like({ postId: post.id });
-  };
+    like({ postId: post.id });
+  }, [hasLiked, like, post.id, router, session, unlike]);
 
-  const removePost = async () => {
-    const toastId = toast.loading("Removing post..");
+  const removePost = useCallback(async () => {
+    const toastId = toast.loading("Removing post..", {
+      icon: "🚮",
+      style: { color: "#dc2626" },
+    });
+
     await deletePost({ postId: post.id });
+
     toast.success("Post removed!", { id: toastId });
-  };
+  }, [deletePost, post.id]);
 
   const seePost = router.query.postId ? null : (
     <Link
@@ -87,20 +97,33 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
 
   const postOwnerActions = isOwner ? (
     <Dropdown>
-      <Link
-        className="relative flex h-8 w-8 items-center justify-center rounded-full "
+      <IconLink
+        Icon={HiOutlinePencilAlt}
         href={`/post/${post.id}/edit`}
-      >
-        <BsPenFill className="relative p-1 text-2xl text-[#eeeeee]/80 " />
-      </Link>
-      <a
+        iconColor="#1d4ed8"
+        iconSize={"1.2rem"}
+      />
+      <IconBtn
+        Icon={BsFillTrashFill}
+        iconSize="1.2rem"
+        iconColor="#dc2626"
         onClick={removePost}
-        className="relative flex h-8 w-8 items-center justify-center  rounded-full "
-      >
-        <AiOutlineClose className="relative p-1 text-3xl text-[#eeeeee] hover:cursor-pointer md:text-4xl" />
-      </a>
+      />
     </Dropdown>
   ) : null;
+
+  const postActions = (
+    <div className="flex">
+      <IconBtn
+        Icon={AiFillHeart}
+        iconColor={hasLiked ? "red" : "gray"}
+        count={post._count.likes}
+        onClick={toggleLikePost}
+      />
+      <IconBtn Icon={BiComment} />
+      <IconBtn Icon={BiShare} />
+    </div>
+  );
 
   return (
     <div className="flex flex-col justify-between gap-3 rounded-md border border-[#d0d7de] bg-[#f6f8fa] p-4 shadow-lg dark:border-[#30363d] dark:bg-[#161b22]">
@@ -138,35 +161,7 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
       <h2 className="text-lg font-semibold">{post.title}</h2>
       <p className="overflow-auto pb-8">{post.description}</p>
       {imageContent}
-      <div className="justify flex [&>*]:flex [&>*]:flex-1">
-        <div>
-          <button
-            className="mx-auto flex items-center justify-center gap-2"
-            onClick={toggleLikePost}
-          >
-            {hasLiked ? (
-              <AiFillHeart size={"1.5rem"} className=" text-red-600" />
-            ) : (
-              <AiOutlineHeart size={"1.5rem"} />
-            )}
-            <span className="text-sm text-gray-400">{post._count.likes}</span>
-          </button>
-        </div>
-        <div>
-          <button className="mx-auto flex items-center justify-center gap-2">
-            <BiComment size={"1.5rem"} />
-            <span className="text-sm text-gray-400">{3}</span>
-          </button>
-        </div>
-        <div>
-          <button className="mx-auto flex items-center justify-center gap-2">
-            <BiShare size={"1.5rem"} />
-            {/* <span className="text-sm text-gray-400">{0}</span> */}
-          </button>
-        </div>
-      </div>
-
-      {/* TODO: ADD COMMENTS SECTION */}
+      {postActions}
     </div>
   );
 };
