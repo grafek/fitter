@@ -34,8 +34,7 @@ const Input: React.FC<InputProps> = ({
   return (
     <>
       <label htmlFor={name}>
-        {setCapitalized(name)}
-        {requiredAsterisk}
+        {setCapitalized(name)} {requiredAsterisk}
       </label>
       <input
         {...register(name, validation)}

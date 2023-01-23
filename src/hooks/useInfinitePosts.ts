@@ -1,10 +1,13 @@
-import { POSTS_LIMIT } from "../utils/globals";
-import { trpc } from "../utils/trpc";
+import { type RouterInputs, trpc } from "../utils/trpc";
 
-const useInfinitePosts = () => {
+const useInfinitePosts = ({
+  input,
+}: {
+  input: RouterInputs["post"]["infinitePosts"];
+}) => {
   return trpc.post.infinitePosts.useInfiniteQuery(
     {
-      limit: POSTS_LIMIT,
+      ...input,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,

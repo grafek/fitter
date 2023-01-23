@@ -1,32 +1,26 @@
 import { type GetServerSideProps, type NextPage } from "next";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Layout, PageHeading } from "../../../components/Layout";
 import PostsList from "../../../components/Posts/PostsList";
-import {
-  useUserById,
-  useInfiniteScroll,
-  useInfinitePosts,
-} from "../../../hooks";
+import { useInfiniteScroll, useInfinitePosts } from "../../../hooks";
 import { POSTS_LIMIT } from "../../../utils/globals";
 import { type RouterInputs } from "../../../utils/trpc";
 import withAuth from "../../../utils/withAuth";
 
-const UsersPostsPage: NextPage = () => {
+const LikedPostsPage: NextPage = () => {
   const router = useRouter();
   const profileId = router.query.profileId as string;
 
   const inputData: RouterInputs["post"]["infinitePosts"] = {
     where: {
-      creator: {
-        id: profileId,
+      likes: {
+        some: {
+          userId: profileId,
+        },
       },
     },
     limit: POSTS_LIMIT,
   };
-
-  const { data: session } = useSession();
-  const { data: foundUser } = useUserById({ userId: profileId });
 
   const { data, hasNextPage, fetchNextPage } = useInfinitePosts({
     input: inputData,
@@ -35,22 +29,19 @@ const UsersPostsPage: NextPage = () => {
   useInfiniteScroll({ fetchNextPage, hasNextPage });
 
   if (!data) return null;
-  const usersPosts = data.pages.flatMap((page) => page.posts) ?? [];
-
-  const profilePosts =
-    session?.user?.id === profileId ? "My posts" : `${foundUser?.name}'s posts`;
+  const likedPosts = data.pages.flatMap((page) => page.posts) ?? [];
 
   return (
-    <Layout title={profilePosts}>
-      <PageHeading>{profilePosts}</PageHeading>
+    <Layout title="Liked posts">
+      <PageHeading>Liked posts</PageHeading>
       <section className="flex flex-col gap-6">
-        <PostsList posts={usersPosts} input={inputData} />
+        <PostsList posts={likedPosts} input={inputData} />
       </section>
     </Layout>
   );
 };
 
-export default UsersPostsPage;
+export default LikedPostsPage;
 
 export const getServerSideProps: GetServerSideProps = withAuth(async () => {
   return {

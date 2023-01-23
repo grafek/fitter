@@ -1,11 +1,7 @@
-import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import Button from "./Button";
 import Navigation from "./Navigation";
 
 const Header: React.FC = () => {
-  const { data: session } = useSession();
-
   return (
     <header className="w-full bg-[#f6f8fa] px-4 py-2 shadow-sm shadow-blue-400 dark:bg-[#161b22] dark:shadow-blue-800">
       <div className="container mx-auto flex items-center justify-between ">
@@ -24,15 +20,7 @@ const Header: React.FC = () => {
             Fitter
           </p>
         </Link>
-        <div className="flex gap-10">
-          <Navigation />
-          <Button
-            onClick={() => (session ? signOut({ callbackUrl: "/" }) : signIn())}
-            className="md:py-0"
-          >
-            {session ? "Log out" : "Log in"}
-          </Button>
-        </div>
+        <Navigation />
       </div>
     </header>
   );

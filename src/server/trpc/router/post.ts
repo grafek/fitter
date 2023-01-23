@@ -43,12 +43,31 @@ export const postRouter = router({
       z.object({
         limit: z.number().min(1).max(20).nullish(),
         cursor: z.string().nullish(),
-        creatorId: z.string().optional(),
+        where: z
+          .object({
+            creator: z
+              .object({
+                id: z.string().optional(),
+              })
+              .optional(),
+            id: z.string().optional(),
+            likes: z
+              .object({
+                some: z
+                  .object({
+                    userId: z.string().optional(),
+                  })
+                  .optional(),
+              })
+              .optional(),
+          })
+          .optional()
+          .optional(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const limit = input.limit ?? 5;
-      const { cursor, creatorId } = input;
+      const limit = input.limit ?? 1;
+      const { cursor, where } = input;
       const userId = ctx.session?.user?.id;
 
       const posts = await ctx.prisma.post.findMany({
@@ -57,9 +76,7 @@ export const postRouter = router({
         orderBy: {
           updatedAt: "desc",
         },
-        where: {
-          creatorId: creatorId ? creatorId : undefined,
-        },
+        where,
         include: {
           creator: {
             select: {
@@ -127,7 +144,7 @@ export const postRouter = router({
 
       const user = await prisma?.user.findUnique({
         where: { id: ctx.session.user.id },
-        select: { posts: true },
+        select: { posts: true, likes: true },
       });
 
       if (!user?.posts.find((post) => post.id === postId)) {

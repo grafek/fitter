@@ -22,9 +22,9 @@ const Loading: React.FC<LoadingProps> = ({
           cy="50"
           fill={bgColor}
           stroke={spinnerColor}
-          stroke-width="4"
+          strokeWidth="4"
           r="36"
-          stroke-dasharray="169.64600329384882 58.548667764616276"
+          strokeDasharray="169.64600329384882 58.548667764616276"
         >
           <animateTransform
             attributeName="transform"

@@ -36,8 +36,7 @@ const Select: React.FC<SelectProps> = ({
   return (
     <>
       <label htmlFor={name}>
-        {setCapitalized(name)}
-        {requiredAsterisk}
+        {setCapitalized(name)} {requiredAsterisk}
       </label>
       <select
         {...register(name, validation)}

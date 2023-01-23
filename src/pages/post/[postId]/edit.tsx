@@ -7,25 +7,31 @@ import withAuth from "../../../utils/withAuth";
 
 const EditPostPage: NextPage = () => {
   const router = useRouter();
-  const { postId } = router.query;
-
-  const { data: post, isLoading } = usePostById({ postId } as {
-    postId: string;
+  const postId = router.query.postId as string;
+  const inputData = {
+    where: {
+      id: postId,
+    },
+  };
+  const { data, isLoading } = usePostById({
+    input: inputData,
   });
+
+  const foundPost = data?.pages[0]?.posts[0];
   const { mutateAsync: updatePost } = useUpdatePost();
 
   return (
     <Layout title="Edit post">
       <section id="edit-post">
-        {!post && !isLoading ? <p>No post found!</p> : null}
-        {post ? (
+        {!foundPost && !isLoading ? <p>No post found!</p> : null}
+        {foundPost ? (
           <PostForm
-            post={post}
+            post={foundPost}
             isEditing
             onSubmit={updatePost}
             buttonColor="success"
             buttonText="Update post"
-            redirectPath={`/post/${post.id}`}
+            redirectPath={`/post/${foundPost.id}`}
           />
         ) : null}
       </section>
