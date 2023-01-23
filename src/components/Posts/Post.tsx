@@ -10,7 +10,7 @@ import {
 import { BsFillTrashFill } from "react-icons/bs";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { AiFillHeart } from "react-icons/ai";
-import { Dropdown, IconBtn, IconLink } from "../Layout";
+import { Dropdown, DropdownItem, IconBtn, IconLink, NavLink } from "../Layout";
 import { toast } from "react-hot-toast";
 import { BiComment, BiShare } from "react-icons/bi";
 import { type RouterInputs, type RouterOutputs } from "../../utils/trpc";
@@ -58,7 +58,9 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     await deletePost({ postId: post.id });
 
     toast.success("Post removed!", { id: toastId });
-  }, [deletePost, post.id]);
+
+    router.push("/");
+  }, [deletePost, post.id, router]);
 
   const seePost = router.query.postId ? null : (
     <Link
@@ -97,18 +99,19 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
 
   const postOwnerActions = isOwner ? (
     <Dropdown>
-      <IconLink
-        Icon={HiOutlinePencilAlt}
-        href={`/post/${post.id}/edit`}
-        iconColor="#1d4ed8"
-        iconSize={"1.2rem"}
-      />
-      <IconBtn
-        Icon={BsFillTrashFill}
-        iconSize="1.2rem"
-        iconColor="#dc2626"
-        onClick={removePost}
-      />
+      <DropdownItem>
+        <NavLink linkDestination={`/post/${post.id}/edit`}>
+          <HiOutlinePencilAlt size={"1.2rem"} color="#1d4ed8" />
+        </NavLink>
+      </DropdownItem>
+      <DropdownItem>
+        <IconBtn
+          Icon={BsFillTrashFill}
+          onClick={removePost}
+          iconColor="#dc2626"
+          iconSize="1.2rem"
+        />
+      </DropdownItem>
     </Dropdown>
   ) : null;
 

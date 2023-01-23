@@ -11,5 +11,6 @@ export { default as NavLink } from "./NavLink";
 export { default as Loading } from "./Loading";
 export { default as ImageUpload } from "./ImageUpload";
 export { default as Dropdown } from "./Dropdown";
+export { default as DropdownItem } from "./DropdownItem";
 export { default as IconBtn } from "./IconBtn";
 export { default as IconLink } from "./IconLink";

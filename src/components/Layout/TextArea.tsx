@@ -34,8 +34,7 @@ const TextArea: React.FC<TextAreaProps> = ({
   return (
     <>
       <label htmlFor={name}>
-        {setCapitalized(name)}
-        {requiredAsterisk}
+        {setCapitalized(name)} {requiredAsterisk}
       </label>
       <textarea
         {...register(name, validation)}
