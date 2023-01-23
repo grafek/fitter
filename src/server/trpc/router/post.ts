@@ -51,6 +51,15 @@ export const postRouter = router({
               })
               .optional(),
             id: z.string().optional(),
+            likes: z
+              .object({
+                some: z
+                  .object({
+                    userId: z.string().optional(),
+                  })
+                  .optional(),
+              })
+              .optional(),
           })
           .optional()
           .optional(),

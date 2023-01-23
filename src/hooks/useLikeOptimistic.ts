@@ -13,7 +13,6 @@ const useLikeOptimistic = ({
       await ctx.post.infinitePosts.cancel();
 
       ctx.post.infinitePosts.setInfiniteData({ ...input }, (data) => {
-        console.log(data);
         if (!data) {
           return {
             pages: [],

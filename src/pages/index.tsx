@@ -21,9 +21,8 @@ const Home: NextPage = () => {
     <Layout>
       <PageHeading>Check out latest posts from our community</PageHeading>
       <section className="flex flex-col gap-12">
-        <PostsList posts={posts} input={inputData}/>
+        <PostsList posts={posts} input={inputData} />
         {isFetchingNextPage ? <Loading /> : null}
-        {!hasNextPage ? "No more posts to fetch" : null}
       </section>
     </Layout>
   );
