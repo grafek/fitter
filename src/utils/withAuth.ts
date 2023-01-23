@@ -16,7 +16,7 @@ const withAuth = (gssp: GetServerSideProps) => {
     const gsspData = await gssp(ctx); // Run `getServerSideProps` to get page-specific data
 
     return {
-      props: { ...gsspData.props },
+      props: { ...gsspData },
     };
   };
 };
