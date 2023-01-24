@@ -13,7 +13,7 @@ const IconBtn: React.FC<IconBtnProps> = ({
   Icon,
   onClick,
   count,
-  iconSize = "1.5rem",
+  iconSize = "1.3rem",
   iconColor,
 }) => {
   return (

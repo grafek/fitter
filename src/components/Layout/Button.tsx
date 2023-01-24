@@ -51,7 +51,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       {...props}
-      className={`rounded-md px-4 py-2 font-semibold shadow-md outline outline-1 transition-colors duration-200 disabled:opacity-50 ${colorClasses} ${className}`}
+      className={`rounded-md px-3 py-1 md:px-4 md:py-2 font-semibold shadow-md outline outline-1 transition-colors duration-200 disabled:opacity-50 ${colorClasses} ${className}`}
     >
       {children}
     </button>

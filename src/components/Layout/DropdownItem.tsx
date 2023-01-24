@@ -1,9 +1,13 @@
 type DropdownItemProps = {
   children: React.ReactNode;
+  className?: string;
 };
 
-const DropdownItem: React.FC<DropdownItemProps> = ({ children }) => {
-  return <li className="flex justify-center">{children}</li>;
+const DropdownItem: React.FC<DropdownItemProps> = ({
+  children,
+  className = "",
+}) => {
+  return <li className={`${className} w-full p-1`}>{children}</li>;
 };
 
 export default DropdownItem;

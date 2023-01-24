@@ -35,7 +35,6 @@ const ProfilePage: NextPage = () => {
           />
         </div>
         <p className="font-semibold">{foundUser.name}</p>
-        <p>{foundUser.email}</p>
         <Link href={`/profile/${profileId}/posts`} className="italic underline">
           {profilePosts}
         </Link>

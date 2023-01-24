@@ -29,7 +29,7 @@ const config = {
       },
       {
         protocol: "https",
-        hostname: "bucarskhgrpvvamsknid.supabase.in",
+        hostname: "bucarskhgrpvvamsknid.supabase.co",
         port: "",
         pathname: `/storage/v1/object/public/fitter/**`,
       },
