@@ -3,6 +3,7 @@ import { signIn } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
 import { Button, Layout, PageHeading } from "../components/Layout";
+import { env } from "../env/client.mjs";
 
 const SignInPage: NextPage = () => {
   return (
@@ -18,7 +19,12 @@ const SignInPage: NextPage = () => {
             })
           }
         >
-          <Image src="/google.svg" alt="Google" width={32} height={32} />
+          <Image
+            src={`${env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${env.NEXT_PUBLIC_SUPABASE_BUCKET}/assets/google.svg`}
+            alt="Google"
+            width={32}
+            height={32}
+          />
           <span>Continue with Google</span>
         </Button>
         <Button
@@ -30,7 +36,12 @@ const SignInPage: NextPage = () => {
           }
           className="mx-auto flex w-full items-center justify-center space-x-2"
         >
-          <Image src="/discord.svg" alt="Discord" width={32} height={32} />
+          <Image
+            src={`${env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${env.NEXT_PUBLIC_SUPABASE_BUCKET}/assets/discord.svg`}
+            alt="Discord"
+            width={32}
+            height={32}
+          />
           <span>Continue with Discord</span>
         </Button>
       </div>

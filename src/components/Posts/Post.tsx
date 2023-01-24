@@ -9,10 +9,9 @@ import {
 } from "../../hooks";
 import { BsFillTrashFill } from "react-icons/bs";
 import { HiOutlinePencilAlt } from "react-icons/hi";
-import { AiFillHeart } from "react-icons/ai";
-import { Dropdown, DropdownItem, IconBtn, IconLink, NavLink } from "../Layout";
+import { Dropdown, DropdownItem, IconBtn, NavItem } from "../Layout";
 import { toast } from "react-hot-toast";
-import { BiComment, BiShare } from "react-icons/bi";
+import { FaShare, FaComment, FaHeart } from "react-icons/fa";
 import { type RouterInputs, type RouterOutputs } from "../../utils/trpc";
 import { useCallback } from "react";
 
@@ -32,6 +31,10 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     input,
   });
   const { mutate: unlike } = useUnlikeOptimistic({ input });
+
+  const formattedDate = new Intl.DateTimeFormat("en-US").format(
+    post.workoutDate
+  );
 
   const isOwner = post.creatorId === session?.user?.id;
 
@@ -98,18 +101,23 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
   ) : null;
 
   const postOwnerActions = isOwner ? (
-    <Dropdown>
+    <Dropdown className="divide-y-[1px] divide-gray-200 dark:divide-gray-600">
       <DropdownItem>
-        <NavLink linkDestination={`/post/${post.id}/edit`}>
-          <HiOutlinePencilAlt size={"1.2rem"} color="#1d4ed8" />
-        </NavLink>
+        <NavItem
+          Icon={HiOutlinePencilAlt}
+          iconColor="#1d4ed8"
+          iconSize="1.5rem"
+          linkClasses="justify-center"
+          linkDestination={`/post/${post.id}/edit`}
+        />
       </DropdownItem>
       <DropdownItem>
-        <IconBtn
+        <NavItem
           Icon={BsFillTrashFill}
           onClick={removePost}
+          linkClasses="justify-center"
           iconColor="#dc2626"
-          iconSize="1.2rem"
+          iconSize="1.5rem"
         />
       </DropdownItem>
     </Dropdown>
@@ -118,13 +126,13 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
   const postActions = (
     <div className="flex">
       <IconBtn
-        Icon={AiFillHeart}
+        Icon={FaHeart}
         iconColor={hasLiked ? "red" : "gray"}
         count={post._count.likes}
         onClick={toggleLikePost}
       />
-      <IconBtn Icon={BiComment} />
-      <IconBtn Icon={BiShare} />
+      <IconBtn Icon={FaComment} iconColor={"gray"} />
+      <IconBtn Icon={FaShare} iconColor={"gray"} />
     </div>
   );
 
@@ -152,9 +160,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
           </Link>
           <span>
             {post.sport} •{" "}
-            <span className="font-light">
-              {post.workoutDate.toDateString()}
-            </span>
+            <span className="font-light tracking-wide">{formattedDate}</span>
           </span>
           {updatedAtContent}
         </div>

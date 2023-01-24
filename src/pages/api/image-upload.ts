@@ -48,11 +48,7 @@ const imageUploadHandler = async (
         throw new Error("Unable to upload image to storage");
       }
 
-      // Construct public URL
-      const url = `${env.SUPABASE_URL.replace(
-        ".co",
-        ".in"
-      )}/storage/v1/object/public/${env.SUPABASE_BUCKET}/${data.path}`;
+      const url = `${env.SUPABASE_URL}/storage/v1/object/public/${env.SUPABASE_BUCKET}/${data.path}`;
 
       return res.status(200).json({ url });
     } catch (e) {

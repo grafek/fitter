@@ -1,14 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { sleep } from "../../utils";
 
 type DropdownProps = {
   children: React.ReactNode;
   expandBtn?: React.ReactNode;
   className?: string;
+  isProtected?: boolean;
 };
 
 const Dropdown: React.FC<DropdownProps> = ({
   children,
+  isProtected,
   className = "",
   expandBtn = (
     <span className="p-2 px-4 text-2xl text-gray-800 dark:text-gray-300">
@@ -19,9 +23,17 @@ const Dropdown: React.FC<DropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [clickedOutside, setClickedOutside] = useState(true);
 
+  const router = useRouter();
+
+  const { data: session } = useSession();
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const toggleDropdownMenu = async () => {
+  const toggleDropdownMenu = useCallback(async () => {
+    if (isProtected && !session) {
+      router.push("/sign-in");
+      return;
+    }
     setClickedOutside((prev) => !prev);
     if (!isOpen) {
       setIsOpen(true);
@@ -29,7 +41,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       await sleep();
       setIsOpen(false);
     }
-  };
+  }, [isOpen, isProtected, router, session]);
 
   useEffect(() => {
     const handleClickOutside = async (event: MouseEvent) => {
@@ -50,13 +62,17 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <div ref={dropdownRef} className="relative ml-auto px-2">
-      <button className="flex items-center" onClick={toggleDropdownMenu}>
+      <span
+        className="flex items-center"
+        role={"button"}
+        onClick={toggleDropdownMenu}
+      >
         {expandBtn}
-      </button>
+      </span>
       <ul
         className={`${
           !clickedOutside ? "scale-100 opacity-100" : "scale-75 opacity-0"
-        } ${className} absolute -right-1 top-12 z-10 flex min-w-[4rem] flex-col items-center divide-y divide-slate-700 rounded-md py-1 shadow-md transition-all duration-200 dark:bg-[#1e2630cb] [&>*]:w-3/4 [&>*]:py-3`}
+        } ${className} absolute -right-1 top-12 z-10 flex min-w-[4rem] flex-col items-center rounded-md bg-[#f6f8fade] p-1 shadow-xl transition-all duration-200 dark:bg-[#1e2630ea] [&>*]:py-2`}
       >
         {isOpen ? children : null}
       </ul>
