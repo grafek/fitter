@@ -5,7 +5,7 @@ import { env } from "../../env/client.mjs";
 const ProfilePicture: React.FC = () => {
   const { data: session } = useSession();
   return (
-    <div className="relative flex min-h-[32px] min-w-[32px] flex-col justify-center">
+    <div className="relative flex min-h-[32px] min-w-[32px] select-none flex-col justify-center">
       <Image
         alt="Profile Picture"
         fill

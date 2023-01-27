@@ -4,7 +4,7 @@ const useCreatePost = () => {
   const ctx = trpc.useContext();
 
   return trpc.post.create.useMutation({
-    onSettled() {
+    onSuccess() {
       ctx.post.infinitePosts.invalidate();
     },
   });
