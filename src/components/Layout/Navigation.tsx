@@ -15,6 +15,7 @@ const Navigation: React.FC = () => {
       text: "Create a post",
       linkDestination: "/post/create",
       Icon: AiOutlinePlus,
+      isProtected: true,
     },
     {
       text: "Show all posts",
@@ -53,6 +54,7 @@ const Navigation: React.FC = () => {
         {NAVIGATION.map((navItem, itemIndex) => (
           <NavItem
             key={itemIndex}
+            isProtected={navItem.isProtected}
             Icon={navItem.Icon}
             innerSpanClasses="hidden sm:block"
             linkDestination={navItem.linkDestination}

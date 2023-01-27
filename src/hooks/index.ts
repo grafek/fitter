@@ -5,6 +5,5 @@ export { default as useUserById } from "./useUserById";
 export { default as usePostById } from "./usePostById";
 export { default as useInfinitePosts } from "./useInfinitePosts";
 export { default as useInfiniteScroll } from "./useInfiniteScroll";
-export { default as useLoading } from "./useLoading";
 export { default as useLikeOptimistic } from "./useLikeOptimistic";
 export { default as useUnlikeOptimistic } from "./useUnlikeOptimistic";

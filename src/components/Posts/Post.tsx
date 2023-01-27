@@ -86,7 +86,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     <a
       href={post.image}
       target="_blank"
-      className="relative mb-8 h-96"
+      className="relative mb-8 h-96 rounded-lg bg-gradient-to-br from-slate-100 to-[#ecebeb] dark:from-[#1616208a] dark:to-[#161a2780]"
       rel="noreferrer"
     >
       <Image

@@ -5,9 +5,12 @@ const usePostById = ({
 }: {
   input: RouterInputs["post"]["infinitePosts"];
 }) => {
-  return trpc.post.infinitePosts.useInfiniteQuery({
-    ...input,
-  });
+  return trpc.post.infinitePosts.useInfiniteQuery(
+    {
+      ...input,
+    },
+    { refetchOnWindowFocus: false }
+  );
 };
 
 export default usePostById;

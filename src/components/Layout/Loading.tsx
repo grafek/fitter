@@ -15,14 +15,13 @@ const Loading: React.FC<LoadingProps> = ({
       <svg
         className="inline h-10 w-10 animate-spinBezier sm:h-14 sm:w-14 md:h-20 md:w-20"
         viewBox="0 0 100 100"
-        preserveAspectRatio="xMidYMid"
       >
         <circle
           cx="50"
           cy="50"
           fill={bgColor}
           stroke={spinnerColor}
-          strokeWidth="4"
+          strokeWidth="5"
           r="36"
           strokeDasharray="169.64600329384882 58.548667764616276"
         >

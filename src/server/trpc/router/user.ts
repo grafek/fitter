@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const userRouter = router({
-  getUserById: protectedProcedure
+  getUserById: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const { userId } = input;
@@ -11,4 +11,7 @@ export const userRouter = router({
       });
       return user;
     }),
+  getUsers: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.user.findMany();
+  }),
 });

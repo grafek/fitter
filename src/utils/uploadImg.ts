@@ -16,7 +16,6 @@ const uploadImg = async (imgData: string | null | undefined | ArrayBuffer) => {
     return data.url;
   } catch (e) {
     toast.error("Unable to upload :(", { id: toastId });
-  } finally {
   }
 };
 

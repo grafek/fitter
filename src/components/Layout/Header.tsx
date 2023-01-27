@@ -5,7 +5,11 @@ const Header: React.FC = () => {
   return (
     <header className="w-full bg-[#f6f8fa] px-4 py-2 shadow-sm shadow-blue-400 dark:bg-[#161b22] dark:shadow-blue-800">
       <div className="container mx-auto flex items-center justify-between ">
-        <Link href={"/"} className="flex items-center justify-center space-x-2">
+        <Link
+          href={"/"}
+          prefetch={false}
+          className="flex items-center justify-center space-x-2"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="40"
