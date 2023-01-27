@@ -1,8 +1,7 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { Layout, PageHeading } from "../../components/Layout";
 import PostForm from "../../components/Posts/PostForm";
 import { useCreatePost } from "../../hooks";
-import withAuth from "../../utils/withAuth";
 
 const CreatePostPage: NextPage = () => {
   const { mutateAsync: addPost } = useCreatePost();
@@ -22,9 +21,3 @@ const CreatePostPage: NextPage = () => {
 };
 
 export default CreatePostPage;
-
-export const getServerSideProps: GetServerSideProps = withAuth(async () => {
-  return {
-    props: {},
-  };
-});
