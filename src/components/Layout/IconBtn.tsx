@@ -7,6 +7,7 @@ type IconBtnProps = {
   count?: number;
   iconSize?: string;
   iconColor?: string;
+  className?: string;
 };
 
 const IconBtn: React.FC<IconBtnProps> = ({
@@ -15,13 +16,18 @@ const IconBtn: React.FC<IconBtnProps> = ({
   count,
   iconSize = "1.3rem",
   iconColor,
+  className = "",
 }) => {
   return (
     <button
-      className="mx-auto flex items-center justify-center gap-2 rounded-lg px-2 py-1 transition-colors duration-300 hover:bg-[#e5e7eb] dark:hover:bg-[#1d2229] dark:hover:text-white"
+      className="dark:hover:bg-[#1d2229] mx-auto flex items-center justify-center gap-2 rounded-lg px-2 py-1 transition-colors duration-300 hover:bg-[#e5e7eb]"
       onClick={onClick}
     >
-      <Icon size={iconSize} color={iconColor} />
+      <Icon
+        size={iconSize}
+        color={iconColor}
+        className={`${className} transition-colors duration-300`}
+      />
       {count || count === 0 ? (
         <span className="text-sm text-gray-800 dark:text-gray-400">
           {count}

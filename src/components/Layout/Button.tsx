@@ -22,7 +22,7 @@ const Button: React.FC<ButtonProps> = ({
   switch (buttonColor) {
     case "primary":
       colorClasses =
-        "bg-[#3366ff] text-white hover:bg-transparent hover:text-[#3366ff] outline-[#3366ff]";
+        "bg-[#3366ff] hover:bg-transparent hover:text-[#3366ff] outline-[#3366ff]";
       break;
     case "success":
       colorClasses =
@@ -51,7 +51,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       {...props}
-      className={`rounded-md px-3 py-1 md:px-4 md:py-2 font-semibold shadow-md outline outline-1 transition-colors duration-200 disabled:opacity-50 ${colorClasses} ${className}`}
+      className={`rounded-md px-3 py-1 font-semibold text-white shadow-md outline outline-1 transition-colors duration-200 disabled:opacity-50 md:px-4 md:py-2 ${colorClasses} ${className}`}
     >
       {children}
     </button>

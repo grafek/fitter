@@ -81,7 +81,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           image
             ? `hover:opacity-50 disabled:hover:opacity-100`
             : `border-2 border-dashed border-gray-500 hover:border-gray-400 focus:border-gray-400 disabled:hover:border-gray-200`
-        }  relative min-h-[150px] overflow-hidden rounded-md transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:min-h-[250px]`}
+        }  relative min-h-[150px] overflow-hidden rounded-md bg-gradient-to-br from-slate-100 to-[#d1d5db4b] transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:from-[#21262d] dark:to-[#12162048] md:min-h-[250px]`}
       >
         {image && typeof image === "string" ? (
           <Image

@@ -14,14 +14,12 @@ const Dropdown: React.FC<DropdownProps> = ({
   children,
   isProtected,
   className = "",
-  expandBtn = (
-    <span className="p-2 px-4 text-2xl text-gray-800 dark:text-gray-300">
-      &#8942;
-    </span>
-  ),
+  expandBtn = <span className="">&#8942;</span>,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [clickedOutside, setClickedOutside] = useState(true);
+
+  const [animationClasses, setAnimationClasses] =
+    useState("opacity-0 scale-75");
 
   const router = useRouter();
 
@@ -34,10 +32,12 @@ const Dropdown: React.FC<DropdownProps> = ({
       router.push("/sign-in");
       return;
     }
-    setClickedOutside((prev) => !prev);
     if (!isOpen) {
       setIsOpen(true);
+      await sleep(10);
+      setAnimationClasses("opacity-1 scale-1");
     } else {
+      setAnimationClasses("opacity-0 scale-75");
       await sleep();
       setIsOpen(false);
     }
@@ -49,7 +49,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        setClickedOutside(true);
+        setAnimationClasses("opacity-0 scale-75");
         await sleep();
         setIsOpen(false);
       }
@@ -61,21 +61,21 @@ const Dropdown: React.FC<DropdownProps> = ({
   }, []);
 
   return (
-    <div ref={dropdownRef} className="relative ml-auto px-2">
+    <div ref={dropdownRef} className="relative ml-auto">
       <span
-        className="flex items-center"
+        className="flex select-none items-center rounded-lg py-1 px-3 text-2xl text-gray-800 transition-colors duration-300 hover:bg-[#e5e7eb] dark:text-gray-300 dark:hover:bg-[#1d2229]"
         role={"button"}
         onClick={toggleDropdownMenu}
       >
         {expandBtn}
       </span>
-      <ul
-        className={`${
-          !clickedOutside ? "scale-100 opacity-100" : "scale-75 opacity-0"
-        } ${className}  absolute -right-1 top-12 z-10 flex min-w-[4rem] select-none flex-col items-center rounded-md bg-[#f6f8fade] p-1 shadow-xl transition-all duration-200 dark:bg-[#1e2630ea] [&>*]:py-2`}
-      >
-        {isOpen ? children : null}
-      </ul>
+      {isOpen ? (
+        <ul
+          className={`${className} ${animationClasses} absolute -right-1 top-12 z-10 flex min-w-[4rem] select-none flex-col items-center rounded-md bg-[#f6f8fade] p-1 shadow-xl transition-all duration-300 dark:bg-[#1e2630ea] [&>*]:py-2`}
+        >
+          {children}
+        </ul>
+      ) : null}
     </div>
   );
 };
