@@ -7,7 +7,7 @@ const Header: React.FC = () => {
       <div className="container mx-auto flex items-center justify-between ">
         <Link
           href={"/"}
-          prefetch={false}
+          shallow={true}
           className="flex items-center justify-center space-x-2"
         >
           <svg

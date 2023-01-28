@@ -34,7 +34,7 @@ const NavItem: React.FC<NavItemProps> = ({
 
   return linkDestination ? (
     <Link
-      prefetch={false}
+      shallow={true}
       href={isProtected && !session?.user ? "/sign-in" : linkDestination}
       className={`${navItemClasses} ${linkClasses}`}
     >

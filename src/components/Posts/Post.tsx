@@ -13,7 +13,8 @@ import { Dropdown, DropdownItem, IconBtn, NavItem } from "../Layout";
 import { toast } from "react-hot-toast";
 import { FaShare, FaComment, FaHeart } from "react-icons/fa";
 import { type RouterInputs, type RouterOutputs } from "../../utils/trpc";
-import { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import { sleep } from "../../utils";
 
 type PostItemProps = {
   post: RouterOutputs["post"]["infinitePosts"]["posts"][number];
@@ -32,6 +33,8 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
   });
   const { mutate: unlike } = useUnlikeOptimistic({ input });
 
+  const [animationClasses, setAnimationClasses] = useState<string>();
+
   const formattedDate = new Intl.DateTimeFormat("en-US").format(
     post.workoutDate
   );
@@ -40,7 +43,15 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
 
   const hasLiked = post.likes.find((like) => like.userId === session?.user?.id);
 
-  const toggleLikePost = useCallback(() => {
+  const likeAnimation = useCallback(async () => {
+    if (!hasLiked) {
+      setAnimationClasses("animate-push");
+      await sleep(300);
+      setAnimationClasses("");
+    }
+  }, [hasLiked]);
+
+  const toggleLikePost = useCallback(async () => {
     if (!session) {
       router.push("/sign-in");
       return;
@@ -50,7 +61,8 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
       return;
     }
     like({ postId: post.id });
-  }, [hasLiked, like, post.id, router, session, unlike]);
+    await likeAnimation();
+  }, [hasLiked, like, likeAnimation, post.id, router, session, unlike]);
 
   const removePost = useCallback(async () => {
     const toastId = toast.loading("Removing post..", {
@@ -123,16 +135,19 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     </Dropdown>
   ) : null;
 
+  console.log(animationClasses);
+
   const postActions = (
     <div className="flex">
       <IconBtn
         Icon={FaHeart}
-        iconColor={hasLiked ? "red" : "gray"}
+        iconColor={hasLiked ? "red" : "#818181"}
+        className={`${animationClasses}`}
         count={post._count.likes}
         onClick={toggleLikePost}
       />
-      <IconBtn Icon={FaComment} iconColor={"gray"} />
-      <IconBtn Icon={FaShare} iconColor={"gray"} />
+      <IconBtn Icon={FaComment} iconColor={"#818181"} />
+      <IconBtn Icon={FaShare} iconColor={"#818181"} />
     </div>
   );
 
@@ -175,4 +190,4 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
   );
 };
 
-export default PostItem;
+export default React.memo(PostItem);

@@ -24,8 +24,6 @@ const Home: NextPage = () => {
 
   const posts = data.pages.flatMap((page) => page.posts) ?? [];
 
-  console.log("render");
-
   return (
     <Layout>
       <PageHeading>Check out latest posts from our community</PageHeading>
