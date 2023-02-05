@@ -43,7 +43,7 @@ const Navigation: React.FC = () => {
 
   const expandUserDropdown = (
     <>
-      <ProfilePicture />
+      <ProfilePicture className="max-h-[32px] max-w-[32px]" />
       <ArrowDown className="ml-1 h-4 w-4" />
     </>
   );
@@ -66,7 +66,7 @@ const Navigation: React.FC = () => {
         <Dropdown isProtected expandBtn={expandUserDropdown} className="w-60">
           <DropdownItem className="border-b border-gray-300 py-2 dark:border-gray-700">
             <NavItem linkDestination={`/profile/${sessionData?.user?.id}`}>
-              <ProfilePicture />
+              <ProfilePicture className="max-h-[32px] max-w-[32px]" />
               <div className="flex flex-col">
                 <span className="font-semibold">{sessionData?.user?.name}</span>
                 <span className="text-sm text-gray-500">

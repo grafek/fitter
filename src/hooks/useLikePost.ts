@@ -1,12 +1,14 @@
 import { type RouterInputs, trpc } from "../utils/trpc";
 
-const useUnlikeOptimistic = ({
+const useLikePost = ({
   input,
+  userId,
 }: {
   input: RouterInputs["post"]["infinitePosts"];
+  userId: string;
 }) => {
   const ctx = trpc.useContext();
-  return trpc.post.unlike.useMutation({
+  return trpc.post.like.useMutation({
     async onMutate({ postId }) {
       await ctx.post.infinitePosts.cancel();
 
@@ -23,9 +25,10 @@ const useUnlikeOptimistic = ({
               if (post.id === postId) {
                 return {
                   ...post,
-                  likes: [],
+                  likes: [{ userId }],
                   _count: {
-                    likes: post._count.likes - 1,
+                    comments: post._count.comments,
+                    likes: post._count.likes + 1,
                   },
                 };
               }
@@ -43,4 +46,4 @@ const useUnlikeOptimistic = ({
   });
 };
 
-export default useUnlikeOptimistic;
+export default useLikePost;

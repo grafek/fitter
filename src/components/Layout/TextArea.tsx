@@ -1,32 +1,37 @@
 import {
   type UseFormRegister,
-  type Path,
   type RegisterOptions,
+  type Path,
+  type FieldValues,
   type FieldError,
+  type UnPackAsyncDefaultValues,
 } from "react-hook-form";
-import { type AddPostFormSchema } from "../../schemas/post.schema";
-import setCapitalized from "../../utils/setCapitalized";
+import FormError from "./FormError";
 
-export interface TextAreaProps
+export interface TextAreaProps<T extends FieldValues>
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  name: Path<AddPostFormSchema>;
-  register: UseFormRegister<AddPostFormSchema>;
+  name: Path<UnPackAsyncDefaultValues<T>>;
+  labelname?: string;
+  register: UseFormRegister<T>;
   className?: string;
-  errors: FieldError | undefined;
-  validation: RegisterOptions<AddPostFormSchema>;
+  errors?: FieldError;
+  validation?: RegisterOptions<T>;
   required?: boolean;
 }
 
-const TextArea: React.FC<TextAreaProps> = ({
+const TextArea = <T extends FieldValues>({
   name,
   register,
-  className = "",
-  errors,
   validation,
+  className,
+  errors,
+  labelname,
   required,
   ...props
-}) => {
-  const errorClassses = errors ? "outline-red-500" : "outline-gray-300";
+}: TextAreaProps<T>) => {
+  const errorClassses = errors
+    ? "outline-red-500"
+    : "focus:outline-blue-500 outline-[#30363d] ";
   const requiredAsterisk = required ? (
     <span className="font-semibold text-red-500">*</span>
   ) : null;
@@ -34,20 +39,16 @@ const TextArea: React.FC<TextAreaProps> = ({
   return (
     <>
       <label htmlFor={name}>
-        {setCapitalized(name)} {requiredAsterisk}
+        {labelname} {requiredAsterisk}
       </label>
       <textarea
         {...register(name, validation)}
         id={name}
-        className={`${className} ${errorClassses} max-h-[200px] min-h-[100px] w-full rounded-md bg-[#f6f8fa] px-3 py-2 outline outline-1 dark:bg-[#161b22] dark:outline-[#30363d] md:min-h-[150px]`}
+        className={`${className} ${errorClassses} max-h-[200px] min-h-[70px] w-full rounded-md bg-[#f6f8fa] px-3 py-2 outline outline-1 dark:bg-[#161b22] `}
         {...props}
       />
 
-      {errors ? (
-        <span role={"alert"} className="text-sm text-red-500">
-          {errors.message}
-        </span>
-      ) : null}
+      <FormError fieldErrors={errors} />
     </>
   );
 };

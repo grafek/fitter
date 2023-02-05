@@ -7,13 +7,14 @@ import {
 import { type AddPostFormSchema } from "../../schemas/post.schema";
 import Image from "next/image";
 import { AiOutlineArrowUp } from "react-icons/ai";
-import setCapitalized from "../../utils/setCapitalized";
+import FormError from "./FormError";
 
 interface ImageUploadProps {
   name: Path<AddPostFormSchema>;
   errors: FieldError | undefined;
   register: UseFormRegister<AddPostFormSchema>;
   sizeLimit?: number;
+  labelName: string;
   onChangePicture: (image: string | ArrayBuffer | null | undefined) => void;
   initialImage: string | null | undefined | ArrayBuffer;
 }
@@ -22,6 +23,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   initialImage = null,
   register,
   errors,
+  labelName,
   name,
   sizeLimit = 10 * 1024 * 1024, //10MB
   onChangePicture,
@@ -73,7 +75,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
   return (
     <>
-      <label>{setCapitalized(name)}</label>
+      <label>{labelName}</label>
       <button
         type="button"
         onClick={handleOnClickPicture}
@@ -115,11 +117,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           />
         </div>
       </button>
-      {pictureError || errors ? (
-        <span className="text-sm text-red-600">
-          {pictureError || errors?.message}
-        </span>
-      ) : null}
+      <FormError fieldErrors={errors} errors={pictureError} />
     </>
   );
 };

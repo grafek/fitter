@@ -8,6 +8,7 @@ type IconBtnProps = {
   iconSize?: string;
   iconColor?: string;
   className?: string;
+  title?: string;
 };
 
 const IconBtn: React.FC<IconBtnProps> = ({
@@ -17,11 +18,13 @@ const IconBtn: React.FC<IconBtnProps> = ({
   iconSize = "1.3rem",
   iconColor,
   className = "",
+  title,
 }) => {
   return (
     <button
-      className="dark:hover:bg-[#1d2229] mx-auto flex items-center justify-center gap-2 rounded-lg px-2 py-1 transition-colors duration-300 hover:bg-[#e5e7eb]"
+      className="mx-auto flex items-center justify-center gap-2 rounded-lg px-2 py-1 transition-colors duration-300 hover:bg-[#e5e7eb] dark:hover:bg-[#1d2229]"
       onClick={onClick}
+      title={title}
     >
       <Icon
         size={iconSize}

@@ -1,24 +1,26 @@
 import {
   type UseFormRegister,
-  type Path,
   type RegisterOptions,
+  type Path,
+  type FieldValues,
   type FieldError,
+  type UnPackAsyncDefaultValues,
 } from "react-hook-form";
-import setCapitalized from "../../utils/setCapitalized";
-import { type AddPostFormSchema } from "../../schemas/post.schema";
+import FormError from "./FormError";
 
-export interface SelectProps
+export interface SelectProps<T extends FieldValues>
   extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  name: Path<AddPostFormSchema>;
-  register: UseFormRegister<AddPostFormSchema>;
-  className?: string;
   options: string[];
-  validation: RegisterOptions<AddPostFormSchema>;
-  errors: FieldError | undefined;
+  name: Path<UnPackAsyncDefaultValues<T>>;
+  labelname?: string;
+  register: UseFormRegister<T>;
+  className?: string;
+  errors?: FieldError;
+  validation?: RegisterOptions<T>;
   required?: boolean;
 }
 
-const Select: React.FC<SelectProps> = ({
+const Select = <T extends FieldValues>({
   name,
   register,
   validation,
@@ -26,8 +28,9 @@ const Select: React.FC<SelectProps> = ({
   options,
   errors,
   required,
+  labelname,
   ...props
-}) => {
+}: SelectProps<T>) => {
   const errorClassses = errors ? "outline-red-500" : "outline-gray-300";
   const requiredAsterisk = required ? (
     <span className="font-semibold text-red-500">*</span>
@@ -36,7 +39,7 @@ const Select: React.FC<SelectProps> = ({
   return (
     <>
       <label htmlFor={name}>
-        {setCapitalized(name)} {requiredAsterisk}
+        {labelname} {requiredAsterisk}
       </label>
       <select
         {...register(name, validation)}
@@ -50,11 +53,7 @@ const Select: React.FC<SelectProps> = ({
           </option>
         ))}
       </select>
-      {errors ? (
-        <span role={"alert"} className="text-sm text-red-500">
-          {errors.message}
-        </span>
-      ) : null}
+      <FormError fieldErrors={errors} />
     </>
   );
 };

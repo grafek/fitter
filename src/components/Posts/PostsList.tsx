@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { type RouterInputs, type RouterOutputs } from "../../utils/trpc";
 import PostItem from "./Post";
 
@@ -19,4 +20,4 @@ const PostsList: React.FC<PostListProps> = ({ posts, input }) => {
   );
 };
 
-export default PostsList;
+export default memo(PostsList);
