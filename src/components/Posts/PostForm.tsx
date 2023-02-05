@@ -93,6 +93,7 @@ const PostForm: React.FC<PostFormProps> = ({
           register={register}
           validation={{ required: true }}
           name="title"
+          labelname="Title"
           placeholder="A catchy title!"
           errors={errors.title}
           type="text"
@@ -104,6 +105,7 @@ const PostForm: React.FC<PostFormProps> = ({
           register={register}
           validation={{ required: true }}
           name="description"
+          labelname="Description"
           placeholder="Describe your workout and feelings post session 😀"
           errors={errors.description}
         />
@@ -112,6 +114,7 @@ const PostForm: React.FC<PostFormProps> = ({
         <Select
           required
           errors={errors.sport}
+          labelname="Sport"
           name="sport"
           validation={{ required: true }}
           register={register}
@@ -125,6 +128,7 @@ const PostForm: React.FC<PostFormProps> = ({
           register={register}
           validation={{ required: true }}
           name="workoutDate"
+          labelname="Workout Date"
           placeholder="Workout date"
           type="text"
           onFocus={(e) => (e.target.type = "date")}
@@ -136,6 +140,7 @@ const PostForm: React.FC<PostFormProps> = ({
           initialImage={post?.image}
           register={register}
           name="image"
+          labelName="Image"
           errors={errors.image}
           onChangePicture={(img) => setImgData(img)}
         />

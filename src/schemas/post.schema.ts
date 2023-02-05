@@ -18,7 +18,7 @@ export const postSchemaInput = z.object({
     .string()
     .trim()
     .min(1, { message: "Description cannot be empty!" })
-    .max(500, { message: "Title cannot be longer than 500 characters" }),
+    .max(500, { message: "Description cannot be longer than 500 characters" }),
   sport: z.string().trim().min(1, { message: "Please choose a sport" }),
   workoutDate: z
     .string()

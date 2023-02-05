@@ -10,7 +10,7 @@ const Loading: React.FC<LoadingProps> = ({
   return (
     <div
       role="status"
-      className="m-auto flex h-[60vh] items-center justify-center"
+      className="m-auto flex items-center justify-center py-2"
     >
       <svg
         className="inline h-10 w-10 animate-spinBezier sm:h-14 sm:w-14 md:h-20 md:w-20"

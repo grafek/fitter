@@ -1,31 +1,35 @@
+import React from "react";
 import {
   type UseFormRegister,
-  type Path,
   type RegisterOptions,
+  type Path,
+  type FieldValues,
   type FieldError,
+  type UnPackAsyncDefaultValues,
 } from "react-hook-form";
-import { type AddPostFormSchema } from "../../schemas/post.schema";
-import setCapitalized from "../../utils/setCapitalized";
+import FormError from "./FormError";
 
-export interface InputProps
+export interface InputProps<T extends FieldValues>
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  name: Path<AddPostFormSchema>;
-  register: UseFormRegister<AddPostFormSchema>;
+  name: Path<UnPackAsyncDefaultValues<T>>;
+  labelname?: string;
+  register: UseFormRegister<T>;
   className?: string;
-  errors: FieldError | undefined;
-  validation?: RegisterOptions<AddPostFormSchema>;
+  errors?: FieldError;
+  validation?: RegisterOptions<T>;
   required?: boolean;
 }
 
-const Input: React.FC<InputProps> = ({
+const Input = <T extends FieldValues>({
   name,
   register,
   className = "",
   errors,
+  labelname,
   validation,
   required,
   ...props
-}) => {
+}: InputProps<T>) => {
   const errorClassses = errors ? "outline-red-500" : "outline-gray-300";
   const requiredAsterisk = required ? (
     <span className="font-semibold text-red-500">*</span>
@@ -34,7 +38,7 @@ const Input: React.FC<InputProps> = ({
   return (
     <>
       <label htmlFor={name}>
-        {setCapitalized(name)} {requiredAsterisk}
+        {labelname} {requiredAsterisk}
       </label>
       <input
         {...register(name, validation)}
@@ -42,11 +46,7 @@ const Input: React.FC<InputProps> = ({
         className={`${className} ${errorClassses} w-full rounded-md bg-[#f6f8fa] py-2 px-3 outline outline-1 dark:bg-[#161b22] dark:outline-[#30363d]`}
         {...props}
       />
-      {errors ? (
-        <span role={"alert"} className="text-sm text-red-500">
-          {errors.message}
-        </span>
-      ) : null}
+      <FormError fieldErrors={errors} />
     </>
   );
 };
