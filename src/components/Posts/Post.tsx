@@ -4,17 +4,24 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import {
   useDeletePost,
-  useLikeOptimistic,
-  useUnlikeOptimistic,
+  useLikeAnimation,
+  useLikePost,
+  useUnlikePost,
 } from "../../hooks";
 import { BsFillTrashFill } from "react-icons/bs";
 import { HiOutlinePencilAlt } from "react-icons/hi";
-import { Dropdown, DropdownItem, IconBtn, NavItem } from "../Layout";
+import {
+  Dropdown,
+  DropdownItem,
+  IconBtn,
+  NavItem,
+  ProfilePicture,
+} from "../Layout";
 import { toast } from "react-hot-toast";
-import { FaShare, FaComment, FaHeart } from "react-icons/fa";
+import { FaComment, FaHeart, FaShareAlt } from "react-icons/fa";
 import { type RouterInputs, type RouterOutputs } from "../../utils/trpc";
-import React, { useCallback, useState } from "react";
-import { sleep } from "../../utils";
+import React, { memo, useCallback, useState } from "react";
+import PostComments from "./PostComments";
 
 type PostItemProps = {
   post: RouterOutputs["post"]["infinitePosts"]["posts"][number];
@@ -27,13 +34,17 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
 
   const { mutateAsync: deletePost } = useDeletePost();
 
-  const { mutate: like } = useLikeOptimistic({
+  const { mutate: like } = useLikePost({
     userId: session?.user?.id ? session.user.id : "",
     input,
   });
-  const { mutate: unlike } = useUnlikeOptimistic({ input });
+  const { mutate: unlike } = useUnlikePost({ input });
 
-  const [animationClasses, setAnimationClasses] = useState<string>();
+  const hasLiked = post.likes.find((like) => like.userId === session?.user?.id);
+
+  const { animationClasses, likeAnimation } = useLikeAnimation({ hasLiked });
+
+  const [commentsShown, setCommentsShown] = useState(true);
 
   const formattedDate = new Intl.DateTimeFormat("en-US").format(
     post.workoutDate
@@ -41,17 +52,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
 
   const isOwner = post.creatorId === session?.user?.id;
 
-  const hasLiked = post.likes.find((like) => like.userId === session?.user?.id);
-
-  const likeAnimation = useCallback(async () => {
-    if (!hasLiked) {
-      setAnimationClasses("animate-push");
-      await sleep(300);
-      setAnimationClasses("");
-    }
-  }, [hasLiked]);
-
-  const toggleLikePost = useCallback(async () => {
+  const toggleLike = useCallback(async () => {
     if (!session) {
       router.push("/sign-in");
       return;
@@ -63,6 +64,14 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     like({ postId: post.id });
     await likeAnimation();
   }, [hasLiked, like, likeAnimation, post.id, router, session, unlike]);
+
+  const toggleComments = useCallback(() => {
+    if (!session) {
+      router.push("/sign-in");
+      return;
+    }
+    setCommentsShown((prev) => !prev);
+  }, [router, session]);
 
   const removePost = useCallback(async () => {
     const toastId = toast.loading("Removing post..", {
@@ -135,8 +144,6 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     </Dropdown>
   ) : null;
 
-  console.log(animationClasses);
-
   const postActions = (
     <div className="flex">
       <IconBtn
@@ -144,28 +151,24 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
         iconColor={hasLiked ? "red" : "#818181"}
         className={`${animationClasses}`}
         count={post._count.likes}
-        onClick={toggleLikePost}
+        title={`${hasLiked ? "Unlike" : "Like"} post`}
+        onClick={toggleLike}
       />
-      <IconBtn Icon={FaComment} iconColor={"#818181"} />
-      <IconBtn Icon={FaShare} iconColor={"#818181"} />
+      <IconBtn
+        Icon={FaComment}
+        iconColor={"#818181"}
+        onClick={toggleComments}
+        title={`${commentsShown ? "Hide" : "Show"} comments`}
+        count={post._count.comments}
+      />
+      <IconBtn Icon={FaShareAlt} iconColor={"#818181"} count={0} />
     </div>
   );
 
   return (
     <div className="flex flex-col justify-between gap-3 rounded-md border border-[#d0d7de] bg-[#f6f8fa] p-4 shadow-lg dark:border-[#30363d] dark:bg-[#161b22]">
       <div className="flex items-center gap-4">
-        <Link
-          href={`/profile/${post.creatorId}`}
-          className={`relative min-h-[40px] min-w-[40px]`}
-        >
-          <Image
-            alt={`${post.creator.name}'s profile picture`}
-            fill
-            className="rounded-full object-contain"
-            src={post.creator.image || "/user.png"}
-            sizes="40x40"
-          />
-        </Link>
+        <ProfilePicture imageSrc={post.creator.image} />
         <div className="flex flex-col gap-1 text-sm">
           <Link
             href={`/profile/${post.creatorId}`}
@@ -186,8 +189,12 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
       <p className="overflow-auto pb-8">{post.description}</p>
       {imageContent}
       {postActions}
+
+      {session?.user ? (
+        <PostComments postId={post.id} commentsShown={commentsShown} />
+      ) : null}
     </div>
   );
 };
 
-export default React.memo(PostItem);
+export default memo(PostItem);

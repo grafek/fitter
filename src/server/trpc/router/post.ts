@@ -93,9 +93,11 @@ export const postRouter = router({
               userId: true,
             },
           },
+          comments: {},
           _count: {
             select: {
               likes: true,
+              comments: true,
             },
           },
         },
@@ -233,7 +235,7 @@ export const postRouter = router({
 
       return await ctx.prisma.like.delete({
         where: {
-          postId_userId: {
+          userId_postId: {
             postId,
             userId,
           },
