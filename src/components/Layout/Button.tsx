@@ -8,7 +8,7 @@ export type ButtonColor =
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   buttonColor?: ButtonColor;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   isRounded?: boolean;
 }

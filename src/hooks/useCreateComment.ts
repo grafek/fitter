@@ -6,7 +6,6 @@ const useCreateComment = () => {
   return trpc.comment.create.useMutation({
     onSuccess() {
       ctx.comment.infiniteComments.invalidate();
-      ctx.post.invalidate()
     },
   });
 };

@@ -1,5 +1,6 @@
 import { useInfiniteComments } from "../../hooks";
 import { COMMENTS_LIMIT } from "../../schemas/comment.schema";
+import type { RouterInputs } from "../../utils/trpc";
 import CommentForm from "../Comments/CommentForm";
 import CommentList from "../Comments/CommentList";
 import { Button, Loading } from "../Layout";
@@ -10,19 +11,26 @@ const PostComments: React.FC<PostCommentsProps> = ({
   postId,
   commentsShown,
 }) => {
-  const commentsInputData = {
+  const commentsInputData: RouterInputs["comment"]["infiniteComments"] = {
     limit: COMMENTS_LIMIT,
     where: {
+      parentId: null,
       post: {
         id: postId,
       },
     },
   };
 
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading } =
-    useInfiniteComments({
-      input: commentsInputData,
-    });
+  const {
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    isLoading,
+    error,
+  } = useInfiniteComments({
+    input: commentsInputData,
+  });
 
   const comments = data?.pages.flatMap((page) => page.comments) ?? [];
 
@@ -31,7 +39,11 @@ const PostComments: React.FC<PostCommentsProps> = ({
       <CommentForm postId={postId} />
 
       {commentsShown && !isLoading ? (
-        <CommentList comments={comments} input={commentsInputData} />
+        <CommentList
+          comments={comments}
+          input={commentsInputData}
+          error={error}
+        />
       ) : isLoading ? (
         <Loading />
       ) : null}

@@ -7,15 +7,12 @@ export const commentRouter = router({
       z.object({
         limit: z.number().min(1).max(20).nullish(),
         cursor: z.string().nullish(),
-        where: z
-          .object({
-            parentId: z.string().optional(),
-            post: z.object({
-              id: z.string(),
-            }),
-          })
-          .optional()
-          .optional(),
+        where: z.object({
+          parentId: z.string().optional().nullable(),
+          post: z.object({
+            id: z.string(),
+          }),
+        }),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -71,26 +68,57 @@ export const commentRouter = router({
       };
     }),
   create: protectedProcedure
-    .input(z.object({ text: z.string(), postId: z.string() }))
+    .input(
+      z.object({
+        text: z.string(),
+        postId: z.string(),
+        parentId: z.string().optional().nullable(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const { text, postId } = input;
+      const { text, postId, parentId } = input;
 
-      const addedComment = await ctx.prisma.comment.create({
-        data: {
-          text,
-          user: {
-            connect: {
-              id: userId,
+      let addedComment;
+
+      if (parentId) {
+        addedComment = await ctx.prisma.comment.create({
+          data: {
+            text,
+            parent: {
+              connect: {
+                id: parentId,
+              },
+            },
+            user: {
+              connect: {
+                id: userId,
+              },
+            },
+            post: {
+              connect: {
+                id: postId,
+              },
             },
           },
-          post: {
-            connect: {
-              id: postId,
+        });
+      } else {
+        addedComment = await ctx.prisma.comment.create({
+          data: {
+            text,
+            user: {
+              connect: {
+                id: userId,
+              },
+            },
+            post: {
+              connect: {
+                id: postId,
+              },
             },
           },
-        },
-      });
+        });
+      }
 
       return addedComment;
     }),

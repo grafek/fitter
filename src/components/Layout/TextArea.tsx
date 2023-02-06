@@ -44,7 +44,7 @@ const TextArea = <T extends FieldValues>({
       <textarea
         {...register(name, validation)}
         id={name}
-        className={`${className} ${errorClassses} max-h-[200px] min-h-[70px] w-full rounded-md bg-[#f6f8fa] px-3 py-2 outline outline-1 dark:bg-[#161b22] `}
+        className={`${className} ${errorClassses} max-h-[200px] min-h-[80px] w-full rounded-md bg-[#f6f8fa] px-3 py-2 outline outline-1 dark:bg-[#161b22] `}
         {...props}
       />
 

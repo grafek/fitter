@@ -22,6 +22,7 @@ import { FaComment, FaHeart, FaShareAlt } from "react-icons/fa";
 import { type RouterInputs, type RouterOutputs } from "../../utils/trpc";
 import React, { memo, useCallback, useState } from "react";
 import PostComments from "./PostComments";
+import { DATE_FORMATTER } from "../../utils/globals";
 
 type PostItemProps = {
   post: RouterOutputs["post"]["infinitePosts"]["posts"][number];
@@ -45,10 +46,6 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
   const { animationClasses, likeAnimation } = useLikeAnimation({ hasLiked });
 
   const [commentsShown, setCommentsShown] = useState(true);
-
-  const formattedDate = new Intl.DateTimeFormat("en-US").format(
-    post.workoutDate
-  );
 
   const isOwner = post.creatorId === session?.user?.id;
 
@@ -178,7 +175,9 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
           </Link>
           <span>
             {post.sport} •{" "}
-            <span className="font-light tracking-wide">{formattedDate}</span>
+            <span className="font-light tracking-wide">
+              {DATE_FORMATTER.format(post.workoutDate)}
+            </span>
           </span>
           {updatedAtContent}
         </div>
