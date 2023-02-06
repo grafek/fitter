@@ -1,3 +1,11 @@
+export const DATETIME_FORMATTER = new Intl.DateTimeFormat(undefined, {
+  dateStyle: "medium",
+  timeStyle: "short",
+});
+export const DATE_FORMATTER = new Intl.DateTimeFormat(undefined, {
+  dateStyle: "medium",
+});
+
 export const POSTS_LIMIT = 5;
 export const SPORTS = [
   "Acrobatics",

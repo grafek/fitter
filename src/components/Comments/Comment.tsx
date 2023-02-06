@@ -1,15 +1,20 @@
 import Link from "next/link";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 import { FaHeart, FaReply } from "react-icons/fa";
-import { IconBtn, ProfilePicture } from "../Layout";
+import { Button, IconBtn, ProfilePicture } from "../Layout";
 import { type RouterInputs, type RouterOutputs } from "../../utils/trpc";
 import {
+  useInfiniteComments,
   useLikeAnimation,
   useLikeComment,
   useUnlikeComment,
 } from "../../hooks";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { DATETIME_FORMATTER } from "../../utils/globals";
+import CommentForm from "./CommentForm";
+import CommentList from "./CommentList";
+import { COMMENTS_LIMIT } from "../../schemas/comment.schema";
 
 type CommentProps = {
   comment: RouterOutputs["comment"]["infiniteComments"]["comments"][number];
@@ -17,9 +22,23 @@ type CommentProps = {
 };
 
 const Comment: React.FC<CommentProps> = ({ comment, input }) => {
+  const childrenCommentsInput: RouterInputs["comment"]["infiniteComments"] = {
+    limit: COMMENTS_LIMIT,
+    where: {
+      parentId: comment.id,
+      post: {
+        id: comment.postId,
+      },
+    },
+  };
+
   const { data: session } = useSession();
 
   const router = useRouter();
+
+  const [isReplying, setIsReplying] = useState(false);
+
+  const [showReplies, setShowReplies] = useState(false);
 
   const { mutate: like } = useLikeComment({
     input,
@@ -33,6 +52,12 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
   );
 
   const { animationClasses, likeAnimation } = useLikeAnimation({ hasLiked });
+
+  const { data, error } = useInfiniteComments({
+    input: childrenCommentsInput,
+  });
+
+  const childrenComments = data?.pages.flatMap((page) => page.comments ?? []);
 
   const toggleLike = useCallback(async () => {
     if (!session) {
@@ -48,8 +73,21 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
   }, [comment.id, hasLiked, like, likeAnimation, router, session, unlike]);
 
   return (
-    <div className="flex flex-col gap-4 bg-[#f6f8fa] px-3 py-4 shadow-lg dark:bg-[#21262d]">
-      <div className="flex items-center gap-3">
+    <div
+      className={`relative flex flex-col gap-4 bg-[#f6f8fa] p-4 pl-8 shadow-lg dark:bg-[#21262d]`}
+    >
+      {comment._count.children ? (
+        <Button
+          title={`${showReplies ? "Hide" : "Show"} replies`}
+          onClick={() => {
+            setShowReplies((prev) => !prev);
+          }}
+          className="absolute top-2 left-1 h-[95%] bg-indigo-300 p-[2px] outline-none hover:bg-indigo-400 dark:bg-blue-900 hover:dark:bg-blue-800"
+        />
+      ) : null}
+      {/* ^^ SHOW REPLIE HORIZONTAL LINE BUTTON */}
+
+      <div className={`flex items-center gap-3`}>
         <Link
           href={`/profile/${comment.user.id}`}
           className={`relative max-h-[38px]`}
@@ -60,7 +98,9 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
           <Link href={`/profile/${comment.user.id}`}>
             <span className="font-medium">{comment.user.name}</span>
           </Link>
-          <span className="font-light">{comment.createdAt.toDateString()}</span>
+          <span className="font-light">
+            {DATETIME_FORMATTER.format(comment.createdAt)}
+          </span>
         </div>
       </div>
 
@@ -75,8 +115,35 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
           title={`${hasLiked ? "Unlike" : "Like"} comment`}
           onClick={toggleLike}
         />
-        <IconBtn Icon={FaReply} iconColor={"#818181"} count={3} />
+        <IconBtn
+          Icon={FaReply}
+          iconColor={"#818181"}
+          onClick={() => {
+            setIsReplying((prev) => !prev);
+          }}
+          title={`${isReplying ? "Cancel" : "Add a"} reply`}
+          count={comment._count.children}
+        />
       </div>
+
+      {isReplying ? (
+        <CommentForm
+          setShowReplies={setShowReplies}
+          postId={comment.postId}
+          parentId={comment.id}
+        />
+      ) : null}
+      {/* ^^ REPLY FORM */}
+
+      {comment._count.children > 0 && childrenComments && showReplies ? (
+        <CommentList
+          comments={childrenComments}
+          input={childrenCommentsInput}
+          error={error}
+        />
+      ) : null}
+
+      {/* ^^ LIST CHILDREN COMMENTS */}
     </div>
   );
 };
