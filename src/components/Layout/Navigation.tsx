@@ -50,20 +50,20 @@ const Navigation: React.FC = () => {
 
   return (
     <nav>
-      <div className="flex w-full items-center justify-around gap-4 dark:bg-[#161b22]/70 ">
+      <div className="flex w-full items-center justify-around dark:bg-[#161b22]/70 ">
         {NAVIGATION.map((navItem, itemIndex) => (
           <NavItem
             key={itemIndex}
             isProtected={navItem.isProtected}
             Icon={navItem.Icon}
-            innerSpanClasses="hidden sm:block"
+            innerSpanClasses="hidden md:block"
             linkDestination={navItem.linkDestination}
           >
             {navItem.text}
           </NavItem>
         ))}
 
-        <Dropdown isProtected expandBtn={expandUserDropdown} className="w-60">
+        <Dropdown isProtected expandBtn={expandUserDropdown} className="w-62">
           <DropdownItem className="border-b border-gray-300 py-2 dark:border-gray-700">
             <NavItem linkDestination={`/profile/${sessionData?.user?.id}`}>
               <ProfilePicture className="max-h-[32px] max-w-[32px]" />

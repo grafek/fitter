@@ -55,6 +55,7 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
 
   const { data, error } = useInfiniteComments({
     input: childrenCommentsInput,
+    enabled: showReplies,
   });
 
   const childrenComments = data?.pages.flatMap((page) => page.comments ?? []);
@@ -74,7 +75,7 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
 
   return (
     <div
-      className={`relative flex flex-col gap-4 bg-[#f6f8fa] p-4 pl-8 shadow-lg dark:bg-[#21262d]`}
+      className={`relative flex flex-col gap-4 bg-[#f6f8fa] p-4 shadow-lg dark:bg-[#21262d]`}
     >
       {comment._count.children ? (
         <Button

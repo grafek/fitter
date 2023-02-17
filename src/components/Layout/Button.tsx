@@ -24,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({
   switch (buttonColor) {
     case "primary":
       colorClasses =
-        "bg-[#3366ff] px-3 py-1 md:px-4 md:py-2 hover:bg-transparent hover:text-[#3366ff] outline-[#3366ff]";
+        "bg-[#3366ff] px-3 py-1 md:px-4 md:py-2 hover:bg-transparent hover:text-[#3366ff] outline-[#3366ff] text-[#c9d1d9]";
       break;
     case "success":
       colorClasses =
@@ -36,15 +36,15 @@ const Button: React.FC<ButtonProps> = ({
       break;
     case "warning":
       colorClasses =
-        "bg-[#ffcc00] px-3 py-1 md:px-4 md:py-2 hover:bg-transparent hover:text-[#ffcc00]  outline-[#ffcc00]";
+        "bg-[#ffcc00] px-3 py-1 md:px-4 md:py-2 hover:bg-transparent hover:text-[#ffcc00] outline-[#ffcc00]";
       break;
     case "google":
       colorClasses =
-        "text-gray-500 px-3 py-1 md:px-4 md:py-2 transition-colors hover:outline-gray-400 hover:bg-gray-100 hover:text-black";
+        "text-gray-500 px-3 py-1 md:px-4 md:py-2 transition-colors outline-gray-400 hover:bg-gray-100 hover:text-black";
       break;
     case "discord":
       colorClasses =
-        "text-gray-500 px-3 py-1 md:px-4 md:py-2 transition-colors hover:outline-indigo-400 hover:bg-indigo-400";
+        "text-gray-500 px-3 py-1 md:px-4 md:py-2 transition-colors outline-indigo-400 hover:bg-indigo-400";
       break;
     default:
       colorClasses = "";
@@ -53,7 +53,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       {...props}
-      className={`select-none font-semibold shadow-md outline outline-1 transition-colors duration-200 disabled:opacity-50 dark:text-white ${
+      className={`select-none font-semibold shadow-md outline-1 transition-colors duration-200 outline disabled:opacity-50 dark:text-white ${
         isRounded ? "rounded-full" : "rounded-md"
       } ${colorClasses} ${className}`}
     >

@@ -45,7 +45,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
 
   const { animationClasses, likeAnimation } = useLikeAnimation({ hasLiked });
 
-  const [commentsShown, setCommentsShown] = useState(true);
+  const [commentsShown, setCommentsShown] = useState(false);
 
   const isOwner = post.creatorId === session?.user?.id;
 
@@ -101,7 +101,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     );
 
   const imageContent = post.image ? (
-    <a
+    <Link
       href={post.image}
       target="_blank"
       className="relative mb-8 h-96 rounded-lg bg-gradient-to-br from-slate-100 to-[#ecebeb] dark:from-[#1616208a] dark:to-[#161a2780]"
@@ -115,7 +115,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
         sizes="40x40"
         className="mx-auto min-h-[100px] max-w-fit rounded-md object-contain md:object-fill"
       />
-    </a>
+    </Link>
   ) : null;
 
   const postOwnerActions = isOwner ? (
@@ -165,7 +165,9 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
   return (
     <div className="flex flex-col justify-between gap-3 rounded-md border border-[#d0d7de] bg-[#f6f8fa] p-4 shadow-lg dark:border-[#30363d] dark:bg-[#161b22]">
       <div className="flex items-center gap-4">
-        <ProfilePicture imageSrc={post.creator.image} />
+        <Link href={`/profile/${post.creatorId}`}>
+          <ProfilePicture imageSrc={post.creator.image} />
+        </Link>
         <div className="flex flex-col gap-1 text-sm">
           <Link
             href={`/profile/${post.creatorId}`}
@@ -189,7 +191,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
       {imageContent}
       {postActions}
 
-      {session?.user ? (
+      {session?.user && commentsShown ? (
         <PostComments postId={post.id} commentsShown={commentsShown} />
       ) : null}
     </div>
