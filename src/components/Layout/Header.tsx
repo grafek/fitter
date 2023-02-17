@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Navigation from "./Navigation";
+import SearchBar from "./SearchBar/SearchBar";
 
 const Header: React.FC = () => {
   return (
-    <header className="w-full bg-[#f6f8fa] px-4 py-2 shadow-sm shadow-blue-400 dark:bg-[#161b22] dark:shadow-blue-800">
+    <header className="fixed z-[80] w-full bg-[#f6f8fa] px-3 py-2 shadow-sm shadow-blue-400 dark:bg-[#161b22] dark:shadow-blue-800 opacity-90">
       <div className="container mx-auto flex items-center justify-between ">
         <Link
           href={"/"}
@@ -24,6 +25,7 @@ const Header: React.FC = () => {
             Fitter
           </p>
         </Link>
+        <SearchBar />
         <Navigation />
       </div>
     </header>

@@ -7,10 +7,7 @@ import { Button, Loading } from "../Layout";
 
 type PostCommentsProps = { postId: string; commentsShown: boolean };
 
-const PostComments: React.FC<PostCommentsProps> = ({
-  postId,
-  commentsShown,
-}) => {
+const PostComments: React.FC<PostCommentsProps> = ({ postId }) => {
   const commentsInputData: RouterInputs["comment"]["infiniteComments"] = {
     limit: COMMENTS_LIMIT,
     where: {
@@ -36,18 +33,19 @@ const PostComments: React.FC<PostCommentsProps> = ({
 
   return (
     <div className="flex flex-col divide-y-[1px] rounded-md bg-[#f6f8fa] shadow-lg outline outline-1 outline-[#d0d7de]  dark:divide-gray-700 dark:bg-[#21262d] dark:outline-[#30363d]">
-      <CommentForm postId={postId} />
-
-      {commentsShown && !isLoading ? (
-        <CommentList
-          comments={comments}
-          input={commentsInputData}
-          error={error}
-        />
-      ) : isLoading ? (
+      {isLoading ? (
         <Loading />
-      ) : null}
-      {comments.length >= COMMENTS_LIMIT && hasNextPage && commentsShown ? (
+      ) : (
+        <>
+          <CommentForm postId={postId} />
+          <CommentList
+            comments={comments}
+            input={commentsInputData}
+            error={error}
+          />
+        </>
+      )}
+      {comments.length >= COMMENTS_LIMIT && hasNextPage ? (
         <Button
           onClick={() => {
             fetchNextPage();

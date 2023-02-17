@@ -87,7 +87,7 @@ const PostForm: React.FC<PostFormProps> = ({
       className="flex flex-col items-center gap-2"
       onSubmit={handleSubmit(submitHandler)}
     >
-      <div className="w-full space-y-1">
+      <div className="w-full space-y-2">
         <Input
           required
           register={register}
@@ -99,7 +99,7 @@ const PostForm: React.FC<PostFormProps> = ({
           type="text"
         />
       </div>
-      <div className="w-full space-y-1">
+      <div className="w-full space-y-2">
         <TextArea
           required
           register={register}
@@ -110,7 +110,7 @@ const PostForm: React.FC<PostFormProps> = ({
           errors={errors.description}
         />
       </div>
-      <div className="w-full space-y-1">
+      <div className="w-full space-y-2">
         <Select
           required
           errors={errors.sport}
@@ -121,7 +121,7 @@ const PostForm: React.FC<PostFormProps> = ({
           options={SPORTS}
         />
       </div>
-      <div className="w-full space-y-3">
+      <div className="w-full space-y-2">
         <Input
           required
           errors={errors.workoutDate}
@@ -135,7 +135,7 @@ const PostForm: React.FC<PostFormProps> = ({
           onBlur={(e) => (e.target.type = "text")}
         />
       </div>
-      <div className="flex w-full flex-col space-y-3">
+      <div className="flex w-full flex-col space-y-2">
         <ImageUpload
           initialImage={post?.image}
           register={register}
