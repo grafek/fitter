@@ -60,8 +60,12 @@ export const postRouter = router({
                   .optional(),
               })
               .optional(),
+            title: z
+              .object({
+                contains: z.string().optional(),
+              })
+              .optional(),
           })
-          .optional()
           .optional(),
       })
     )
