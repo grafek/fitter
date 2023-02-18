@@ -95,8 +95,6 @@ const SearchBar: React.FC = () => {
 
   const filteredPosts = posts ? posts.pages.flatMap((page) => page.posts) : [];
 
-  console.log(usersFetching, postsFetching);
-
   const onQueryChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     if (e.target.value.trim().length > 0) {
@@ -130,6 +128,7 @@ const SearchBar: React.FC = () => {
     >
       {isVisible ? (
         <input
+          role={"searchbox"}
           ref={inputRef}
           className={`${inputAnimations}  absolute -left-5 w-28 rounded-md bg-gray-200 px-4 py-2  pl-10 text-gray-800 transition-all duration-300 focus:outline-none dark:bg-gray-800 dark:text-gray-200 sm:static sm:inline-block sm:w-max sm:pl-3`}
           type="text"
