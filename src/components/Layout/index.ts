@@ -16,3 +16,5 @@ export { default as IconBtn } from "./IconBtn";
 export { default as ProfilePicture } from "./ProfilePicture";
 export { default as ArrowDown } from "./ArrowDown";
 export { default as FormError } from "./FormError";
+export { default as Modal } from "./Modal";
+export { default as InstagramIcon } from "./InstagramIcon";
