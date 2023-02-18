@@ -148,7 +148,7 @@ export const postRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { postId } = input;
 
-      const user = await prisma?.user.findUnique({
+      const user = await ctx.prisma.user.findUnique({
         where: { id: ctx.session.user.id },
         select: { posts: true, likes: true },
       });
