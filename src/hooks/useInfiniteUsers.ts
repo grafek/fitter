@@ -1,13 +1,13 @@
 import { type RouterInputs, trpc } from "../utils/trpc";
 
-const useInfinitePosts = ({
+const useInfiniteUsers = ({
   input,
   enabled,
 }: {
-  input: RouterInputs["post"]["infinitePosts"];
+  input: RouterInputs["user"]["infiniteUsers"];
   enabled?: boolean;
 }) => {
-  return trpc.post.infinitePosts.useInfiniteQuery(
+  return trpc.user.infiniteUsers.useInfiniteQuery(
     {
       ...input,
     },
@@ -19,4 +19,4 @@ const useInfinitePosts = ({
   );
 };
 
-export default useInfinitePosts;
+export default useInfiniteUsers;

@@ -11,9 +11,11 @@ import {
 import { BsFillTrashFill } from "react-icons/bs";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import {
+  Button,
   Dropdown,
   DropdownItem,
   IconBtn,
+  Modal,
   NavItem,
   ProfilePicture,
 } from "../Layout";
@@ -23,6 +25,8 @@ import { type RouterInputs, type RouterOutputs } from "../../utils/trpc";
 import React, { memo, useCallback, useState } from "react";
 import PostComments from "./PostComments";
 import { DATE_FORMATTER } from "../../utils/globals";
+import PostShare from "./PostShare";
+import { TRPCClientError } from "@trpc/client";
 
 type PostItemProps = {
   post: RouterOutputs["post"]["infinitePosts"]["posts"][number];
@@ -45,7 +49,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
 
   const { animationClasses, likeAnimation } = useLikeAnimation({ hasLiked });
 
-  const [commentsShown, setCommentsShown] = useState(true);
+  const [commentsShown, setCommentsShown] = useState(false);
 
   const isOwner = post.creatorId === session?.user?.id;
 
@@ -75,10 +79,14 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
       icon: "🚮",
       style: { color: "#dc2626" },
     });
-
-    await deletePost({ postId: post.id });
-
-    toast.success("Post removed!", { id: toastId });
+    try {
+      await deletePost({ postId: post.id });
+      toast.success("Post removed!", { id: toastId });
+    } catch (e) {
+      if (e instanceof TRPCClientError) {
+        toast.error(e.message, { id: toastId });
+      }
+    }
 
     router.push("/");
   }, [deletePost, post.id, router]);
@@ -101,7 +109,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     );
 
   const imageContent = post.image ? (
-    <a
+    <Link
       href={post.image}
       target="_blank"
       className="relative mb-8 h-96 rounded-lg bg-gradient-to-br from-slate-100 to-[#ecebeb] dark:from-[#1616208a] dark:to-[#161a2780]"
@@ -115,7 +123,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
         sizes="40x40"
         className="mx-auto min-h-[100px] max-w-fit rounded-md object-contain md:object-fill"
       />
-    </a>
+    </Link>
   ) : null;
 
   const postOwnerActions = isOwner ? (
@@ -132,7 +140,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
       <DropdownItem>
         <NavItem
           Icon={BsFillTrashFill}
-          onClick={removePost}
+          onClick={() => setRemovePostModal(true)}
           linkClasses="justify-center"
           iconColor="#dc2626"
           iconSize="1.5rem"
@@ -140,6 +148,9 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
       </DropdownItem>
     </Dropdown>
   ) : null;
+
+  const [removePostModal, setRemovePostModal] = useState(false);
+  const [shareModal, setShareModal] = useState(false);
 
   const postActions = (
     <div className="flex">
@@ -158,14 +169,20 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
         title={`${commentsShown ? "Hide" : "Show"} comments`}
         count={post._count.comments}
       />
-      <IconBtn Icon={FaShareAlt} iconColor={"#818181"} count={0} />
+      <IconBtn
+        Icon={FaShareAlt}
+        iconColor={"#818181"}
+        onClick={() => setShareModal(true)}
+      />
     </div>
   );
 
   return (
     <div className="flex flex-col justify-between gap-3 rounded-md border border-[#d0d7de] bg-[#f6f8fa] p-4 shadow-lg dark:border-[#30363d] dark:bg-[#161b22]">
       <div className="flex items-center gap-4">
-        <ProfilePicture imageSrc={post.creator.image} />
+        <Link href={`/profile/${post.creatorId}`}>
+          <ProfilePicture imageSrc={post.creator.image} />
+        </Link>
         <div className="flex flex-col gap-1 text-sm">
           <Link
             href={`/profile/${post.creatorId}`}
@@ -189,8 +206,33 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
       {imageContent}
       {postActions}
 
-      {session?.user ? (
+      {session?.user && commentsShown ? (
         <PostComments postId={post.id} commentsShown={commentsShown} />
+      ) : null}
+
+      {removePostModal ? (
+        <Modal
+          actionTitle="Delete Post"
+          hideModal={() => setRemovePostModal(false)}
+          isOpen={removePostModal}
+        >
+          <h2>Are you sure to remove this post?</h2>
+          <Button
+            buttonColor="danger"
+            onClick={removePost}
+            className="mx-auto w-1/2"
+          >
+            Remove
+          </Button>
+        </Modal>
+      ) : null}
+
+      {shareModal ? (
+        <PostShare
+          isOpen={shareModal}
+          setIsOpen={setShareModal}
+          postId={post.id}
+        />
       ) : null}
     </div>
   );

@@ -6,7 +6,8 @@ export const DATE_FORMATTER = new Intl.DateTimeFormat(undefined, {
   dateStyle: "medium",
 });
 
-export const POSTS_LIMIT = 5;
+export const POSTS_LIMIT = 4;
+export const SEARCH_LIMIT = 3;
 export const SPORTS = [
   "Acrobatics",
   "Aerobic Gymnastics",
