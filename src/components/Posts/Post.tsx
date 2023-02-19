@@ -44,12 +44,16 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     input,
   });
   const { mutate: unlike } = useUnlikePost({ input });
-
+  
   const hasLiked = post.likes.find((like) => like.userId === session?.user?.id);
-
+  
   const { animationClasses, likeAnimation } = useLikeAnimation({ hasLiked });
-
+  
   const [commentsShown, setCommentsShown] = useState(false);
+
+  const [removePostModal, setRemovePostModal] = useState(false);
+  
+  const [shareModal, setShareModal] = useState(false);
 
   const isOwner = post.creatorId === session?.user?.id;
 
@@ -133,7 +137,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
           Icon={HiOutlinePencilAlt}
           iconColor="#1d4ed8"
           iconSize="1.5rem"
-          linkClasses="justify-center"
+          linkClasses="justify-center py-2"
           linkDestination={`/post/${post.id}/edit`}
         />
       </DropdownItem>
@@ -141,7 +145,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
         <NavItem
           Icon={BsFillTrashFill}
           onClick={() => setRemovePostModal(true)}
-          linkClasses="justify-center"
+          linkClasses="justify-center py-2"
           iconColor="#dc2626"
           iconSize="1.5rem"
         />
@@ -149,8 +153,6 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     </Dropdown>
   ) : null;
 
-  const [removePostModal, setRemovePostModal] = useState(false);
-  const [shareModal, setShareModal] = useState(false);
 
   const postActions = (
     <div className="flex">
