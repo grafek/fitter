@@ -15,3 +15,5 @@ export { default as useUnlikeComment } from "./useUnlikeComment";
 export { default as useClickOutside } from "./useClickOutside";
 export { default as useDebounceValue } from "./useDebounceValue";
 export { default as useInfiniteUsers } from "./useInfiniteUsers";
+export { default as useUpdateComment } from "./useUpdateComment";
+export { default as useDeleteComment } from "./useDeleteComment";

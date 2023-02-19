@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { Comment } from "@prisma/client";
 import { TRPCClientError } from "@trpc/client";
 import { type Dispatch, type SetStateAction } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { AiOutlineSend } from "react-icons/ai";
-import { useCreateComment } from "../../hooks";
+import { AiOutlineClose, AiOutlineSend } from "react-icons/ai";
+import { useCreateComment, useUpdateComment } from "../../hooks";
 import {
   commentSchemaInput,
   type AddCommentFormSchema,
@@ -15,12 +16,18 @@ type CommentFormProps = {
   postId: string;
   parentId?: string;
   setShowReplies?: Dispatch<SetStateAction<boolean>>;
+  comment?: Comment;
+  isEditing?: boolean;
+  setIsEditing?: Dispatch<SetStateAction<boolean>>;
 };
 
 const CommentForm: React.FC<CommentFormProps> = ({
   postId,
   parentId,
   setShowReplies,
+  isEditing,
+  comment,
+  setIsEditing,
 }) => {
   const {
     register,
@@ -32,6 +39,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
   });
 
   const { mutateAsync: addComment } = useCreateComment();
+  const { mutateAsync: updateComment } = useUpdateComment();
 
   let toastId: string;
 
@@ -40,11 +48,19 @@ const CommentForm: React.FC<CommentFormProps> = ({
   ) => {
     try {
       toastId = toast.loading("Submitting a comment");
-      await addComment({
-        postId,
-        text: data.commentContent,
-        parentId: parentId ? parentId : undefined,
-      });
+      if (comment && isEditing && setIsEditing) {
+        await updateComment({
+          commentId: comment.id,
+          text: data.commentContent,
+        });
+        setIsEditing(false);
+      } else {
+        await addComment({
+          postId,
+          text: data.commentContent,
+          parentId: parentId ? parentId : undefined,
+        });
+      }
       toast.success("You've added a comment!", { id: toastId });
       reset();
       if (setShowReplies && parentId) {
@@ -61,8 +77,21 @@ const CommentForm: React.FC<CommentFormProps> = ({
           name="commentContent"
           register={register}
           errors={errors.commentContent}
+          defaultValue={comment ? comment.text : undefined}
           placeholder="What do you think about this post?"
         />
+        {isEditing && setIsEditing ? (
+          <Button
+            isRounded
+            onClick={() => setIsEditing(false)}
+            buttonColor="danger"
+            title="Dismiss"
+            className={`absolute md:-top-12 -top-9 right-0`}
+            disabled={isSubmitting}
+          >
+            <AiOutlineClose size={20}/>
+          </Button>
+        ) : null}
         <Button
           type="submit"
           isRounded

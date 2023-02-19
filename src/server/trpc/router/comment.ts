@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 
@@ -121,6 +122,60 @@ export const commentRouter = router({
       }
 
       return addedComment;
+    }),
+  delete: protectedProcedure
+    .input(z.object({ commentId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { commentId } = input;
+
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: ctx.session.user.id },
+        select: { comments: true, likes: true },
+      });
+
+      if (!user?.comments.find((comment) => comment.id === commentId)) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You cannot remove not your own posts!",
+        });
+      }
+
+      const deletedComment = await ctx.prisma.comment.delete({
+        where: {
+          id: commentId,
+        },
+      });
+      return deletedComment;
+    }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        commentId: z.string(),
+        text: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: ctx.session.user.id },
+        select: { comments: true },
+      });
+      const { text, commentId } = input;
+
+      if (!user?.comments.find((comment) => comment.id === commentId)) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You cannot edit not your own commments!",
+        });
+      }
+
+      const updatedComment = await ctx.prisma.comment.update({
+        where: { id: commentId },
+        data: {
+          text,
+        },
+      });
+
+      return updatedComment;
     }),
   like: protectedProcedure
     .input(
