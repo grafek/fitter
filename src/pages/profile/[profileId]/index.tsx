@@ -39,11 +39,16 @@ const ProfilePage: NextPage<ProfilePageProps> = (
   const profilePosts =
     session?.user?.id === profileId ? "My posts" : `${foundUser?.name}'s posts`;
 
+  const likedPosts =
+    session?.user?.id === profileId
+      ? "My liked posts"
+      : `${foundUser?.name}'s liked posts`;
+
   return (
     <Layout title={profileHeading}>
       <PageHeading>{profileHeading}</PageHeading>
-      <div>
-        <div className="relative mx-auto mb-4 h-16 w-16">
+      <div className="mx-auto mt-5 flex flex-col items-center justify-center gap-4 rounded-lg p-6 shadow-md">
+        <div className="relative h-24 w-24">
           <Image
             alt="user-pic"
             fill
@@ -52,9 +57,19 @@ const ProfilePage: NextPage<ProfilePageProps> = (
             sizes="40x40"
           />
         </div>
-        <p className="font-semibold">{foundUser?.name}</p>
-        <Link href={`/profile/${profileId}/posts`} className="italic underline">
+        <h2 className="text-2xl font-semibold">{foundUser?.name}</h2>
+
+        <Link
+          href={`/profile/${profileId}/posts`}
+          className="transform-cpu italic text-blue-600 hover:text-blue-800 underline transition-colors dark:text-indigo-400 dark:hover:text-indigo-300"
+        >
           {profilePosts}
+        </Link>
+        <Link
+          href={`/profile/${profileId}/liked-posts`}
+          className="transform-cpu italic text-blue-600 hover:text-blue-800 underline transition-colors dark:text-indigo-400 dark:hover:text-indigo-300 "
+        >
+          {likedPosts}
         </Link>
       </div>
     </Layout>

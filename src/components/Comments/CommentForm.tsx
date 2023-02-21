@@ -71,7 +71,10 @@ const CommentForm: React.FC<CommentFormProps> = ({
     }
   };
   return (
-    <form className="p-3" onSubmit={handleSubmit(submitCommentHandler)}>
+    <form
+      className="min-w-[150px] p-3"
+      onSubmit={handleSubmit(submitCommentHandler)}
+    >
       <div className="relative top-1">
         <TextArea
           name="commentContent"
@@ -86,10 +89,10 @@ const CommentForm: React.FC<CommentFormProps> = ({
             onClick={() => setIsEditing(false)}
             buttonColor="danger"
             title="Dismiss"
-            className={`absolute md:-top-12 -top-9 right-0`}
+            className={`absolute -top-9 right-0 md:-top-12`}
             disabled={isSubmitting}
           >
-            <AiOutlineClose size={20}/>
+            <AiOutlineClose size={20} />
           </Button>
         ) : null}
         <Button
