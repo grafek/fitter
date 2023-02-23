@@ -8,8 +8,9 @@ import type { NextPage } from "next";
 import superjson from "superjson";
 import { createContextInner } from "../server/trpc/context";
 import LoadingPage from "./LoadingPage";
+import type { RouterInputs } from "../utils/trpc";
 
-const inputData = {
+const inputData: RouterInputs["post"]["infinitePosts"] = {
   limit: POSTS_LIMIT,
   where: {},
 };
