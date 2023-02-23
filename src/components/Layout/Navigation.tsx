@@ -4,7 +4,9 @@ import {
   AiOutlineLogout,
   AiOutlinePlus,
   AiOutlineUnorderedList,
+  AiOutlineUser,
 } from "react-icons/ai";
+import { RiUserFollowLine } from "react-icons/ri";
 import { NavItem, ProfilePicture, Dropdown, DropdownItem, ArrowDown } from "./";
 
 const Navigation: React.FC = () => {
@@ -33,6 +35,16 @@ const Navigation: React.FC = () => {
       text: "Liked Posts",
       linkDestination: `/profile/${sessionData?.user?.id}/liked-posts`,
       Icon: AiOutlineHeart,
+    },
+    {
+      text: "Following",
+      linkDestination: `/profile/${sessionData?.user?.id}/following`,
+      Icon: AiOutlineUser,
+    },
+    {
+      text: "My followers",
+      linkDestination: `/profile/${sessionData?.user?.id}/followers`,
+      Icon: RiUserFollowLine,
     },
     {
       text: sessionData ? "Sign out" : "Sign in",

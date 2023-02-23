@@ -1,9 +1,4 @@
-import type {
-  GetStaticPaths,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-  NextPage,
-} from "next";
+import type { InferGetStaticPropsType, NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { Layout, PageHeading } from "../../../components/Layout";
 import PostsList from "../../../components/Posts/PostsList";
@@ -14,13 +9,9 @@ import {
 } from "../../../hooks";
 import { POSTS_LIMIT } from "../../../utils/globals";
 import { type RouterInputs } from "../../../utils/trpc";
-import { prisma } from "../../../server/db/client";
-import superjson from "superjson";
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
-import { appRouter } from "../../../server/trpc/router/_app";
 import { type DehydratedState } from "@tanstack/react-query";
 import LoadingPage from "../../LoadingPage";
-import { createContextInner } from "../../../server/trpc/context";
+import { withProfileId, withProfilePaths } from "../../../hoc";
 
 type UsersPostsPageProps = { trpcState: DehydratedState; profileId: string };
 
@@ -68,39 +59,8 @@ const UsersPostsPage: NextPage<UsersPostsPageProps> = (
 
 export default UsersPostsPage;
 
-export async function getStaticProps(
-  context: GetStaticPropsContext<{ profileId: string }>
-) {
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: await createContextInner(),
-    transformer: superjson,
-  });
-  const profileId = context.params?.profileId as string;
+export const getStaticProps = withProfileId(async () => {
+  return { props: {} };
+});
 
-  await ssg.user.getUserById.prefetch({ userId: profileId });
-  return {
-    props: {
-      trpcState: ssg.dehydrate(),
-      profileId,
-    },
-    revalidate: 1,
-  };
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const users = await prisma.post.findMany({
-    select: {
-      id: true,
-    },
-  });
-  return {
-    paths: users.map((user) => ({
-      params: {
-        profileId: user.id,
-      },
-    })),
-    // https://nextjs.org/docs/basic-features/data-fetching#fallback-blocking
-    fallback: "blocking",
-  };
-};
+export const getStaticPaths = withProfilePaths();

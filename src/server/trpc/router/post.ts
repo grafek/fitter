@@ -48,6 +48,20 @@ export const postRouter = router({
             creator: z
               .object({
                 id: z.string().optional(),
+                followers: z
+                  .object({
+                    some: z
+                      .object({ followerId: z.string().optional() })
+                      .optional(),
+                  })
+                  .optional(),
+                following: z
+                  .object({
+                    some: z
+                      .object({ followingId: z.string().optional() })
+                      .optional(),
+                  })
+                  .optional(),
               })
               .optional(),
             id: z.string().optional(),

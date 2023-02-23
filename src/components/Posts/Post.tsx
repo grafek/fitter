@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import {
   useDeletePost,
+  useFollowers,
   useLikeAnimation,
   useLikePost,
   useUnlikePost,
@@ -14,6 +15,7 @@ import {
   Button,
   Dropdown,
   DropdownItem,
+  FollowBtn,
   IconBtn,
   Modal,
   NavItem,
@@ -44,18 +46,26 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     input,
   });
   const { mutate: unlike } = useUnlikePost({ input });
-  
+
   const hasLiked = post.likes.find((like) => like.userId === session?.user?.id);
-  
+
   const { animationClasses, likeAnimation } = useLikeAnimation({ hasLiked });
-  
+
   const [commentsShown, setCommentsShown] = useState(false);
 
   const [removePostModal, setRemovePostModal] = useState(false);
-  
+
   const [shareModal, setShareModal] = useState(false);
 
   const isOwner = post.creatorId === session?.user?.id;
+
+  const { data: followingIds } = useFollowers({
+    input: {
+      userId: session?.user?.id ?? "",
+    },
+    enabled: session?.user ? true : false,
+  });
+  const isFollowing = followingIds?.includes(post.creatorId);
 
   const toggleLike = useCallback(async () => {
     if (!session) {
@@ -98,7 +108,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
   const seePost = router.query.postId ? null : (
     <Link
       href={`/post/${post.id}`}
-      className="w-fit italic text-indigo-800 underline underline-offset-2 dark:text-indigo-400"
+      className="w-fit text-blue-600 underline underline-offset-4 transition-colors hover:text-blue-800 dark:text-indigo-400 dark:hover:text-indigo-300 "
     >
       See post
     </Link>
@@ -153,7 +163,6 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
     </Dropdown>
   ) : null;
 
-
   const postActions = (
     <div className="flex">
       <IconBtn
@@ -200,6 +209,12 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
           </span>
           {updatedAtContent}
         </div>
+        {!isOwner ? (
+          <FollowBtn
+            isFollowing={isFollowing ?? false}
+            followingId={post.creatorId}
+          />
+        ) : null}
         {postOwnerActions}
       </div>
       {seePost}

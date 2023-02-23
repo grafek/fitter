@@ -26,12 +26,26 @@ export const userRouter = router({
                 contains: z.string().optional(),
               })
               .optional(),
+            followers: z
+              .object({
+                some: z
+                  .object({ followerId: z.string().optional() })
+                  .optional(),
+              })
+              .optional(),
+            following: z
+              .object({
+                some: z
+                  .object({ followingId: z.string().optional() })
+                  .optional(),
+              })
+              .optional(),
           })
           .optional(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const limit = input.limit ?? 1;
+      const limit = input.limit ?? 4;
       const { cursor, where } = input;
 
       const users = await ctx.prisma.user.findMany({

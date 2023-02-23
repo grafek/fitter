@@ -45,6 +45,18 @@ model User {
   posts         Post[]
   likes         Like[]
   comments      Comment[]
+
+  followers Follow[] @relation("following")
+  following Follow[] @relation("follower")
+}
+
+model Follow {
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id])
+  followingId String
+
+  @@id([followerId, followingId])
 }
 
 model VerificationToken {

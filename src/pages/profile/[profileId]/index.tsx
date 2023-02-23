@@ -1,21 +1,21 @@
-import type {
-  GetStaticPaths,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-  NextPage,
-} from "next";
+import type { InferGetStaticPropsType, NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
-import { Layout, PageHeading } from "../../../components/Layout";
-import { useUserById } from "../../../hooks";
-import { prisma } from "../../../server/db/client";
-import superjson from "superjson";
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
-import { appRouter } from "../../../server/trpc/router/_app";
+import {
+  FollowBtn,
+  Layout,
+  NavItem,
+  PageHeading,
+} from "../../../components/Layout";
+import { useFollowers, useUserById } from "../../../hooks";
 import { type DehydratedState } from "@tanstack/react-query";
-import LoadingPage from "../../LoadingPage";
-import { createContextInner } from "../../../server/trpc/context";
+import {
+  AiOutlineHeart,
+  AiOutlineUnorderedList,
+  AiOutlineUser,
+} from "react-icons/ai";
+import { RiUserFollowLine } from "react-icons/ri";
+import { withProfileId, withProfilePaths } from "../../../hoc";
 
 type ProfilePageProps = { trpcState: DehydratedState; profileId: string };
 
@@ -24,26 +24,77 @@ const ProfilePage: NextPage<ProfilePageProps> = (
 ) => {
   const { profileId } = props;
 
-  const { data: session, status } = useSession();
-  const { data: foundUser, isLoading } = useUserById({ userId: profileId });
+  const { data: session } = useSession();
+  const { data: foundUser } = useUserById({ userId: profileId });
 
-  if (status === "loading" || isLoading) {
-    return <LoadingPage />;
+  const { data: followingIds } = useFollowers({
+    input: {
+      userId: session?.user?.id ?? "",
+    },
+  });
+  const isFollowing = followingIds?.includes(profileId);
+
+  const loggedUserPage = profileId === session?.user?.id;
+
+  const profileHeading = loggedUserPage
+    ? "My Profile"
+    : `${foundUser?.name}'s profile`;
+
+  const profilePosts = loggedUserPage
+    ? "My posts"
+    : `${foundUser?.name}'s posts`;
+
+  const likedPosts = loggedUserPage
+    ? "My liked posts"
+    : `${foundUser?.name}'s liked posts`;
+  const following = loggedUserPage
+    ? "People who I follow"
+    : `People who ${foundUser?.name} follows`;
+  const followers = loggedUserPage
+    ? "People who follow me"
+    : `People who follow ${foundUser?.name}`;
+
+  const LINKS = [
+    {
+      text: profilePosts,
+      linkDestination: `/profile/${profileId}/posts`,
+      Icon: AiOutlineUnorderedList,
+    },
+    {
+      text: likedPosts,
+      linkDestination: `/profile/${profileId}/liked-posts`,
+      Icon: AiOutlineHeart,
+    },
+    {
+      text: following,
+      linkDestination: `/profile/${profileId}/following`,
+      Icon: AiOutlineUser,
+    },
+    {
+      text: followers,
+      linkDestination: `/profile/${profileId}/followers`,
+      Icon: RiUserFollowLine,
+    },
+    {
+      text: "Check posts from your followers!",
+      linkDestination: `/profile/${profileId}/following-posts`,
+      Icon: AiOutlineUnorderedList,
+    },
+    {
+      text: " Check posts from people you follow!",
+      Icon: AiOutlineUnorderedList,
+      linkDestination: `/profile/${profileId}/following-posts`,
+    },
+  ];
+  if (!loggedUserPage) {
+    LINKS.length = 4;
   }
-
-  const profileHeading =
-    session?.user?.id === profileId
-      ? "My Profile"
-      : `${foundUser?.name}'s profile`;
-
-  const profilePosts =
-    session?.user?.id === profileId ? "My posts" : `${foundUser?.name}'s posts`;
 
   return (
     <Layout title={profileHeading}>
       <PageHeading>{profileHeading}</PageHeading>
-      <div>
-        <div className="relative mx-auto mb-4 h-16 w-16">
+      <div className="mx-auto mt-5 flex flex-col items-center justify-center gap-4 rounded-lg p-6 pb-2 shadow-md">
+        <div className="relative h-24 w-24">
           <Image
             alt="user-pic"
             fill
@@ -52,10 +103,23 @@ const ProfilePage: NextPage<ProfilePageProps> = (
             sizes="40x40"
           />
         </div>
-        <p className="font-semibold">{foundUser?.name}</p>
-        <Link href={`/profile/${profileId}/posts`} className="italic underline">
-          {profilePosts}
-        </Link>
+        <h2 className="text-2xl font-semibold">{foundUser?.name}</h2>
+        {!loggedUserPage ? (
+          <FollowBtn
+            followingId={profileId}
+            isFollowing={isFollowing ?? false}
+          />
+        ) : null}
+
+        <ul className="w-full divide-y-[1px] divide-slate-200 dark:divide-slate-700">
+          {LINKS.map(({ Icon, text, linkDestination }, itemIndex) => (
+            <li key={itemIndex} className="w-full py-2">
+              <NavItem linkDestination={linkDestination} Icon={Icon}>
+                {text}
+              </NavItem>
+            </li>
+          ))}
+        </ul>
       </div>
     </Layout>
   );
@@ -63,39 +127,8 @@ const ProfilePage: NextPage<ProfilePageProps> = (
 
 export default ProfilePage;
 
-export async function getStaticProps(
-  context: GetStaticPropsContext<{ profileId: string }>
-) {
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: await createContextInner(),
-    transformer: superjson,
-  });
-  const profileId = context.params?.profileId as string;
+export const getStaticProps = withProfileId(async () => {
+  return { props: {} };
+});
 
-  await ssg.user.getUserById.prefetch({ userId: profileId });
-  return {
-    props: {
-      trpcState: ssg.dehydrate(),
-      profileId,
-    },
-    revalidate: 1,
-  };
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const users = await prisma.post.findMany({
-    select: {
-      id: true,
-    },
-  });
-  return {
-    paths: users.map((user) => ({
-      params: {
-        profileId: user.id,
-      },
-    })),
-    // https://nextjs.org/docs/basic-features/data-fetching#fallback-blocking
-    fallback: "blocking",
-  };
-};
+export const getStaticPaths = withProfilePaths();

@@ -17,3 +17,6 @@ export { default as useDebounceValue } from "./useDebounceValue";
 export { default as useInfiniteUsers } from "./useInfiniteUsers";
 export { default as useUpdateComment } from "./useUpdateComment";
 export { default as useDeleteComment } from "./useDeleteComment";
+export { default as useFollow } from "./useFollow";
+export { default as useUnfollow } from "./useUnfollow";
+export { default as useFollowers } from "./useFollowers";
