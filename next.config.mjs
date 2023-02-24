@@ -33,6 +33,12 @@ const config = {
         port: "",
         pathname: `/storage/v1/object/public/fitter/**`,
       },
+      {
+        protocol: "https",
+        hostname: "platform-lookaside.fbsbx.com",
+        port: "",
+        pathname: `/platform/**`,
+      },
     ],
   },
 };
