@@ -35,7 +35,7 @@ const NavItem: React.FC<NavItemProps> = ({
   return linkDestination ? (
     <Link
       shallow={true}
-      href={isProtected && !session?.user ? "/sign-in" : linkDestination}
+      href={isProtected && !session?.user ? "/auth/sign-in" : linkDestination}
       className={`${navItemClasses} ${linkClasses}`}
     >
       {Icon ? <Icon size={iconSize} color={iconColor} /> : null}

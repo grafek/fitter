@@ -1,4 +1,4 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import {
   AiOutlineHeart,
   AiOutlineLogout,
@@ -47,9 +47,9 @@ const Navigation: React.FC = () => {
       Icon: RiUserFollowLine,
     },
     {
-      text: sessionData ? "Sign out" : "Sign in",
+      text: "Sign out",
       Icon: AiOutlineLogout,
-      onClick: () => (sessionData ? signOut({ callbackUrl: "/" }) : signIn()),
+      onClick: () => signOut({ callbackUrl: "/" }),
     },
   ];
 

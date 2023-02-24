@@ -81,7 +81,7 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
 
   const toggleLike = useCallback(async () => {
     if (!session) {
-      router.push("/sign-in");
+      router.push("/auth/sign-in");
       return;
     }
     if (hasLiked) {

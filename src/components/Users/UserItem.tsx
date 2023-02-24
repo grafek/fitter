@@ -24,7 +24,7 @@ const UserItem: React.FC<UserItemProps> = ({
   return (
     <li className="flex items-center justify-between">
       <Link
-        className="flex items-center gap-3 py-4 transition-colors dark:hover:text-slate-400"
+        className="flex items-center gap-3 py-4 transition-colors hover:text-slate-500"
         href={`/profile/${userId}`}
       >
         <div className="relative h-12 w-12">
