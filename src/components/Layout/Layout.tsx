@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Header, Footer } from "./";
+import { Header, Footer, SlideToTop } from "./";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -21,6 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "" }) => {
           {children}
         </main>
         <Footer />
+        <SlideToTop />
       </div>
     </>
   );

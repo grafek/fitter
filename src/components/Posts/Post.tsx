@@ -69,7 +69,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
 
   const toggleLike = useCallback(async () => {
     if (!session) {
-      router.push("/sign-in");
+      router.push("/auth/sign-in");
       return;
     }
     if (hasLiked) {
@@ -82,7 +82,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
 
   const toggleComments = useCallback(() => {
     if (!session) {
-      router.push("/sign-in");
+      router.push("/auth/sign-in");
       return;
     }
     setCommentsShown((prev) => !prev);
@@ -197,15 +197,13 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
         <div className="flex flex-col gap-1 text-sm">
           <Link
             href={`/profile/${post.creatorId}`}
-            className={`block font-semibold`}
+            className="text-base font-semibold text-blue-600 transition-colors hover:text-blue-800 dark:text-indigo-400 dark:hover:text-indigo-300 "
           >
             {post.creator.name}
           </Link>
-          <span>
-            {post.sport} •{" "}
-            <span className="font-light tracking-wide">
-              {DATE_FORMATTER.format(post.workoutDate)}
-            </span>
+          <span>{post.sport}</span>
+          <span className="font-light">
+            {DATE_FORMATTER.format(post.workoutDate)}
           </span>
           {updatedAtContent}
         </div>

@@ -1,4 +1,5 @@
 import { useSession } from "next-auth/react";
+import { AiOutlineCheck, AiOutlinePlus } from "react-icons/ai";
 import { useFollow, useUnfollow } from "../../hooks";
 import { Button } from "./";
 
@@ -37,10 +38,21 @@ const FollowBtn: React.FC<FollowBtnProps> = ({
               });
             }
           }}
+          buttonColor="primary"
           disabled={unfollowLoading || followLoading}
-          className="min-w-[87px] py-1 px-2 dark:hover:bg-blue-400 dark:hover:outline-blue-400"
+          className="min-w-[109px] py-1 px-2 mx-2"
         >
-          {isFollowing ? followingText : followText}
+          <span className="flex items-center justify-center gap-1">
+            {isFollowing ? (
+              <>
+                <AiOutlineCheck size={18} /> {followingText}
+              </>
+            ) : (
+              <>
+                <AiOutlinePlus size={18} /> {followText}
+              </>
+            )}
+          </span>
         </Button>
       ))
     : null;

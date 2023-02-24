@@ -19,3 +19,4 @@ export { default as FormError } from "./FormError";
 export { default as Modal } from "./Modal";
 export { default as InstagramIcon } from "./InstagramIcon";
 export { default as FollowBtn } from "./FollowBtn";
+export { default as SlideToTop } from "./SlideToTop";

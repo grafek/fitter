@@ -34,7 +34,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   const toggleDropdownMenu = useCallback(async () => {
     if (isProtected && !session) {
-      router.push("/sign-in");
+      router.push("/auth/sign-in");
       return;
     }
     if (!isOpen) {
