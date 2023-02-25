@@ -17,6 +17,7 @@ import {
   useLikeAnimation,
   useLikeComment,
   useUnlikeComment,
+  useUsers,
 } from "../../hooks";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -28,6 +29,7 @@ import { BsFillTrashFill } from "react-icons/bs";
 import { HiPencil } from "react-icons/hi";
 import { toast } from "react-hot-toast";
 import { TRPCClientError } from "@trpc/client";
+import UsersList from "../Users/UsersList";
 
 type CommentProps = {
   comment: RouterOutputs["comment"]["infiniteComments"]["comments"][number];
@@ -56,6 +58,21 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
   const [showReplies, setShowReplies] = useState(false);
 
   const [removeCommentModal, setRemoveCommentModal] = useState(false);
+
+  const [userLikedCommentModal, setUserLikedCommentModal] = useState(false);
+
+  const { data: usersLikedComment, isLoading } = useUsers({
+    input: {
+      where: {
+        likes: {
+          some: {
+            commentId: comment.id,
+          },
+        },
+      },
+    },
+    enabled: userLikedCommentModal,
+  });
 
   const { mutate: like } = useLikeComment({
     input,
@@ -115,6 +132,33 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
         Edited at: {comment.updatedAt.toLocaleString()}
       </span>
     );
+
+  const commentActions = (
+    <div className="flex max-w-[150px]">
+      <IconBtn
+        Icon={FaHeart}
+        iconColor={hasLiked ? "red" : "#818181"}
+        className={`${animationClasses}`}
+        title={`${hasLiked ? "Unlike" : "Like"} comment`}
+        onClick={toggleLike}
+      />
+      <Button
+        onClick={() => setUserLikedCommentModal(true)}
+        className="px-2 text-sm text-gray-800 outline-none hover:bg-[#e5e7eb] dark:text-gray-400 dark:hover:bg-[#1d2229]"
+      >
+        {comment._count.likes}
+      </Button>
+      <IconBtn
+        Icon={FaReply}
+        iconColor={"#818181"}
+        onClick={() => {
+          setIsReplying((prev) => !prev);
+        }}
+        title={`${isReplying ? "Cancel" : "Add a"} reply`}
+        count={comment._count.children}
+      />
+    </div>
+  );
 
   const commentOwnerActions = isOwner ? (
     <Dropdown className="divide-y-[1px] divide-gray-200 dark:divide-gray-600">
@@ -184,25 +228,8 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
             {commentOwnerActions}
           </div>
           <p>{comment.text}</p>
-          <div className="flex max-w-[150px]">
-            <IconBtn
-              Icon={FaHeart}
-              iconColor={hasLiked ? "red" : "#818181"}
-              count={comment._count.likes}
-              className={`${animationClasses}`}
-              title={`${hasLiked ? "Unlike" : "Like"} comment`}
-              onClick={toggleLike}
-            />
-            <IconBtn
-              Icon={FaReply}
-              iconColor={"#818181"}
-              onClick={() => {
-                setIsReplying((prev) => !prev);
-              }}
-              title={`${isReplying ? "Cancel" : "Add a"} reply`}
-              count={comment._count.children}
-            />
-          </div>
+          {commentActions}
+
           {isReplying ? (
             <CommentForm
               setShowReplies={setShowReplies}
@@ -211,6 +238,7 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
             />
           ) : null}
           {/* ^^ REPLY FORM */}
+
           {comment._count.children > 0 && childrenComments && showReplies ? (
             <CommentList
               comments={childrenComments}
@@ -218,7 +246,9 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
               error={error}
             />
           ) : null}
+
           {/* ^^ LIST CHILDREN COMMENTS */}
+
           {removeCommentModal ? (
             <Modal
               actionTitle="Delete comment"
@@ -233,6 +263,16 @@ const Comment: React.FC<CommentProps> = ({ comment, input }) => {
               >
                 Remove
               </Button>
+            </Modal>
+          ) : null}
+
+          {userLikedCommentModal ? (
+            <Modal
+              actionTitle="Users who liked this comment"
+              hideModal={() => setUserLikedCommentModal(false)}
+              isOpen={userLikedCommentModal}
+            >
+              <UsersList users={usersLikedComment} isLoading={isLoading}/>
             </Modal>
           ) : null}
         </>

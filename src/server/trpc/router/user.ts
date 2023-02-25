@@ -11,9 +11,32 @@ export const userRouter = router({
       });
       return user;
     }),
-  getAll: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.user.findMany();
-  }),
+  getAll: protectedProcedure
+    .input(
+      z.object({
+        where: z
+          .object({
+            likes: z
+              .object({
+                some: z
+                  .object({
+                    postId: z.string().optional(),
+                    commentId: z.string().optional(),
+                  })
+                  .optional(),
+              })
+              .optional(),
+          })
+          .optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { where } = input;
+      return await ctx.prisma.user.findMany({
+        where,
+        orderBy: { name: "desc" },
+      });
+    }),
   infiniteUsers: protectedProcedure
     .input(
       z.object({

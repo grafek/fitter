@@ -1,12 +1,13 @@
 import type { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import React from "react";
+import React, { memo } from "react";
 import { useFollowers } from "../../hooks";
+import { Loading } from "../Layout";
 import UserItem from "./UserItem";
 
-type UsersListProps = { users: User[] | undefined };
+type UsersListProps = { users: User[] | undefined; isLoading: boolean };
 
-const UsersList: React.FC<UsersListProps> = ({ users }) => {
+const UsersList: React.FC<UsersListProps> = ({ users, isLoading }) => {
   const { data: session } = useSession();
 
   const { data: followingIds } = useFollowers({
@@ -16,8 +17,16 @@ const UsersList: React.FC<UsersListProps> = ({ users }) => {
   });
   let isFollowing: boolean;
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!users || users.length < 1) {
+    return <h2 className="p-2 text-center font-semibold">So empty... 😶</h2>;
+  }
+
   return (
-    <ul className="mx-auto mt-5 flex flex-col divide-y-[1px] rounded-lg p-4 shadow-md dark:divide-slate-700">
+    <ul className=" mt-5 flex flex-col divide-y-[1px] rounded-lg p-4 shadow-md dark:divide-slate-700">
       {users?.map((user) => {
         if (followingIds?.includes(user.id)) {
           isFollowing = true;
@@ -38,4 +47,4 @@ const UsersList: React.FC<UsersListProps> = ({ users }) => {
   );
 };
 
-export default UsersList;
+export default memo(UsersList);
