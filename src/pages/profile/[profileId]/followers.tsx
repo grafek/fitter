@@ -1,11 +1,6 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { useSession } from "next-auth/react";
-import {
-  Button,
-  Layout,
-  Loading,
-  PageHeading,
-} from "../../../components/Layout";
+import { Button, Layout, PageHeading } from "../../../components/Layout";
 import { useInfiniteUsers, useUserById } from "../../../hooks";
 import { type DehydratedState } from "@tanstack/react-query";
 import Link from "next/link";
@@ -65,11 +60,10 @@ const FollowersPage: NextPage<FollowersPageProps> = (
           Check posts from your followers!
         </Link>
       ) : null}
-      <UsersList users={followerUsers} />
+      <UsersList users={followerUsers} isLoading={isLoading} />
       {followerUsers && followerUsers?.length < 1 ? (
         <div className="text-center font-semibold">{emptyContent}</div>
       ) : null}
-      {isLoading ? <Loading /> : null}
       {hasNextPage ? (
         <div className="flex justify-center pt-8">
           <Button buttonColor="primary" onClick={() => fetchNextPage()}>

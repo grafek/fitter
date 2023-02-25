@@ -40,7 +40,7 @@ const FollowBtn: React.FC<FollowBtnProps> = ({
           }}
           buttonColor="primary"
           disabled={unfollowLoading || followLoading}
-          className="min-w-[109px] py-1 px-2 mx-2"
+          className="min-w-[109px] py-1 px-2 m-2"
         >
           <span className="flex items-center justify-center gap-1">
             {isFollowing ? (

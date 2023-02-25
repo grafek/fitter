@@ -22,12 +22,12 @@ const UserItem: React.FC<UserItemProps> = ({
   const checkUser = userId === session?.user?.id;
 
   return (
-    <li className="flex items-center justify-between">
+    <li className="flex flex-col items-center justify-between sm:flex-row">
       <Link
         className="flex items-center gap-3 py-4 transition-colors hover:text-slate-500"
         href={`/profile/${userId}`}
       >
-        <div className="relative h-12 w-12">
+        <div className="relative h-12 min-h-[3rem] w-12 min-w-[3rem]">
           <Image
             alt={`${userName}'s picture`}
             fill

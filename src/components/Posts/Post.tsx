@@ -8,6 +8,7 @@ import {
   useLikeAnimation,
   useLikePost,
   useUnlikePost,
+  useUsers,
 } from "../../hooks";
 import { BsFillTrashFill } from "react-icons/bs";
 import { HiOutlinePencilAlt } from "react-icons/hi";
@@ -29,6 +30,7 @@ import PostComments from "./PostComments";
 import { DATE_FORMATTER } from "../../utils/globals";
 import PostShare from "./PostShare";
 import { TRPCClientError } from "@trpc/client";
+import UsersList from "../Users/UsersList";
 
 type PostItemProps = {
   post: RouterOutputs["post"]["infinitePosts"]["posts"][number];
@@ -56,6 +58,21 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
   const [removePostModal, setRemovePostModal] = useState(false);
 
   const [shareModal, setShareModal] = useState(false);
+
+  const [usersLikedPostModal, setUsersLikedPostModal] = useState(false);
+
+  const { data: usersLikedPost, isLoading } = useUsers({
+    input: {
+      where: {
+        likes: {
+          some: {
+            postId: post.id,
+          },
+        },
+      },
+    },
+    enabled: usersLikedPostModal,
+  });
 
   const isOwner = post.creatorId === session?.user?.id;
 
@@ -165,14 +182,21 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
 
   const postActions = (
     <div className="flex">
-      <IconBtn
-        Icon={FaHeart}
-        iconColor={hasLiked ? "red" : "#818181"}
-        className={`${animationClasses}`}
-        count={post._count.likes}
-        title={`${hasLiked ? "Unlike" : "Like"} post`}
-        onClick={toggleLike}
-      />
+      <div className="mx-auto flex">
+        <IconBtn
+          Icon={FaHeart}
+          iconColor={hasLiked ? "red" : "#818181"}
+          className={`${animationClasses}`}
+          title={`${hasLiked ? "Unlike" : "Like"} post`}
+          onClick={toggleLike}
+        />
+        <Button
+          onClick={() => setUsersLikedPostModal(true)}
+          className="px-2 py-1 text-sm text-gray-800 outline-none hover:bg-[#e5e7eb] dark:text-gray-400 dark:hover:bg-[#1d2229]"
+        >
+          {post._count.likes}
+        </Button>
+      </div>
       <IconBtn
         Icon={FaComment}
         iconColor={"#818181"}
@@ -194,7 +218,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
         <Link href={`/profile/${post.creatorId}`}>
           <ProfilePicture imageSrc={post.creator.image} />
         </Link>
-        <div className="flex flex-col gap-1 text-sm">
+        <div className="flex flex-col gap-[2px] text-sm">
           <Link
             href={`/profile/${post.creatorId}`}
             className="text-base font-semibold text-blue-600 transition-colors hover:text-blue-800 dark:text-indigo-400 dark:hover:text-indigo-300 "
@@ -207,12 +231,14 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
           </span>
           {updatedAtContent}
         </div>
-        {!isOwner ? (
-          <FollowBtn
-            isFollowing={isFollowing ?? false}
-            followingId={post.creatorId}
-          />
-        ) : null}
+        <span className="ml-auto">
+          {!isOwner ? (
+            <FollowBtn
+              isFollowing={isFollowing ?? false}
+              followingId={post.creatorId}
+            />
+          ) : null}
+        </span>
         {postOwnerActions}
       </div>
       {seePost}
@@ -239,6 +265,16 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
           >
             Remove
           </Button>
+        </Modal>
+      ) : null}
+
+      {usersLikedPostModal ? (
+        <Modal
+          actionTitle="Users who liked this post"
+          hideModal={() => setUsersLikedPostModal(false)}
+          isOpen={usersLikedPostModal}
+        >
+          <UsersList users={usersLikedPost} isLoading={isLoading} />
         </Modal>
       ) : null}
 
