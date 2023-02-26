@@ -12,3 +12,5 @@
 - Error and loading state handling
 - Notifications via react-hot-toast
 - Logging in via oauth providers
+
+https://fitterr.vercel.app
