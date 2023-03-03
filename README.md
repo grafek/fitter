@@ -36,5 +36,6 @@ Fitter is a twitter-like (hence naming) website for people who love working out 
 **Linting** - [ESLint](https://eslint.org)  
 **Notifications** - [react-hot-toast](https://react-hot-toast.com/)  
  
+**Bootstrapped the project with** [create-t3-app](https://create.t3.gg/)  
 
 https://fitterr.vercel.app
