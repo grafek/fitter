@@ -12,6 +12,7 @@ Fitter is a twitter-like (hence naming) website for people who love working out 
 - [x] search bar to search up for posts and users
 - [x] follow system and filtered queries to e.g. list only posts from followers. (All links available from profile page)
 - [x] infinite queries and posts infinite scrolling
+- [x] utilized ISR with prefetching for better UX
 - [x] share a post modal to copy post's link or share it via various social medias 
 - [x] error and loading state handling
 - [x] notifications via react-hot-toast
