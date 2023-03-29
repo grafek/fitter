@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { nanoid } from "nanoid";
 import { env } from "../../env/server.mjs";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 
 const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_KEY);
@@ -19,7 +19,7 @@ const imageUploadHandler = async (
   res: NextApiResponse
 ) => {
   if (req.method === "POST") {
-    const session = unstable_getServerSession(req, res, authOptions);
+    const session = getServerSession(req, res, authOptions);
     if (!session) {
       console.log("no session!");
       return;

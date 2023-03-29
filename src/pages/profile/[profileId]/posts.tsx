@@ -10,7 +10,6 @@ import {
 import { POSTS_LIMIT } from "../../../utils/globals";
 import { type RouterInputs } from "../../../utils/trpc";
 import { type DehydratedState } from "@tanstack/react-query";
-import LoadingPage from "../../LoadingPage";
 import { withProfileId, withProfilePaths } from "../../../hoc";
 
 type UsersPostsPageProps = { trpcState: DehydratedState; profileId: string };
@@ -29,20 +28,16 @@ const UsersPostsPage: NextPage<UsersPostsPageProps> = (
     limit: POSTS_LIMIT,
   };
 
-  const { data: session, status } = useSession();
-  const { data: foundUser, isLoading } = useUserById({ userId: profileId });
+  const { data: session } = useSession();
+  const { data: foundUser } = useUserById({ userId: profileId });
 
-  const { data, hasNextPage, fetchNextPage } = useInfinitePosts({
+  const { data, hasNextPage, fetchNextPage, isLoading } = useInfinitePosts({
     input: inputData,
   });
 
   useInfiniteScroll({ fetchNextPage, hasNextPage });
 
-  if (status === "loading" || isLoading || !data) {
-    return <LoadingPage />;
-  }
-
-  const usersPosts = data.pages.flatMap((page) => page.posts) ?? [];
+  const usersPosts = data?.pages.flatMap((page) => page.posts) ?? [];
 
   const profilePosts =
     session?.user?.id === profileId ? "My posts" : `${foundUser?.name}'s posts`;
@@ -51,7 +46,7 @@ const UsersPostsPage: NextPage<UsersPostsPageProps> = (
     <Layout title={profilePosts}>
       <PageHeading>{profilePosts}</PageHeading>
       <section className="flex flex-col gap-6">
-        <PostsList posts={usersPosts} input={inputData} />
+        <PostsList posts={usersPosts} input={inputData} isLoading={isLoading} />
       </section>
     </Layout>
   );

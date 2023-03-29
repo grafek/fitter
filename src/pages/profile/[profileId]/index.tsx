@@ -86,6 +86,7 @@ const ProfilePage: NextPage<ProfilePageProps> = (
       linkDestination: `/profile/${profileId}/following-posts`,
     },
   ];
+  
   if (!loggedUserPage) {
     LINKS.length = 4;
   }

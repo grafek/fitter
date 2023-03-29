@@ -9,7 +9,6 @@ import {
 import { POSTS_LIMIT } from "../../../utils/globals";
 import { type RouterInputs } from "../../../utils/trpc";
 import { type DehydratedState } from "@tanstack/react-query";
-import LoadingPage from "../../LoadingPage";
 import { useSession } from "next-auth/react";
 import { withProfileId, withProfilePaths } from "../../../hoc";
 
@@ -46,17 +45,13 @@ const LikedPostsPage: NextPage<LikedPostsPageProps> = (
 
   useInfiniteScroll({ fetchNextPage, hasNextPage });
 
-  if (isLoading || !data) {
-    return <LoadingPage />;
-  }
-
-  const likedPosts = data.pages.flatMap((page) => page.posts) ?? [];
+  const likedPosts = data?.pages.flatMap((page) => page.posts) ?? [];
 
   return (
     <Layout title={profileHeading}>
       <PageHeading>{profileHeading}</PageHeading>
       <section className="flex flex-col gap-6">
-        <PostsList posts={likedPosts} input={inputData} />
+        <PostsList posts={likedPosts} input={inputData} isLoading={isLoading} />
       </section>
     </Layout>
   );

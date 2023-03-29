@@ -4,14 +4,13 @@ import {
   type Path,
   type FieldValues,
   type FieldError,
-  type UnPackAsyncDefaultValues,
 } from "react-hook-form";
 import FormError from "./FormError";
 
 export interface SelectProps<T extends FieldValues>
   extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: string[];
-  name: Path<UnPackAsyncDefaultValues<T>>;
+  name: Path<T>;
   labelname?: string;
   register: UseFormRegister<T>;
   className?: string;
