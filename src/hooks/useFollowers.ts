@@ -3,14 +3,18 @@ import { trpc } from "../utils/trpc";
 
 const useFollowers = ({
   input,
-  enabled
+  enabled,
 }: {
   input: RouterInputs["follow"]["getFollowing"];
-  enabled?:boolean
+  enabled?: boolean;
 }) => {
-  return trpc.follow.getFollowing.useQuery({ ...input },{
-    enabled
-  });
+  return trpc.follow.getFollowing.useQuery(
+    { ...input },
+    {
+      enabled,
+      suspense: true,
+    }
+  );
 };
 
 export default useFollowers;

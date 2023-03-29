@@ -6,11 +6,12 @@ import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
 import { Toaster } from "react-hot-toast";
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
+import { SuspenseHelper } from "../components/SuspenseHelper";
 import LoadingPage from "./LoadingPage";
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -43,10 +44,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
   return (
     <SessionProvider session={session}>
-      <Suspense fallback={<LoadingPage />}>
+      <SuspenseHelper fallback={<LoadingPage />}>
         <Component {...pageProps} />
         <Toaster />
-      </Suspense>
+      </SuspenseHelper>
     </SessionProvider>
   );
 };
