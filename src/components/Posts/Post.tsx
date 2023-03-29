@@ -27,7 +27,7 @@ import { FaComment, FaHeart, FaShareAlt } from "react-icons/fa";
 import { type RouterInputs, type RouterOutputs } from "../../utils/trpc";
 import React, { memo, useCallback, useState } from "react";
 import PostComments from "./PostComments";
-import { DATE_FORMATTER } from "../../utils/globals";
+import { DATE_FORMATTER, DATETIME_FORMATTER } from "../../utils/globals";
 import PostShare from "./PostShare";
 import { TRPCClientError } from "@trpc/client";
 import UsersList from "../Users/UsersList";
@@ -135,7 +135,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, input }) => {
   const updatedAtContent =
     post.updatedAt.getTime() === post.createdAt.getTime() ? null : (
       <span className="font-light italic">
-        Edited at: {post.updatedAt.toLocaleString()}
+        Edited at: {DATETIME_FORMATTER.format(post.updatedAt)}
       </span>
     );
 

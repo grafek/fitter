@@ -45,10 +45,6 @@ const FollowersPage: NextPage<FollowersPageProps> = (
     ? "My followers"
     : `${foundUser?.name}'s followers`;
 
-  const emptyContent = loggedUserPage
-    ? "You do not have any followers yet!"
-    : `${foundUser?.name} does not have any followers yet!`;
-
   return (
     <Layout title={title}>
       <PageHeading>{heading}</PageHeading>
@@ -61,9 +57,6 @@ const FollowersPage: NextPage<FollowersPageProps> = (
         </Link>
       ) : null}
       <UsersList users={followerUsers} isLoading={isLoading} />
-      {followerUsers && followerUsers?.length < 1 ? (
-        <div className="text-center font-semibold">{emptyContent}</div>
-      ) : null}
       {hasNextPage ? (
         <div className="flex justify-center pt-8">
           <Button buttonColor="primary" onClick={() => fetchNextPage()}>

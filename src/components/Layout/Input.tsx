@@ -5,13 +5,12 @@ import {
   type Path,
   type FieldValues,
   type FieldError,
-  type UnPackAsyncDefaultValues,
 } from "react-hook-form";
 import FormError from "./FormError";
 
 export interface InputProps<T extends FieldValues>
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  name: Path<UnPackAsyncDefaultValues<T>>;
+  name: Path<T>;
   labelname?: string;
   register: UseFormRegister<T>;
   className?: string;
@@ -43,7 +42,7 @@ const Input = <T extends FieldValues>({
       <input
         {...register(name, validation)}
         id={name}
-        className={`${className} ${errorClassses} w-full rounded-md bg-[#f6f8fa] py-2 px-3 outline outline-1 dark:bg-[#161b22] dark:outline-[#30363d]`}
+        className={`${className} ${errorClassses} w-full rounded-md bg-[#f6f8fa] px-3 py-2 outline outline-1 dark:bg-[#161b22] dark:outline-[#30363d]`}
         {...props}
       />
       <FormError fieldErrors={errors} />

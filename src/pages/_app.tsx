@@ -6,7 +6,7 @@ import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
 import { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import NProgress from "nprogress";
@@ -17,24 +17,16 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
-
   const router = useRouter();
   NProgress.configure({ showSpinner: false });
   useEffect(() => {
     const onBeforeChange = (url: string) => {
       if (router.asPath !== url) {
-        setIsLoading(true);
         NProgress.start();
       }
     };
 
     const onAfterChange = () => {
-      setIsLoading(false);
       NProgress.done();
     };
 
@@ -51,8 +43,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
   return (
     <SessionProvider session={session}>
-      {isLoading ? <LoadingPage /> : <Component {...pageProps} />}
-      <Toaster />
+      <Suspense fallback={<LoadingPage />}>
+        <Component {...pageProps} />
+        <Toaster />
+      </Suspense>
     </SessionProvider>
   );
 };

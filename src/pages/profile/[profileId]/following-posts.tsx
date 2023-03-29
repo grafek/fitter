@@ -5,7 +5,6 @@ import { type DehydratedState } from "@tanstack/react-query";
 import PostsList from "../../../components/Posts/PostsList";
 import { POSTS_LIMIT } from "../../../utils/globals";
 import type { RouterInputs } from "../../../utils/trpc";
-import LoadingPage from "../../LoadingPage";
 import { withProfileId, withProfilePaths } from "../../../hoc";
 
 type FollowingPageProps = {
@@ -36,15 +35,13 @@ const FollowingPage: NextPage<FollowingPageProps> = (
 
   useInfiniteScroll({ fetchNextPage, hasNextPage });
 
-  if (!data || isLoading) return <LoadingPage />;
-
-  const posts = data.pages.flatMap((page) => page.posts) ?? [];
+  const posts = data?.pages.flatMap((page) => page.posts) ?? [];
 
   return (
     <Layout title={"My followings"}>
       <PageHeading>{"Posts from people I follow"}</PageHeading>
       <section className="flex flex-col gap-4 md:gap-8">
-        <PostsList posts={posts} input={inputData} />
+        <PostsList posts={posts} input={inputData} isLoading={isLoading} />
         {isFetchingNextPage ? <Loading /> : null}
       </section>
     </Layout>

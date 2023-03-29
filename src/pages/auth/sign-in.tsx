@@ -3,7 +3,7 @@ import type { ClientSafeProvider, LiteralUnion } from "next-auth/react";
 import Image from "next/image";
 import type { GetServerSidePropsContext } from "next";
 import { getProviders, signIn } from "next-auth/react";
-import { unstable_getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { Button, Layout, PageHeading } from "../../components/Layout";
 import { env } from "../../env/client.mjs";
@@ -49,7 +49,7 @@ const SignInPage: NextPage<SignInPageProps> = ({ providers }) => {
           <Button
             key={provider.id}
             buttonColor={provider.id}
-            className="mx-auto flex w-full items-center justify-center space-x-2 md:py-2 md:px-4"
+            className="mx-auto flex w-full items-center justify-center space-x-2 md:px-4 md:py-2"
             onClick={() => signIn(provider.id, { callbackUrl: "/" })}
           >
             <Image
@@ -69,11 +69,7 @@ const SignInPage: NextPage<SignInPageProps> = ({ providers }) => {
 export default SignInPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   if (session) {
     return { redirect: { destination: "/" } };
