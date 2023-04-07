@@ -26,7 +26,7 @@ const Users: React.FC<UsersProps> = ({ users, isLoading }) => {
             .fill(1)
             .map((_, i) => <UserSkeleton key={i} />)
         : null}
-      {!users || (users?.length < 1 && !isLoading) ? (
+      {(!users || users.length < 1) && !isLoading ? (
         <h2 className="p-2 text-center font-semibold">So empty... 😶</h2>
       ) : null}
       {users?.map((user) => {
@@ -39,7 +39,7 @@ const Users: React.FC<UsersProps> = ({ users, isLoading }) => {
 
         return (
           <li
-            className="flex flex-col items-center justify-between border-b-[1px] dark:border-slate-700 sm:flex-row"
+            className="flex flex-col items-center justify-between border-b-[1px] last:border-none dark:border-slate-700 sm:flex-row"
             key={user.id}
           >
             <Link
