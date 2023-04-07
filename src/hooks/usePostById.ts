@@ -9,7 +9,7 @@ const usePostById = ({
     {
       ...input,
     },
-    { refetchOnWindowFocus: false, suspense: true }
+    { refetchOnWindowFocus: false }
   );
 };
 

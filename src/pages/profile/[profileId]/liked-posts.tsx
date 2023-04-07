@@ -1,16 +1,17 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
-import { Layout, PageHeading } from "../../../components/Layout";
-import PostsList from "../../../components/Posts/PostsList";
+import PostsList from "../../../components/Posts";
 import {
   useInfiniteScroll,
   useInfinitePosts,
   useUserById,
 } from "../../../hooks";
-import { POSTS_LIMIT } from "../../../utils/globals";
+import { METADATA, POSTS_LIMIT } from "../../../utils/globals";
 import { type RouterInputs } from "../../../utils/trpc";
 import { type DehydratedState } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { withProfileId, withProfilePaths } from "../../../hoc";
+import { PageHeading } from "../../../components/UI";
+import HeadSEO from "../../../components/HeadSEO";
 
 type LikedPostsPageProps = { trpcState: DehydratedState; profileId: string };
 
@@ -48,12 +49,17 @@ const LikedPostsPage: NextPage<LikedPostsPageProps> = (
   const likedPosts = data?.pages.flatMap((page) => page.posts) ?? [];
 
   return (
-    <Layout title={profileHeading}>
+    <>
+      <HeadSEO
+        canonicalUrl={`${METADATA.siteUrl}/${profileId}/liked-posts`}
+        description={profileHeading}
+        title={profileHeading}
+      />
       <PageHeading>{profileHeading}</PageHeading>
       <section className="flex flex-col gap-6">
         <PostsList posts={likedPosts} input={inputData} isLoading={isLoading} />
       </section>
-    </Layout>
+    </>
   );
 };
 

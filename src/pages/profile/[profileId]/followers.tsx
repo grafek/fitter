@@ -1,11 +1,13 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { useSession } from "next-auth/react";
-import { Button, Layout, PageHeading } from "../../../components/Layout";
+import { Button, PageHeading } from "../../../components/UI";
 import { useInfiniteUsers, useUserById } from "../../../hooks";
 import { type DehydratedState } from "@tanstack/react-query";
 import Link from "next/link";
-import UsersList from "../../../components/Users/UsersList";
+import UsersList from "../../../components/Users";
 import { withProfileId, withProfilePaths } from "../../../hoc";
+import HeadSEO from "../../../components/HeadSEO";
+import { METADATA } from "../../../utils/globals";
 
 type FollowersPageProps = {
   trpcState: DehydratedState;
@@ -46,25 +48,33 @@ const FollowersPage: NextPage<FollowersPageProps> = (
     : `${foundUser?.name}'s followers`;
 
   return (
-    <Layout title={title}>
+    <>
+      <HeadSEO
+        canonicalUrl={`${METADATA.siteUrl}/${profileId}/followers`}
+        description={title}
+        title={title}
+      />
       <PageHeading>{heading}</PageHeading>
-      {loggedUserPage ? (
-        <Link
-          className="text-blue-600 underline underline-offset-4 transition-colors hover:text-blue-800 dark:text-indigo-400 dark:hover:text-indigo-300 "
-          href={`/profile/${session?.user?.id}/following-posts`}
-        >
-          Check posts from your followers!
-        </Link>
-      ) : null}
-      <UsersList users={followerUsers} isLoading={isLoading} />
-      {hasNextPage ? (
-        <div className="flex justify-center pt-8">
-          <Button buttonColor="primary" onClick={() => fetchNextPage()}>
-            See more..
-          </Button>
-        </div>
-      ) : null}
-    </Layout>
+      <section>
+        {followerUsers && followerUsers?.length > 1 ? (
+          <Link
+            className="text-blue-600 underline underline-offset-4 transition-colors hover:text-blue-800 dark:text-indigo-400 dark:hover:text-indigo-300 "
+            href={`/profile/${session?.user?.id}/followers-posts`}
+            title="Followers Posts"
+          >
+            Check posts from your followers!
+          </Link>
+        ) : null}
+        <UsersList isLoading={isLoading} users={followerUsers} />
+        {hasNextPage ? (
+          <div className="flex justify-center pt-8">
+            <Button buttonColor="primary" onClick={() => fetchNextPage()}>
+              See more..
+            </Button>
+          </div>
+        ) : null}
+      </section>
+    </>
   );
 };
 

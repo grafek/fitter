@@ -1,9 +1,10 @@
-import { Layout } from "../../../components/Layout";
-import PostForm from "../../../components/Posts/PostForm";
 import { usePostById, useUpdatePost } from "../../../hooks";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { type DehydratedState } from "@tanstack/react-query";
 import { withPostId, withPostPaths } from "../../../hoc";
+import HeadSEO from "../../../components/HeadSEO";
+import { METADATA } from "../../../utils/globals";
+import { PostForm } from "../../../components/Posts";
 
 type EditPostPageProps = { trpcState: DehydratedState; postId: string };
 
@@ -27,8 +28,13 @@ const EditPostPage: NextPage<EditPostPageProps> = (
   const { mutateAsync: updatePost } = useUpdatePost();
 
   return (
-    <Layout title="Edit post">
-      <section id="edit-post">
+    <>
+      <HeadSEO
+        canonicalUrl={`${METADATA.siteUrl}/${postId}/edit`}
+        description={"Edit Post"}
+        title={"Edit Post"}
+      />
+      <section>
         {!foundPost && !isLoading ? <p>No post found!</p> : null}
         {foundPost ? (
           <PostForm
@@ -41,7 +47,7 @@ const EditPostPage: NextPage<EditPostPageProps> = (
           />
         ) : null}
       </section>
-    </Layout>
+    </>
   );
 };
 

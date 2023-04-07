@@ -1,11 +1,12 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
-import { Layout, Loading, PageHeading } from "../../../components/Layout";
+import { Loading, PageHeading } from "../../../components/UI";
 import { useInfinitePosts, useInfiniteScroll } from "../../../hooks";
 import { type DehydratedState } from "@tanstack/react-query";
-import PostsList from "../../../components/Posts/PostsList";
-import { POSTS_LIMIT } from "../../../utils/globals";
+import PostsList from "../../../components/Posts";
+import { METADATA, POSTS_LIMIT } from "../../../utils/globals";
 import type { RouterInputs } from "../../../utils/trpc";
 import { withProfileId, withProfilePaths } from "../../../hoc";
+import HeadSEO from "../../../components/HeadSEO";
 
 type FollowersPostsPageProps = {
   trpcState: DehydratedState;
@@ -38,13 +39,18 @@ const FollowersPostsPage: NextPage<FollowersPostsPageProps> = (
   const posts = data?.pages.flatMap((page) => page.posts) ?? [];
 
   return (
-    <Layout title={"My followers posts"}>
+    <>
+      <HeadSEO
+        canonicalUrl={`${METADATA.siteUrl}/${profileId}/followers-posts`}
+        description={"Posts from people who follow me"}
+        title={"Posts from people who follow me"}
+      />
       <PageHeading>{"Posts from people who follow me"}</PageHeading>
-      <section className="flex flex-col gap-4 md:gap-8">
+      <section title="followers-posts" className="flex flex-col gap-4 md:gap-8">
         <PostsList posts={posts} input={inputData} isLoading={isLoading} />
         {isFetchingNextPage ? <Loading /> : null}
       </section>
-    </Layout>
+    </>
   );
 };
 

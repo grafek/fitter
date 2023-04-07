@@ -1,18 +1,14 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-
 import { trpc } from "../utils/trpc";
-
 import "../styles/globals.css";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import { SuspenseHelper } from "../components/SuspenseHelper";
-import LoadingPage from "./LoadingPage";
+import Layout from "../components/Layout";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -44,10 +40,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
   return (
     <SessionProvider session={session}>
-      <SuspenseHelper fallback={<LoadingPage />}>
+      <Toaster />
+      <Layout>
         <Component {...pageProps} />
-        <Toaster />
-      </SuspenseHelper>
+      </Layout>
     </SessionProvider>
   );
 };

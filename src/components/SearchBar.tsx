@@ -5,18 +5,18 @@ import {
   AiOutlineUnorderedList,
   AiOutlineUser,
 } from "react-icons/ai";
-import { sleep } from "../../../utils";
-import { Button, Loading } from "..";
-import SearchCategory from "./SearchCategory";
-import SearchItem from "./SearchItem";
+import { highlightSearchTerm, sleep } from "../utils";
+import { Button, Loading } from "./UI";
 import {
   useClickOutside,
   useDebounceValue,
   useInfinitePosts,
   useInfiniteUsers,
-} from "../../../hooks";
-import { SEARCH_LIMIT } from "../../../utils/globals";
-import type { RouterInputs } from "../../../utils/trpc";
+} from "../hooks";
+import { SEARCH_LIMIT } from "../utils/globals";
+import type { RouterInputs } from "../utils/trpc";
+import Link from "next/link";
+import type { IconType } from "react-icons/lib";
 
 const LIST_HIDDEN_CLASSES = "opacity-0 scale-75 -z-30";
 const LIST_VISIBLE_CLASSES = "opacity-100 scale-100";
@@ -24,6 +24,49 @@ const LIST_VISIBLE_CLASSES = "opacity-100 scale-100";
 const INPUT_HIDDEN_CLASSES =
   "opacity-0 -z-20 sm:-translate-x-10 translate-x-10";
 const INPUT_VISIBLE_CLASSES = "opacity-100";
+
+type SearchItemProps = {
+  itemId: string;
+  itemName: string;
+  searchItem: string;
+  searchQuery: string;
+};
+
+const SearchItem: React.FC<SearchItemProps> = ({
+  itemId,
+  itemName,
+  searchItem,
+  searchQuery,
+}) => {
+  return (
+    <li className="rounded-md border-gray-300 hover:bg-gray-100 dark:hover:bg-slate-900">
+      <Link href={`/${itemName}/${itemId}`} className="inline-block w-full p-2">
+        {highlightSearchTerm(searchItem, searchQuery)}
+      </Link>
+    </li>
+  );
+};
+
+type SearchCategoryProps = {
+  Icon: IconType;
+  iconSize?: string;
+  category: string;
+};
+
+const SearchCategory: React.FC<SearchCategoryProps> = ({
+  Icon,
+  iconSize = "1.5rem",
+  category,
+}) => {
+  return (
+    <div className="my-3 flex items-center gap-2">
+      <span className="rounded-lg bg-gray-200 p-1 dark:bg-slate-800 sm:p-2">
+        <Icon size={iconSize} />
+      </span>
+      <h2 className="text-lg font-bold">{category}</h2>
+    </div>
+  );
+};
 
 const SearchBar: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -84,7 +127,7 @@ const SearchBar: React.FC = () => {
   });
 
   useClickOutside(formRef, async () => {
-    setAnimationClasses("opacity-0 scale-75 -translate-y-10");
+    setAnimationClasses("opacity-0 scale-75 -translate-y-10 -z-40");
     setInputAnimations("opacity-0 -z-20 sm:-translate-x-10 translate-x-10");
     await sleep();
     setIsVisible(false);
@@ -149,7 +192,7 @@ const SearchBar: React.FC = () => {
       </Button>
       {isVisible ? (
         <div
-          className={`${animationClassess} absolute -left-4 top-8 z-[100] max-h-[350px] min-w-[120px] overflow-y-auto rounded-lg border border-[#d0d7de] bg-[#f6f8fa] py-2 px-2 transition-all dark:border-[#30363d] dark:bg-[#171f42]/90 sm:left-0 sm:top-12 sm:w-full`}
+          className={`absolute -left-4 top-8 z-[100] max-h-[350px] min-w-[120px] overflow-y-auto rounded-lg border border-[#d0d7de] bg-[#f6f8fa] px-2 py-2 transition-all dark:border-[#30363d] dark:bg-[#171f42]/90 sm:left-0 sm:top-12 sm:w-full ${animationClassess} `}
         >
           {filteredUsers.length > 0 ? (
             <SearchCategory Icon={AiOutlineUser} category="Users" />

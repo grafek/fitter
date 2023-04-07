@@ -18,7 +18,6 @@ const useInfiniteScroll = ({
 }: useInfiniteScrollProps) => {
   useEffect(() => {
     function handleScroll() {
-      console.log();
       if (
         Math.ceil(window.innerHeight + document.documentElement.scrollTop) !==
         document.documentElement.offsetHeight

@@ -50,7 +50,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           onChangePicture(reader.result);
         }
       } catch (err) {
-        console.log(err);
       } finally {
         setUpdatingPicture(false);
       }

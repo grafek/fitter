@@ -1,12 +1,7 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import {
-  FollowBtn,
-  Layout,
-  NavItem,
-  PageHeading,
-} from "../../../components/Layout";
+import { FollowBtn, PageHeading } from "../../../components/UI";
 import { useFollowers, useUserById } from "../../../hooks";
 import { type DehydratedState } from "@tanstack/react-query";
 import {
@@ -16,6 +11,9 @@ import {
 } from "react-icons/ai";
 import { RiUserFollowLine } from "react-icons/ri";
 import { withProfileId, withProfilePaths } from "../../../hoc";
+import { NavItem } from "../../../components/UI/Navigation";
+import HeadSEO from "../../../components/HeadSEO";
+import { METADATA } from "../../../utils/globals";
 
 type ProfilePageProps = { trpcState: DehydratedState; profileId: string };
 
@@ -86,15 +84,20 @@ const ProfilePage: NextPage<ProfilePageProps> = (
       linkDestination: `/profile/${profileId}/following-posts`,
     },
   ];
-  
+
   if (!loggedUserPage) {
     LINKS.length = 4;
   }
 
   return (
-    <Layout title={profileHeading}>
+    <>
+      <HeadSEO
+        canonicalUrl={`${METADATA.siteUrl}/${profileId}/`}
+        description={profileHeading}
+        title={profileHeading}
+      />
       <PageHeading>{profileHeading}</PageHeading>
-      <div className="mx-auto mt-5 flex flex-col items-center justify-center gap-4 rounded-lg p-6 pb-2 shadow-md">
+      <section className="mx-auto mt-5 flex flex-col items-center justify-center gap-4 rounded-lg p-6 pb-2 shadow-md">
         <div className="relative h-24 w-24">
           <Image
             alt="user-pic"
@@ -121,8 +124,8 @@ const ProfilePage: NextPage<ProfilePageProps> = (
             </li>
           ))}
         </ul>
-      </div>
-    </Layout>
+      </section>
+    </>
   );
 };
 

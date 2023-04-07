@@ -21,7 +21,6 @@ const imageUploadHandler = async (
   if (req.method === "POST") {
     const session = getServerSession(req, res, authOptions);
     if (!session) {
-      console.log("no session!");
       return;
       // add error handling to front-end
     }
@@ -52,7 +51,6 @@ const imageUploadHandler = async (
         });
 
       if (uploadError) {
-        console.log(uploadError);
         throw new Error("Unable to upload image to storage");
       }
 
