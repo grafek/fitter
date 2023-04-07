@@ -1,13 +1,20 @@
 import type { NextPage } from "next";
-import { Layout, PageHeading } from "../../components/Layout";
-import PostForm from "../../components/Posts/PostForm";
 import { useCreatePost } from "../../hooks";
+import { PageHeading } from "../../components/UI";
+import { PostForm } from "../../components/Posts";
+import HeadSEO from "../../components/HeadSEO";
+import { METADATA } from "../../utils/globals";
 
 const CreatePostPage: NextPage = () => {
   const { mutateAsync: addPost } = useCreatePost();
 
   return (
-    <Layout title="Add a post">
+    <>
+      <HeadSEO
+        canonicalUrl={`${METADATA.siteUrl}/post/create`}
+        description={"Create Post"}
+        title={"Create Post"}
+      />
       <PageHeading>Share your workout with others 😎</PageHeading>
       <section id="create-post">
         <PostForm
@@ -16,7 +23,7 @@ const CreatePostPage: NextPage = () => {
           buttonText="Create post"
         />
       </section>
-    </Layout>
+    </>
   );
 };
 

@@ -8,6 +8,7 @@ type FollowBtnProps = {
   isFollowing: boolean;
   followText?: string;
   followingText?: string;
+  className?: string;
 };
 
 const FollowBtn: React.FC<FollowBtnProps> = ({
@@ -15,6 +16,7 @@ const FollowBtn: React.FC<FollowBtnProps> = ({
   isFollowing,
   followText = "Follow",
   followingText = "Following",
+  className = "",
 }) => {
   const { mutate: follow, isLoading: followLoading } = useFollow();
   const { mutate: unfollow, isLoading: unfollowLoading } = useUnfollow();
@@ -40,7 +42,7 @@ const FollowBtn: React.FC<FollowBtnProps> = ({
           }}
           buttonColor="primary"
           disabled={unfollowLoading || followLoading}
-          className="min-w-[109px] py-1 px-2 m-2"
+          className={`m-2 min-w-[109px] px-2 py-1 ${className}`}
         >
           <span className="flex items-center justify-center gap-1">
             {isFollowing ? (

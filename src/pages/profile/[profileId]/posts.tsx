@@ -1,16 +1,17 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { useSession } from "next-auth/react";
-import { Layout, PageHeading } from "../../../components/Layout";
-import PostsList from "../../../components/Posts/PostsList";
+import PostsList from "../../../components/Posts";
 import {
   useUserById,
   useInfiniteScroll,
   useInfinitePosts,
 } from "../../../hooks";
-import { POSTS_LIMIT } from "../../../utils/globals";
+import { METADATA, POSTS_LIMIT } from "../../../utils/globals";
 import { type RouterInputs } from "../../../utils/trpc";
 import { type DehydratedState } from "@tanstack/react-query";
 import { withProfileId, withProfilePaths } from "../../../hoc";
+import { PageHeading } from "../../../components/UI";
+import HeadSEO from "../../../components/HeadSEO";
 
 type UsersPostsPageProps = { trpcState: DehydratedState; profileId: string };
 
@@ -43,12 +44,17 @@ const UsersPostsPage: NextPage<UsersPostsPageProps> = (
     session?.user?.id === profileId ? "My posts" : `${foundUser?.name}'s posts`;
 
   return (
-    <Layout title={profilePosts}>
+    <>
+      <HeadSEO
+        canonicalUrl={`${METADATA.siteUrl}/${profileId}/posts`}
+        description={profilePosts}
+        title={profilePosts}
+      />
       <PageHeading>{profilePosts}</PageHeading>
       <section className="flex flex-col gap-6">
         <PostsList posts={usersPosts} input={inputData} isLoading={isLoading} />
       </section>
-    </Layout>
+    </>
   );
 };
 

@@ -8,6 +8,16 @@ export const DATE_FORMATTER = new Intl.DateTimeFormat(undefined, {
 
 export const POSTS_LIMIT = 4;
 export const SEARCH_LIMIT = 3;
+
+export const METADATA = {
+  title: "Fitter",
+  description: "Social media app created for all fitness enthusiasts!",
+  siteUrl: "https://fitterr.vercel.app/",
+  siteLogo: "https://example.com/images/logo.png",
+  siteLogoSquare: "https://example.com/images/logox200.png",
+  email: "jacek.grafender@gmail.com",
+};
+
 export const SPORTS = [
   "Acrobatics",
   "Aerobic Gymnastics",

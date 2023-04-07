@@ -1,11 +1,13 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { useSession } from "next-auth/react";
-import { Button, Layout, PageHeading } from "../../../components/Layout";
+import { Button, PageHeading } from "../../../components/UI";
 import { useInfiniteUsers, useUserById } from "../../../hooks";
 import { type DehydratedState } from "@tanstack/react-query";
 import Link from "next/link";
-import UsersList from "../../../components/Users/UsersList";
+import UsersList from "../../../components/Users";
 import { withProfileId, withProfilePaths } from "../../../hoc";
+import HeadSEO from "../../../components/HeadSEO";
+import { METADATA } from "../../../utils/globals";
 
 type FollowingPageProps = {
   trpcState: DehydratedState;
@@ -44,12 +46,13 @@ const FollowingPage: NextPage<FollowingPageProps> = (
     ? "My followings"
     : `${foundUser?.name}'s followings`;
 
-  const emptyContent = loggedUserPage
-    ? "You do not follow anyone yet!"
-    : `${foundUser?.name} does not follow anyone yet!`;
-
   return (
-    <Layout title={title}>
+    <>
+      <HeadSEO
+        canonicalUrl={`${METADATA.siteUrl}/${profileId}/following`}
+        description={title}
+        title={title}
+      />
       <PageHeading>{heading}</PageHeading>
       {loggedUserPage ? (
         <Link
@@ -59,10 +62,7 @@ const FollowingPage: NextPage<FollowingPageProps> = (
           Check posts from people you follow!
         </Link>
       ) : null}
-      <UsersList users={followingUsers} isLoading={isLoading} />
-      {followingUsers && followingUsers?.length < 1 ? (
-        <div className="text-center font-semibold">{emptyContent}</div>
-      ) : null}
+      <UsersList isLoading={isLoading} users={followingUsers} />
       {hasNextPage ? (
         <div className="flex justify-center pt-8">
           <Button buttonColor="primary" onClick={() => fetchNextPage()}>
@@ -70,7 +70,7 @@ const FollowingPage: NextPage<FollowingPageProps> = (
           </Button>
         </div>
       ) : null}
-    </Layout>
+    </>
   );
 };
 

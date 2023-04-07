@@ -18,7 +18,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   children,
   isProtected,
   className = "",
-  expandBtn = <span className="text-2xl">&#8942;</span>,
+  expandBtn = "⋮",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -56,13 +56,13 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <div ref={dropdownRef} className="relative ml-auto">
-      <span
-        className="flex select-none items-center rounded-lg py-1 px-3 text-gray-800 transition-colors duration-300 hover:bg-[#e5e7eb] dark:text-gray-300 dark:hover:bg-[#1d2229]"
+      <button
+        className="flex select-none items-center rounded-lg px-3 py-1 text-2xl text-gray-800 transition-colors duration-300 hover:bg-[#e5e7eb] dark:text-gray-300 dark:hover:bg-[#1d2229]"
         role={"button"}
         onClick={toggleDropdownMenu}
       >
         {expandBtn}
-      </span>
+      </button>
       {isOpen ? (
         <ul
           className={`${className} ${animationClasses} absolute -right-1 top-12 z-10 flex min-w-[4rem] select-none flex-col items-center rounded-md bg-[#f6f8fade] p-1 shadow-xl transition-all duration-300 dark:bg-[#1e2630ea] [&>*]:py-2`}
@@ -75,3 +75,15 @@ const Dropdown: React.FC<DropdownProps> = ({
 };
 
 export default Dropdown;
+
+type DropdownItemProps = {
+  children: React.ReactNode;
+  className?: string;
+};
+
+export const DropdownItem: React.FC<DropdownItemProps> = ({
+  children,
+  className = "",
+}) => {
+  return <li className={`${className} w-full p-1`}>{children}</li>;
+};
