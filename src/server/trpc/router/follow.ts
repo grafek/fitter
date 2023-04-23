@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const followRouter = router({
   follow: protectedProcedure
@@ -28,7 +28,7 @@ export const followRouter = router({
       });
       return unfollow;
     }),
-  getFollowing: protectedProcedure
+  getFollowing: publicProcedure
     .input(
       z.object({
         userId: z.string(),

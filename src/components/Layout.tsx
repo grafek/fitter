@@ -11,7 +11,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <>
       <div id="overlays" />
       <div className="min-h-screen dark:bg-[#21262d] dark:text-[#c9d1d9]">
-        <header className="fixed z-[80] w-full bg-[#f6f8fa] px-3 py-2 opacity-90 shadow-sm shadow-blue-400 dark:bg-[#161b22] dark:shadow-blue-800">
+        <header className="fixed z-[80] w-full select-none bg-[#f6f8fa] px-3 py-2 opacity-90 shadow-sm shadow-blue-400 dark:bg-[#161b22] dark:shadow-blue-800">
           <div className="container mx-auto flex items-center justify-between ">
             <Link
               href={"/"}

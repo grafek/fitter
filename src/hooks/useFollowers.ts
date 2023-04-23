@@ -12,7 +12,6 @@ const useFollowers = ({
     { ...input },
     {
       enabled,
-
     }
   );
 };
