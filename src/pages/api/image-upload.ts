@@ -2,8 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { nanoid } from "nanoid";
 import { env } from "../../env/server.mjs";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./auth/[...nextauth]";
+import { getServerAuthSession } from "./auth/[...nextauth]";
 
 const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_KEY);
 
@@ -19,12 +18,12 @@ const imageUploadHandler = async (
   res: NextApiResponse
 ) => {
   if (req.method === "POST") {
-    const session = getServerSession(req, res, authOptions);
+    const session = await getServerAuthSession({ req, res });
     if (!session) {
-      return;
-      // add error handling to front-end
+      return res.status(401).json({ message: "Unauthenticated" });
     }
-    const image = req.body;
+
+    const image: string | null | undefined = req.body;
 
     if (!image) {
       return res.status(500).json({ message: "No image provided" });
