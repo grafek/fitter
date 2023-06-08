@@ -1,6 +1,6 @@
 import superjson from "superjson";
 import type { GetStaticProps } from "next";
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import { createServerSideHelpers } from '@trpc/react-query/server';
 import { createContextInner } from "../server/trpc/context";
 import { appRouter } from "../server/trpc/router/_app";
 
@@ -11,17 +11,17 @@ function withPostId(gsp: GetStaticProps): GetStaticProps {
     if (!("props" in gspData)) {
       throw new Error("invalid getSP result");
     }
-    const ssg = createProxySSGHelpers({
+    const helpers = createServerSideHelpers({
       router: appRouter,
       ctx: await createContextInner(),
       transformer: superjson,
     });
     const postId = context.params?.postId as string;
 
-    await ssg.post.getById.prefetch({ postId });
+    await helpers.post.getById.prefetch({ postId });
     return {
       props: {
-        trpcState: ssg.dehydrate(),
+        trpcState: helpers.dehydrate(),
         postId,
       },
       revalidate: 1,
