@@ -18,7 +18,7 @@ import type { RouterInputs } from "../utils/trpc";
 import Link from "next/link";
 import type { IconType } from "react-icons/lib";
 
-const LIST_HIDDEN_CLASSES = "opacity-0 scale-75 -z-30";
+const LIST_HIDDEN_CLASSES = "opacity-0 scale-75 -z-50";
 const LIST_VISIBLE_CLASSES = "opacity-100 scale-100";
 
 const INPUT_HIDDEN_CLASSES =
@@ -190,72 +190,70 @@ const SearchBar: React.FC = () => {
           className="text-black dark:text-white"
         />
       </Button>
-      {isVisible ? (
-        <div
-          className={`absolute -left-4 top-8 z-[100] max-h-[350px] min-w-[120px] overflow-y-auto rounded-lg border border-[#d0d7de] bg-[#f6f8fa] px-2 py-2 transition-all dark:border-[#30363d] dark:bg-[#171f42]/90 sm:left-0 sm:top-12 sm:w-full ${animationClassess} `}
-        >
-          {filteredUsers.length > 0 ? (
-            <SearchCategory Icon={AiOutlineUser} category="Users" />
+      <div
+        className={`absolute -left-4 top-8 max-h-[350px] min-w-[120px] overflow-y-auto rounded-lg border border-[#d0d7de] bg-[#f6f8fa] px-2 py-2 transition-all dark:border-[#30363d] dark:bg-[#171f42]/90 sm:left-0 sm:top-12 sm:w-full ${animationClassess}`}
+      >
+        {filteredUsers.length > 0 ? (
+          <SearchCategory Icon={AiOutlineUser} category="Users" />
+        ) : null}
+        <ul className="divide-y dark:divide-[#30363d]">
+          {filteredUsers.map((user) => (
+            <SearchItem
+              key={user.id}
+              itemName={"profile"}
+              itemId={user.id}
+              searchItem={user.name}
+              searchQuery={searchQuery}
+            />
+          ))}
+          {hasMoreUsers ? (
+            <Button
+              className="my-2 w-full"
+              buttonColor="primary"
+              onClick={(e) => {
+                e.preventDefault();
+                fetchMoreUsers();
+              }}
+            >
+              See more users..
+            </Button>
           ) : null}
-          <ul className="divide-y dark:divide-[#30363d]">
-            {filteredUsers.map((user) => (
-              <SearchItem
-                key={user.id}
-                itemName={"profile"}
-                itemId={user.id}
-                searchItem={user.name}
-                searchQuery={searchQuery}
-              />
-            ))}
-            {hasMoreUsers ? (
-              <Button
-                className="my-2 w-full"
-                buttonColor="primary"
-                onClick={(e) => {
-                  e.preventDefault();
-                  fetchMoreUsers();
-                }}
-              >
-                See more users..
-              </Button>
-            ) : null}
-          </ul>
-          {filteredPosts.length > 0 ? (
-            <SearchCategory Icon={AiOutlineUnorderedList} category="Posts" />
+        </ul>
+        {filteredPosts.length > 0 ? (
+          <SearchCategory Icon={AiOutlineUnorderedList} category="Posts" />
+        ) : null}
+        <ul className="divide-y dark:divide-[#30363d]">
+          {filteredPosts.map((post) => (
+            <SearchItem
+              itemName={"post"}
+              key={post.id}
+              itemId={post.id}
+              searchItem={post.title}
+              searchQuery={searchQuery}
+            />
+          ))}
+          {hasMorePosts ? (
+            <Button
+              className="my-2 w-full"
+              buttonColor="primary"
+              onClick={(e) => {
+                e.preventDefault();
+                fetchMorePosts();
+              }}
+            >
+              See more posts..
+            </Button>
           ) : null}
-          <ul className="divide-y dark:divide-[#30363d]">
-            {filteredPosts.map((post) => (
-              <SearchItem
-                itemName={"post"}
-                key={post.id}
-                itemId={post.id}
-                searchItem={post.title}
-                searchQuery={searchQuery}
-              />
-            ))}
-            {hasMorePosts ? (
-              <Button
-                className="my-2 w-full"
-                buttonColor="primary"
-                onClick={(e) => {
-                  e.preventDefault();
-                  fetchMorePosts();
-                }}
-              >
-                See more posts..
-              </Button>
-            ) : null}
-          </ul>
-          {postsFetching || usersFetching ? <Loading /> : null}
-          {filteredPosts.length < 1 &&
-          filteredUsers.length < 1 &&
-          (!postsFetching || !usersFetching) ? (
-            <h2 className="py-4 text-center font-semibold sm:text-xl">
-              No match found :(
-            </h2>
-          ) : null}
-        </div>
-      ) : null}
+        </ul>
+        {postsFetching || usersFetching ? <Loading /> : null}
+        {filteredPosts.length < 1 &&
+        filteredUsers.length < 1 &&
+        (!postsFetching || !usersFetching) ? (
+          <h2 className="py-4 text-center font-semibold sm:text-xl">
+            No match found :(
+          </h2>
+        ) : null}
+      </div>
     </form>
   );
 };
