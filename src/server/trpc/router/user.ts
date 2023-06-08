@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { publicProcedure, router } from "../trpc";
 
 export const userRouter = router({
   getUserById: publicProcedure
@@ -11,7 +11,7 @@ export const userRouter = router({
       });
       return user;
     }),
-  getAll: protectedProcedure
+  getAll: publicProcedure
     .input(
       z.object({
         where: z
@@ -37,7 +37,7 @@ export const userRouter = router({
         orderBy: { name: "desc" },
       });
     }),
-  infiniteUsers: protectedProcedure
+  infiniteUsers: publicProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(20).nullish(),
