@@ -32,7 +32,7 @@ export const followRouter = router({
     .input(
       z.object({
         userId: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { userId } = input;

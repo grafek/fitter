@@ -15,7 +15,7 @@ const useInfiniteComments = ({
       getNextPageParam: (lastPage) => lastPage.nextCursor,
       refetchOnWindowFocus: false,
       enabled,
-    }
+    },
   );
 };
 

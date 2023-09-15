@@ -13,8 +13,7 @@ const useUsers = ({
     {
       enabled,
       refetchOnWindowFocus: false,
-
-    }
+    },
   );
 };
 

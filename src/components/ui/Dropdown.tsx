@@ -23,7 +23,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const [animationClasses, setAnimationClasses] = useState(
-    DROPDOWN_HIDDEN_CLASSES
+    DROPDOWN_HIDDEN_CLASSES,
   );
 
   const router = useRouter();

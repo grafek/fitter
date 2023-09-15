@@ -15,7 +15,7 @@ const useInfiniteUsers = ({
       getNextPageParam: (lastPage) => lastPage.nextCursor,
       refetchOnWindowFocus: false,
       enabled,
-    }
+    },
   );
 };
 

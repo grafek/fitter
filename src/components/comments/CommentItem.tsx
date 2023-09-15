@@ -1,81 +1,29 @@
-import type { TRPCClientErrorBase } from "@trpc/client";
-import type { DefaultErrorShape } from "@trpc/server";
-import { type RouterInputs, type RouterOutputs } from "../utils/trpc";
-import type { Dispatch, SetStateAction } from "react";
-import {
-  commentSchemaInput,
-  type AddCommentFormSchema,
-} from "../schemas/comment.schema";
-import { type SubmitHandler, useForm } from "react-hook-form";
-import type { Comment } from "@prisma/client";
+import type { RouterInputs, RouterOutputs } from "../../utils/trpc";
 import { FaHeart, FaReply } from "react-icons/fa";
-import { AiOutlineClose, AiOutlineSend } from "react-icons/ai";
 import { BsFillTrashFill } from "react-icons/bs";
 import { HiPencil } from "react-icons/hi";
-import { COMMENTS_LIMIT } from "../schemas/comment.schema";
-import { DATETIME_FORMATTER } from "../utils/globals";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { COMMENTS_LIMIT } from "../../schemas/comment.schema";
+import { DATETIME_FORMATTER } from "../../utils/globals";
 import { TRPCClientError } from "@trpc/client";
 import Link from "next/link";
-import { memo, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import {
-  useCreateComment,
   useDeleteComment,
   useInfiniteComments,
   useLikeAnimation,
   useLikeComment,
   useUnlikeComment,
-  useUpdateComment,
   useUsers,
-} from "../hooks";
-import {
-  Button,
-  Dropdown,
-  IconBtn,
-  Modal,
-  ProfilePicture,
-  TextArea,
-} from "./UI";
-import { NavItem } from "./UI/Navigation";
-import { DropdownItem } from "./UI/Dropdown";
-import { CommentSkeleton } from "./UI/Skeletons";
+} from "../../hooks";
+import { Button, Dropdown, IconBtn, Modal, ProfilePicture } from "../ui";
+import { NavItem } from "../ui/Navigation";
+import { DropdownItem } from "../ui/Dropdown";
 import { toast } from "react-hot-toast";
-import UsersList from "./Users";
-
-type CommentsProps = {
-  comments: RouterOutputs["comment"]["infiniteComments"]["comments"];
-  input: RouterInputs["comment"]["infiniteComments"];
-  error: TRPCClientErrorBase<DefaultErrorShape> | null;
-  isLoading: boolean;
-};
-
-const Comments: React.FC<CommentsProps> = ({
-  comments,
-  input,
-  error,
-  isLoading,
-}) => {
-  return (
-    <>
-      {isLoading ? <CommentSkeleton /> : null}
-      {comments.length < 1 && !error && !isLoading ? (
-        <div className="p-4 text-center">So empty... 😶</div>
-      ) : error ? (
-        <div className="p-4 text-center font-bold text-red-600">
-          {error?.message}
-        </div>
-      ) : null}
-
-      {comments.map((comment) => (
-        <CommentItem comment={comment} key={comment.id} input={input} />
-      ))}
-    </>
-  );
-};
-
-export default memo(Comments);
+import UsersList from "../users/Users";
+import { CommentForm } from "./CommentForm";
+import Comments from "./Comments";
 
 type CommentItemProps = {
   comment: RouterOutputs["comment"]["infiniteComments"]["comments"][number];
@@ -92,20 +40,13 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, input }) => {
       },
     },
   };
-
-  const { data: session } = useSession();
-
-  const router = useRouter();
-
   const [isReplying, setIsReplying] = useState(false);
-
   const [isEditing, setIsEditing] = useState(false);
-
   const [showReplies, setShowReplies] = useState(false);
-
   const [removeCommentModal, setRemoveCommentModal] = useState(false);
-
   const [userLikedCommentModal, setUserLikedCommentModal] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const { data: usersLikedComment, isLoading: usersLoading } = useUsers({
     input: {
@@ -128,7 +69,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, input }) => {
   const { mutate: unlike } = useUnlikeComment({ input });
 
   const hasLiked = comment.likes.find(
-    (like) => like.userId === session?.user?.id
+    (like) => like.userId === session?.user?.id,
   );
 
   const { animationClasses, likeAnimation } = useLikeAnimation({ hasLiked });
@@ -242,7 +183,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, input }) => {
           className="absolute left-1 top-2 h-[95%] bg-indigo-300 p-[2px] outline-none hover:bg-indigo-400 dark:bg-blue-900 hover:dark:bg-blue-800"
         />
       ) : null}
-      {/* ^^ SHOW REPLIE HORIZONTAL LINE BUTTON */}
 
       {isEditing ? (
         <CommentForm
@@ -283,7 +223,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, input }) => {
               parentId={comment.id}
             />
           ) : null}
-          {/* ^^ REPLY FORM */}
 
           {comment._count.children > 0 && childrenComments && showReplies ? (
             <Comments
@@ -293,8 +232,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, input }) => {
               error={error}
             />
           ) : null}
-
-          {/* ^^ LIST CHILDREN COMMENTS */}
 
           {removeCommentModal ? (
             <Modal
@@ -328,101 +265,4 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, input }) => {
   );
 };
 
-type CommentFormProps = {
-  postId: string;
-  parentId?: string;
-  setShowReplies?: Dispatch<SetStateAction<boolean>>;
-  comment?: Comment;
-  isEditing?: boolean;
-  setIsEditing?: Dispatch<SetStateAction<boolean>>;
-};
-
-export const CommentForm: React.FC<CommentFormProps> = ({
-  postId,
-  parentId,
-  setShowReplies,
-  isEditing,
-  comment,
-  setIsEditing,
-}) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<AddCommentFormSchema>({
-    resolver: zodResolver(commentSchemaInput),
-  });
-
-  const { mutateAsync: addComment } = useCreateComment();
-  const { mutateAsync: updateComment } = useUpdateComment();
-
-  let toastId: string;
-
-  const submitCommentHandler: SubmitHandler<AddCommentFormSchema> = async (
-    data
-  ) => {
-    try {
-      toastId = toast.loading("Submitting a comment");
-      if (comment && isEditing && setIsEditing) {
-        await updateComment({
-          commentId: comment.id,
-          text: data.commentContent,
-        });
-        setIsEditing(false);
-      } else {
-        await addComment({
-          postId,
-          text: data.commentContent,
-          parentId: parentId ? parentId : undefined,
-        });
-      }
-      toast.success("You've added a comment!", { id: toastId });
-      reset();
-      if (setShowReplies && parentId) {
-        setShowReplies(true);
-      }
-    } catch (e) {
-      if (e instanceof TRPCClientError) toast.error(e.message, { id: toastId });
-    }
-  };
-  return (
-    <form
-      className="min-w-[150px] p-3"
-      onSubmit={handleSubmit(submitCommentHandler)}
-    >
-      <div className="relative top-1">
-        <TextArea
-          name="commentContent"
-          register={register}
-          errors={errors.commentContent}
-          defaultValue={comment ? comment.text : undefined}
-          placeholder="What do you think about this post?"
-        />
-        {isEditing && setIsEditing ? (
-          <Button
-            isRounded
-            onClick={() => setIsEditing(false)}
-            buttonColor="danger"
-            title="Dismiss"
-            className={`absolute -top-9 right-0 md:-top-12`}
-            disabled={isSubmitting}
-          >
-            <AiOutlineClose size={20} />
-          </Button>
-        ) : null}
-        <Button
-          type="submit"
-          isRounded
-          title="Add a comment"
-          className={`${
-            errors.commentContent ? "bottom-10" : "bottom-4"
-          } absolute right-2 ml-auto bg-indigo-500 p-[10px] text-white outline-indigo-500 hover:bg-indigo-700`}
-          disabled={isSubmitting}
-        >
-          <AiOutlineSend />
-        </Button>
-      </div>
-    </form>
-  );
-};
+export default CommentItem;

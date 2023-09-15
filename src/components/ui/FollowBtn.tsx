@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { AiOutlineCheck, AiOutlinePlus } from "react-icons/ai";
 import { useFollow, useUnfollow } from "../../hooks";
-import { Button } from "./";
+import { Button } from ".";
 
 type FollowBtnProps = {
   followingId: string;

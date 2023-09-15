@@ -8,10 +8,7 @@ const Loading: React.FC<LoadingProps> = ({
   spinnerColor = "#5a90dd",
 }) => {
   return (
-    <div
-      role="status"
-      className="m-auto flex items-center justify-center py-2"
-    >
+    <div role="status" className="m-auto flex items-center justify-center py-2">
       <svg
         className="inline h-10 w-10 animate-spinBezier sm:h-14 sm:w-14 md:h-20 md:w-20"
         viewBox="0 0 100 100"

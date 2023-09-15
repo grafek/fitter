@@ -1,6 +1,6 @@
 import Link from "next/link";
-import SearchBar from "./SearchBar";
-import { Navigation, SlideToTop } from "./UI";
+import SearchBar from "../search-bar/SearchBar";
+import { Navigation, SlideToTop } from "../ui";
 
 type LayoutProps = {
   children: React.ReactNode;

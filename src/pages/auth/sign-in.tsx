@@ -10,8 +10,8 @@ import type { BuiltInProviderType } from "next-auth/providers";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
 import { useEffect } from "react";
-import { Button, PageHeading } from "../../components/UI";
-import HeadSEO from "../../components/HeadSEO";
+import { Button, PageHeading } from "../../components/ui";
+import HeadSEO from "../../components/layout/HeadSEO";
 import { METADATA } from "../../utils/globals";
 
 type SignInPageProps = {
@@ -35,7 +35,7 @@ const SignInPage: NextPage<SignInPageProps> = ({ providers }) => {
             },
             icon: "❌",
             id: "errorMsg",
-          }
+          },
         );
         break;
       default:

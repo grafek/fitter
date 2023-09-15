@@ -14,7 +14,7 @@ export const commentRouter = router({
             id: z.string(),
           }),
         }),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 3;
@@ -60,7 +60,7 @@ export const commentRouter = router({
       let nextCursor: typeof cursor | undefined = undefined;
 
       if (comments.length > limit) {
-        const nextItem = comments.pop() as typeof comments[number];
+        const nextItem = comments.pop() as (typeof comments)[number];
         nextCursor = nextItem.id;
       }
       return {
@@ -74,7 +74,7 @@ export const commentRouter = router({
         text: z.string(),
         postId: z.string(),
         parentId: z.string().optional().nullable(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
@@ -152,7 +152,7 @@ export const commentRouter = router({
       z.object({
         commentId: z.string(),
         text: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findUnique({
@@ -181,7 +181,7 @@ export const commentRouter = router({
     .input(
       z.object({
         commentId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
@@ -206,7 +206,7 @@ export const commentRouter = router({
     .input(
       z.object({
         commentId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;

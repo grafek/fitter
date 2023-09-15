@@ -14,7 +14,6 @@ function withProfilePaths(): GetStaticPaths {
           profileId: user.id,
         },
       })),
-      // https://nextjs.org/docs/basic-features/data-fetching#fallback-blocking
       fallback: "blocking",
     };
   };

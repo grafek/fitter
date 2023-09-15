@@ -1,11 +1,11 @@
-import {
-  type UseFormRegister,
-  type RegisterOptions,
-  type Path,
-  type FieldValues,
-  type FieldError,
+import type {
+  UseFormRegister,
+  RegisterOptions,
+  Path,
+  FieldValues,
+  FieldError,
 } from "react-hook-form";
-import FormError from "./FormError";
+import { FormError } from ".";
 
 export interface SelectProps<T extends FieldValues>
   extends React.SelectHTMLAttributes<HTMLSelectElement> {

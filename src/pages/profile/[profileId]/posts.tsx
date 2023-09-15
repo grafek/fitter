@@ -1,6 +1,6 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { useSession } from "next-auth/react";
-import PostsList from "../../../components/Posts";
+import Posts from "../../../components/posts/Posts";
 import {
   useUserById,
   useInfiniteScroll,
@@ -10,13 +10,13 @@ import { METADATA, POSTS_LIMIT } from "../../../utils/globals";
 import { type RouterInputs } from "../../../utils/trpc";
 import { type DehydratedState } from "@tanstack/react-query";
 import { withProfileId, withProfilePaths } from "../../../hoc";
-import { PageHeading } from "../../../components/UI";
-import HeadSEO from "../../../components/HeadSEO";
+import { PageHeading } from "../../../components/ui";
+import HeadSEO from "../../../components/layout/HeadSEO";
 
 type UsersPostsPageProps = { trpcState: DehydratedState; profileId: string };
 
 const UsersPostsPage: NextPage<UsersPostsPageProps> = (
-  props: InferGetStaticPropsType<typeof getStaticProps>
+  props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
   const { profileId } = props;
 
@@ -52,7 +52,7 @@ const UsersPostsPage: NextPage<UsersPostsPageProps> = (
       />
       <PageHeading>{profilePosts}</PageHeading>
       <section className="flex flex-col gap-6">
-        <PostsList posts={usersPosts} input={inputData} isLoading={isLoading} />
+        <Posts posts={usersPosts} input={inputData} isLoading={isLoading} />
       </section>
     </>
   );

@@ -7,7 +7,7 @@ import {
   AiOutlineUser,
 } from "react-icons/ai";
 import { RiUserFollowLine } from "react-icons/ri";
-import { ProfilePicture, Dropdown } from "./";
+import { ProfilePicture, Dropdown } from ".";
 import type { MouseEventHandler } from "react";
 import type { IconType } from "react-icons/lib";
 import Link from "next/link";

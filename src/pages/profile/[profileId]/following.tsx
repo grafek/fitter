@@ -1,12 +1,12 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { useSession } from "next-auth/react";
-import { Button, PageHeading } from "../../../components/UI";
+import { Button, PageHeading } from "../../../components/ui";
 import { useInfiniteUsers, useUserById } from "../../../hooks";
 import { type DehydratedState } from "@tanstack/react-query";
 import Link from "next/link";
-import UsersList from "../../../components/Users";
+import Users from "../../../components/users/Users";
 import { withProfileId, withProfilePaths } from "../../../hoc";
-import HeadSEO from "../../../components/HeadSEO";
+import HeadSEO from "../../../components/layout/HeadSEO";
 import { METADATA } from "../../../utils/globals";
 
 type FollowingPageProps = {
@@ -15,14 +15,12 @@ type FollowingPageProps = {
 };
 
 const FollowingPage: NextPage<FollowingPageProps> = (
-  props: InferGetStaticPropsType<typeof getStaticProps>
+  props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
   const { profileId } = props;
-
+  
   const { data: session } = useSession();
-
   const { data: foundUser } = useUserById({ userId: profileId });
-
   const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteUsers({
     input: {
       where: {
@@ -62,7 +60,7 @@ const FollowingPage: NextPage<FollowingPageProps> = (
           Check posts from people you follow!
         </Link>
       ) : null}
-      <UsersList isLoading={isLoading} users={followingUsers} />
+      <Users isLoading={isLoading} users={followingUsers} />
       {hasNextPage ? (
         <div className="flex justify-center pt-8">
           <Button buttonColor="primary" onClick={() => fetchNextPage()}>

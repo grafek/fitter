@@ -1,13 +1,10 @@
 import type { NextPage } from "next";
-import { useCreatePost } from "../../hooks";
-import { PageHeading } from "../../components/UI";
-import { PostForm } from "../../components/Posts";
-import HeadSEO from "../../components/HeadSEO";
+import { PageHeading } from "../../components/ui";
+import HeadSEO from "../../components/layout/HeadSEO";
 import { METADATA } from "../../utils/globals";
+import PostForm from "../../components/posts/PostForm";
 
 const CreatePostPage: NextPage = () => {
-  const { mutateAsync: addPost } = useCreatePost();
-
   return (
     <>
       <HeadSEO
@@ -17,11 +14,7 @@ const CreatePostPage: NextPage = () => {
       />
       <PageHeading>Share your workout with others 😎</PageHeading>
       <section id="create-post">
-        <PostForm
-          onSubmit={addPost}
-          buttonColor="primary"
-          buttonText="Create post"
-        />
+        <PostForm buttonColor="primary" buttonText="Create post" />
       </section>
     </>
   );

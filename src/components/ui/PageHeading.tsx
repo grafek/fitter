@@ -8,9 +8,7 @@ const PageHeading: React.FC<PageHeadingProps> = ({
   className = "",
 }) => {
   return (
-    <h1
-      className={`pb-4 text-xl font-semibold md:pb-8 md:text-2xl ${className}`}
-    >
+    <h1 className={`pb-4 text-xl font-semibold md:pb-8 ${className}`}>
       {children}
     </h1>
   );
