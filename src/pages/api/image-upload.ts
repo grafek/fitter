@@ -15,7 +15,7 @@ export const config = {
 };
 const imageUploadHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   if (req.method === "POST") {
     const session = await getServerAuthSession({ req, res });
@@ -37,7 +37,6 @@ const imageUploadHandler = async (
         return res.status(500).json({ message: "Image data not valid" });
       }
 
-      // Upload image
       const fileName = nanoid();
       const ext = contentType.split("/")[1];
       const path = `${fileName}.${ext}`;

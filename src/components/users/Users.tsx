@@ -1,11 +1,11 @@
 import type { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React, { memo } from "react";
-import { useFollowers } from "../hooks";
+import { useFollowers } from "../../hooks";
 import Image from "next/image";
 import Link from "next/link";
-import { FollowBtn } from "./UI";
-import { UserSkeleton } from "./UI/Skeletons";
+import { FollowBtn } from "../ui";
+import { UserSkeleton } from "../ui/Skeletons";
 
 type UsersProps = { users: User[] | undefined; isLoading: boolean };
 

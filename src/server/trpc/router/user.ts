@@ -28,7 +28,7 @@ export const userRouter = router({
               .optional(),
           })
           .optional(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const { where } = input;
@@ -65,7 +65,7 @@ export const userRouter = router({
               .optional(),
           })
           .optional(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 4;
@@ -82,7 +82,7 @@ export const userRouter = router({
 
       let nextCursor: typeof cursor | undefined = undefined;
       if (users.length > limit) {
-        const nextItem = users.pop() as typeof users[number];
+        const nextItem = users.pop() as (typeof users)[number];
         nextCursor = nextItem.id;
       }
       return {

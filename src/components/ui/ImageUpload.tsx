@@ -1,13 +1,9 @@
 import React, { useRef, useState } from "react";
-import {
-  type UseFormRegister,
-  type Path,
-  type FieldError,
-} from "react-hook-form";
+import type { UseFormRegister, Path, FieldError } from "react-hook-form";
 import { type AddPostFormSchema } from "../../schemas/post.schema";
 import Image from "next/image";
 import { AiOutlineArrowUp } from "react-icons/ai";
-import FormError from "./FormError";
+import { FormError } from ".";
 
 interface ImageUploadProps {
   name: Path<AddPostFormSchema>;
@@ -32,7 +28,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const pictureRef = useRef<HTMLInputElement | null>(null);
 
   const [image, setImage] = useState<string | null | undefined | ArrayBuffer>(
-    initialImage
+    initialImage,
   );
   const [updatingPicture, setUpdatingPicture] = useState(false);
   const [pictureError, setPictureError] = useState("");
@@ -54,8 +50,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         setUpdatingPicture(false);
       }
     });
-    console.log(file);
-
     if (file) {
       if (file.size <= sizeLimit) {
         setUpdatingPicture(true);

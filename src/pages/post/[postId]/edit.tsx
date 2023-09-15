@@ -1,15 +1,15 @@
-import { usePostById, useUpdatePost } from "../../../hooks";
+import { usePostById } from "../../../hooks";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { type DehydratedState } from "@tanstack/react-query";
 import { withPostId, withPostPaths } from "../../../hoc";
-import HeadSEO from "../../../components/HeadSEO";
+import HeadSEO from "../../../components/layout/HeadSEO";
 import { METADATA } from "../../../utils/globals";
-import { PostForm } from "../../../components/Posts";
+import PostForm from "../../../components/posts/PostForm";
 
 type EditPostPageProps = { trpcState: DehydratedState; postId: string };
 
 const EditPostPage: NextPage<EditPostPageProps> = (
-  props: InferGetStaticPropsType<typeof getStaticProps>
+  props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
   const { postId } = props;
 
@@ -25,8 +25,6 @@ const EditPostPage: NextPage<EditPostPageProps> = (
 
   const foundPost = data?.pages[0]?.posts[0];
 
-  const { mutateAsync: updatePost } = useUpdatePost();
-
   return (
     <>
       <HeadSEO
@@ -40,7 +38,6 @@ const EditPostPage: NextPage<EditPostPageProps> = (
           <PostForm
             post={foundPost}
             isEditing
-            onSubmit={updatePost}
             buttonColor="success"
             buttonText="Update post"
             redirectPath={`/post/${foundPost.id}`}

@@ -1,5 +1,4 @@
 export { default as Navigation } from "./Navigation";
-export { default as Layout } from "../Layout";
 export { default as PageHeading } from "./PageHeading";
 export { default as Input } from "./Input";
 export { default as Select } from "./Select";
@@ -12,6 +11,5 @@ export { default as IconBtn } from "./IconBtn";
 export { default as ProfilePicture } from "./ProfilePicture";
 export { default as FormError } from "./FormError";
 export { default as Modal } from "./Modal";
-export { default as InstagramIcon } from "./InstagramIcon";
 export { default as FollowBtn } from "./FollowBtn";
 export { default as SlideToTop } from "./SlideToTop";

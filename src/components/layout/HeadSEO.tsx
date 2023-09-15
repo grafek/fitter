@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { METADATA } from "../utils/globals";
+import { METADATA } from "../../utils/globals";
 
 type HeadSEOProps = {
   title?: string;

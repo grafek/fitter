@@ -1,12 +1,12 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
-import { Loading, PageHeading } from "../../../components/UI";
+import { Loading, PageHeading } from "../../../components/ui";
 import { useInfinitePosts, useInfiniteScroll } from "../../../hooks";
 import { type DehydratedState } from "@tanstack/react-query";
-import PostsList from "../../../components/Posts";
+import Posts from "../../../components/posts/Posts";
 import { METADATA, POSTS_LIMIT } from "../../../utils/globals";
 import type { RouterInputs } from "../../../utils/trpc";
 import { withProfileId, withProfilePaths } from "../../../hoc";
-import HeadSEO from "../../../components/HeadSEO";
+import HeadSEO from "../../../components/layout/HeadSEO";
 
 type FollowersPostsPageProps = {
   trpcState: DehydratedState;
@@ -14,7 +14,7 @@ type FollowersPostsPageProps = {
 };
 
 const FollowersPostsPage: NextPage<FollowersPostsPageProps> = (
-  props: InferGetStaticPropsType<typeof getStaticProps>
+  props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
   const { profileId } = props;
 
@@ -47,7 +47,7 @@ const FollowersPostsPage: NextPage<FollowersPostsPageProps> = (
       />
       <PageHeading>{"Posts from people who follow me"}</PageHeading>
       <section title="followers-posts" className="flex flex-col gap-4 md:gap-8">
-        <PostsList posts={posts} input={inputData} isLoading={isLoading} />
+        <Posts posts={posts} input={inputData} isLoading={isLoading} />
         {isFetchingNextPage ? <Loading /> : null}
       </section>
     </>

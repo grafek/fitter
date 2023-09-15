@@ -81,7 +81,7 @@ export const postRouter = router({
               .optional(),
           })
           .optional(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 1;
@@ -123,7 +123,7 @@ export const postRouter = router({
 
       let nextCursor: typeof cursor | undefined = undefined;
       if (posts.length > limit) {
-        const nextItem = posts.pop() as typeof posts[number];
+        const nextItem = posts.pop() as (typeof posts)[number];
         nextCursor = nextItem.id;
       }
       return {
@@ -220,7 +220,7 @@ export const postRouter = router({
     .input(
       z.object({
         postId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
@@ -245,7 +245,7 @@ export const postRouter = router({
     .input(
       z.object({
         postId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;

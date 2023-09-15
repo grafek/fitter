@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { AiOutlineArrowUp } from "react-icons/ai";
-import { Button } from "./";
+import { Button } from ".";
 
 const SlideToTop: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -14,7 +14,7 @@ const SlideToTop: React.FC = () => {
   }, []);
 
   const handleScroll = () => {
-    if (window.pageYOffset > 0) {
+    if (window.scrollY > 0) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
@@ -27,16 +27,14 @@ const SlideToTop: React.FC = () => {
   };
 
   return (
-    <>
-      {isVisible && (
-        <Button
-          className="fixed bottom-8 right-8 z-50 bg-gray-200 p-2 text-black outline-indigo-700 hover:bg-gray-300 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
-          onClick={handleClick}
-        >
-          <AiOutlineArrowUp />
-        </Button>
-      )}
-    </>
+    isVisible && (
+      <Button
+        className="fixed bottom-8 right-8 z-50 bg-gray-200 p-2 text-black outline-indigo-700 hover:bg-gray-300 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+        onClick={handleClick}
+      >
+        <AiOutlineArrowUp />
+      </Button>
+    )
   );
 };
 

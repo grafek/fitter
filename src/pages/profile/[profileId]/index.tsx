@@ -1,7 +1,7 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { FollowBtn, PageHeading } from "../../../components/UI";
+import { FollowBtn, PageHeading } from "../../../components/ui";
 import { useFollowers, useUserById } from "../../../hooks";
 import { type DehydratedState } from "@tanstack/react-query";
 import {
@@ -11,20 +11,19 @@ import {
 } from "react-icons/ai";
 import { RiUserFollowLine } from "react-icons/ri";
 import { withProfileId, withProfilePaths } from "../../../hoc";
-import { NavItem } from "../../../components/UI/Navigation";
-import HeadSEO from "../../../components/HeadSEO";
+import { NavItem } from "../../../components/ui/Navigation";
+import HeadSEO from "../../../components/layout/HeadSEO";
 import { METADATA } from "../../../utils/globals";
 
 type ProfilePageProps = { trpcState: DehydratedState; profileId: string };
 
 const ProfilePage: NextPage<ProfilePageProps> = (
-  props: InferGetStaticPropsType<typeof getStaticProps>
+  props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
   const { profileId } = props;
 
   const { data: session } = useSession();
   const { data: foundUser } = useUserById({ userId: profileId });
-
   const { data: followingIds } = useFollowers({
     input: {
       userId: session?.user?.id ?? "",

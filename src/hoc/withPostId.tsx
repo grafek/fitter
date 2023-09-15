@@ -23,6 +23,7 @@ function withPostId(gsp: GetStaticProps): GetStaticProps {
       props: {
         trpcState: helpers.dehydrate(),
         postId,
+        ...gspData.props,
       },
       revalidate: 1,
     };

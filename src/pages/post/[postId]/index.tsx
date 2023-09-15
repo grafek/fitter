@@ -1,15 +1,15 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import { type DehydratedState } from "@tanstack/react-query";
 import { withPostId, withPostPaths } from "../../../hoc";
-import { PostItem } from "../../../components/Posts";
 import { usePostById } from "../../../hooks";
-import HeadSEO from "../../../components/HeadSEO";
+import HeadSEO from "../../../components/layout/HeadSEO";
 import { METADATA } from "../../../utils/globals";
+import { PostItem } from "../../../components/posts/PostItem";
 
 type PostPageProps = { trpcState: DehydratedState; postId: string };
 
 const PostPage: NextPage<PostPageProps> = (
-  props: InferGetStaticPropsType<typeof getStaticProps>
+  props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
   const { postId } = props;
 

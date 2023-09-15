@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import Layout from "../components/Layout";
+import Layout from "../components/layout/Layout";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
